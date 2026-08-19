@@ -5,6 +5,17 @@ on:
     # 每周一 09:30（北京时间）自动运行
     - cron: '30 1 * * 1'
   workflow_dispatch: # 支持在 GitHub Actions 页面手动触发
+  push: # 代码改动推送到 main 时自动重新部署（数据目录除外，避免重复触发）
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'compare.html'
+      - 'css/**'
+      - 'js/**'
+      - 'robots.txt'
+      - 'sitemap.xml'
+      - 'scripts/**'
+      - '.github/**'
 
 permissions:
   contents: write
@@ -50,8 +61,8 @@ jobs:
 
   deploy-pages:
     needs: update-data
-    # 数据有变化，或手动触发时，才重新部署
-    if: needs.update-data.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
+    # 数据有变化、手动触发、或代码 push 时，都重新部署
+    if: needs.update-data.outputs.changed == 'true' || github.event_name == 'workflow_dispatch' || github.event_name == 'push'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
