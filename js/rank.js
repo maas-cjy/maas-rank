@@ -60,7 +60,7 @@
       var rowCls = i < 3 ? ' class="row-top3"' : '';
       html += '<tr' + rowCls + '>'
         + '<td>' + (rank || '<span class="muted num">' + (i + 1) + '</span>') + '</td>'
-        + '<td><div class="mname"><a href="compare.html?m=' + encodeURIComponent(m.id) + '">' + R.esc(m.name) + '</a></div>'
+        + '<td><div class="mname"><a href="model.html?id=' + encodeURIComponent(m.id) + '">' + R.esc(m.name) + '</a></div>'
         + '<div class="mprov">' + R.esc(m.provider) + ' · ' + R.regionName(m.region) + '</div></td>'
         + '<td class="num">' + t.fmt(m) + '</td>'
         + '<td class="num">' + R.fmtNum(m.superclue) + R.estMark(m, 'superclue') + '</td>'
