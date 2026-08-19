@@ -39,7 +39,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 DATA_FILE = ROOT / "data" / "models.json"
 DIFF_FILE = ROOT / "data" / ".last_update.json"
+HISTORY_FILE = ROOT / "data" / "history.json"
 TIMEOUT = 25
+
+# 历史快照仅归档以下字段（自动更新只涉及这几个指标）
+HISTORY_FIELDS = ("id", "name", "elo", "superclue", "priceIn", "priceOut")
 
 # ---------------------------------------------------------------------------
 # 模型别名表：models.json 的 id -> 各数据源中的名称特征（子串匹配，忽略大小写）
@@ -373,7 +377,14 @@ def main() -> int:
         "date": used_date,
     }
 
-    # 合并
+    # 合并（注意：apply_updates 会原地修改 models，因此先保留更新前快照用于历史归档）
+    prev_snapshot = {
+        "date": meta.get("updated", ""),
+        "models": [
+            {k: m.get(k) for k in HISTORY_FIELDS}
+            for m in data["models"]
+        ],
+    }
     changes = apply_updates(data["models"], elo_map, sc_scores, sc_prices)
     diff["changes"] = changes
 
@@ -402,6 +413,28 @@ def main() -> int:
         json.dump(diff, f, ensure_ascii=False, indent=2)
     log(f"✓ 已写入 {data_path}")
     log(f"✓ 已写入变更摘要 {DIFF_FILE}")
+
+    # 历史快照归档：仅当数据确有变化时，把「更新前」的榜单写入 history.json，
+    # 供榜单变化周报页对比展示。同一天重复更新则覆盖最后一条，避免堆积重复快照。
+    if changes:
+        history: dict = {"meta": {"count": 0, "generated": ""}, "snapshots": []}
+        if HISTORY_FILE.exists():
+            try:
+                with open(HISTORY_FILE, encoding="utf-8") as f:
+                    history = json.load(f)
+            except Exception:  # noqa: BLE001
+                log("  ⚠ history.json 读取失败，按空历史重建")
+        snaps = history.setdefault("snapshots", [])
+        if snaps and snaps[-1].get("date") == prev_snapshot.get("date"):
+            snaps[-1] = prev_snapshot
+        else:
+            snaps.append(prev_snapshot)
+        history["meta"] = {"count": len(snaps), "generated": today}
+        htmp = HISTORY_FILE.with_suffix(".json.tmp")
+        with open(htmp, "w", encoding="utf-8") as f:
+            json.dump(history, f, ensure_ascii=False, indent=2)
+        htmp.replace(HISTORY_FILE)
+        log(f"✓ 已归档历史快照 {len(snaps)} 期 → {HISTORY_FILE}")
     return 0
 
 
