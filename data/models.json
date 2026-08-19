@@ -1,0 +1,394 @@
+{
+  "meta": {
+    "name": "MaaS 模型排行 · 数据快照",
+    "updated": "2026-08-19",
+    "note": "榜单数据自动更新：中文能力/价格来自 SuperCLUE（2026年7月 测评，自动抓取）；未抓取到的字段保留上次快照。",
+    "exchangeRate": 7.2,
+    "sources": [
+      {
+        "name": "LMArena (Chatbot Arena)",
+        "url": "https://lmarena.ai",
+        "desc": "全球人类盲测投票，Bradley-Terry Elo 排名，反映真实用户偏好"
+      },
+      {
+        "name": "SuperCLUE 智能指数",
+        "url": "https://www.superclueai.com",
+        "desc": "中文通用大模型综合测评：数学推理 / 科学推理 / 智能体编程 / 指令遵循 / 幻觉控制 / 任务规划"
+      },
+      {
+        "name": "厂商公开定价页",
+        "url": "",
+        "desc": "OpenAI / Anthropic / Google / DeepSeek / 阿里云 / 智谱 / 月之暗面 / 字节 等官方 API 定价"
+      }
+    ],
+    "lastAutoUpdate": "2026-08-19 14:06:03"
+  },
+  "models": [
+    {
+      "id": "claude-opus-5",
+      "name": "Claude Opus 5",
+      "provider": "Anthropic",
+      "open": false,
+      "region": "overseas",
+      "desc": "前沿智能体编程与复杂推理旗舰",
+      "release": "2026-07",
+      "elo": 1508,
+      "superclue": 75.0,
+      "priceIn": 5.0,
+      "priceOut": 25.0,
+      "context": 1000000,
+      "speed": 74,
+      "est": {
+        "superclue": true
+      }
+    },
+    {
+      "id": "qwen3.8-max",
+      "name": "Qwen3.8-Max",
+      "provider": "阿里巴巴",
+      "open": true,
+      "region": "china",
+      "desc": "开源旗舰，中文与推理能力国内第一梯队",
+      "release": "2026-08",
+      "elo": 1492,
+      "superclue": 71.48,
+      "priceIn": 12.0,
+      "priceOut": 36.0,
+      "context": 1000000,
+      "speed": 90,
+      "est": {
+        "speed": true
+      }
+    },
+    {
+      "id": "gemini-3.5-flash",
+      "name": "Gemini 3.5 Flash",
+      "provider": "Google",
+      "open": false,
+      "region": "overseas",
+      "desc": "高速高性价比的轻量旗舰",
+      "release": "2026-06",
+      "elo": 1482,
+      "superclue": 71.5,
+      "priceIn": 1.5,
+      "priceOut": 9.0,
+      "context": 1000000,
+      "speed": 220,
+      "est": {
+        "speed": true
+      }
+    },
+    {
+      "id": "gemini-3.1-pro",
+      "name": "Gemini 3.1 Pro",
+      "provider": "Google",
+      "open": false,
+      "region": "overseas",
+      "desc": "多模态与长上下文综合旗舰",
+      "release": "2026-05",
+      "elo": 1480,
+      "superclue": 75.7,
+      "priceIn": 2.0,
+      "priceOut": 12.0,
+      "context": 1000000,
+      "speed": 85,
+      "est": {
+        "speed": true
+      }
+    },
+    {
+      "id": "kimi-k3",
+      "name": "Kimi K3",
+      "provider": "月之暗面",
+      "open": true,
+      "region": "china",
+      "desc": "开源开放权重，代码与智能体能力突出",
+      "release": "2026-06",
+      "elo": 1476,
+      "superclue": 70.68,
+      "priceIn": 20.0,
+      "priceOut": 100.0,
+      "context": 1000000,
+      "speed": 55
+    },
+    {
+      "id": "gpt-5.5",
+      "name": "GPT-5.5",
+      "provider": "OpenAI",
+      "open": false,
+      "region": "overseas",
+      "desc": "通用前沿推理与工具调用旗舰",
+      "release": "2026-04",
+      "elo": 1471,
+      "superclue": 74.3,
+      "priceIn": 5.0,
+      "priceOut": 30.0,
+      "context": 1000000,
+      "speed": 90,
+      "est": {
+        "speed": true
+      }
+    },
+    {
+      "id": "gpt-5.4",
+      "name": "GPT-5.4",
+      "provider": "OpenAI",
+      "open": false,
+      "region": "overseas",
+      "desc": "高性价比主力，覆盖大多数生产负载",
+      "release": "2026-03",
+      "elo": 1470,
+      "superclue": 72.0,
+      "priceIn": 2.5,
+      "priceOut": 15.0,
+      "context": 400000,
+      "speed": 100,
+      "est": {
+        "superclue": true,
+        "speed": true
+      }
+    },
+    {
+      "id": "ernie-5.1",
+      "name": "ERNIE 5.1",
+      "provider": "百度",
+      "open": false,
+      "region": "china",
+      "desc": "文心系列旗舰，中文语义与幻觉控制见长",
+      "release": "2026-07",
+      "elo": 1468,
+      "superclue": 54.56,
+      "priceIn": 4.0,
+      "priceOut": 18.0,
+      "context": 1000000,
+      "speed": 80,
+      "est": {
+        "speed": true,
+        "context": true
+      }
+    },
+    {
+      "id": "glm-5.2",
+      "name": "GLM-5.2",
+      "provider": "智谱AI",
+      "open": true,
+      "region": "china",
+      "desc": "开源权重，智能体与工具调用能力强",
+      "release": "2026-07",
+      "elo": 1466,
+      "superclue": 63.27,
+      "priceIn": 8.0,
+      "priceOut": 28.0,
+      "context": 1000000,
+      "speed": 100,
+      "est": {
+        "speed": true
+      }
+    },
+    {
+      "id": "mimo-v2.5-pro",
+      "name": "MiMo V2.5 Pro",
+      "provider": "小米",
+      "open": true,
+      "region": "china",
+      "desc": "开源旗舰，完整多模态模型家族",
+      "release": "2026-06",
+      "elo": 1465,
+      "superclue": 53.01,
+      "priceIn": 3.0,
+      "priceOut": 6.0,
+      "context": 256000,
+      "speed": 110,
+      "est": {
+        "speed": true
+      }
+    },
+    {
+      "id": "claude-opus-4.8",
+      "name": "Claude Opus 4.8",
+      "provider": "Anthropic",
+      "open": false,
+      "region": "overseas",
+      "desc": "编码、智能体与计算机使用旗舰",
+      "release": "2026-05",
+      "elo": 1461,
+      "superclue": 73.9,
+      "priceIn": 5.0,
+      "priceOut": 25.0,
+      "context": 1000000,
+      "speed": 72
+    },
+    {
+      "id": "claude-sonnet-4.6",
+      "name": "Claude Sonnet 4.6",
+      "provider": "Anthropic",
+      "open": false,
+      "region": "overseas",
+      "desc": "生产级主力，写作与编码均衡",
+      "release": "2026-03",
+      "elo": 1458,
+      "superclue": 70.0,
+      "priceIn": 3.0,
+      "priceOut": 15.0,
+      "context": 1000000,
+      "speed": 80,
+      "est": {
+        "superclue": true,
+        "speed": true
+      }
+    },
+    {
+      "id": "qwen3.7-max",
+      "name": "Qwen3.7-Max",
+      "provider": "阿里巴巴",
+      "open": false,
+      "region": "china",
+      "desc": "闭源旗舰，代码生成接近海外头部",
+      "release": "2026-06",
+      "elo": 1474,
+      "superclue": 70.2,
+      "priceIn": 1.25,
+      "priceOut": 3.75,
+      "context": 1000000,
+      "speed": 95,
+      "est": {
+        "speed": true
+      }
+    },
+    {
+      "id": "deepseek-v4-pro",
+      "name": "DeepSeek V4 Pro",
+      "provider": "深度求索",
+      "open": true,
+      "region": "china",
+      "desc": "开源旗舰，性价比之王，1M 上下文",
+      "release": "2026-07",
+      "elo": 1350,
+      "superclue": 70.1,
+      "priceIn": 3.0,
+      "priceOut": 6.0,
+      "context": 1000000,
+      "speed": 120,
+      "est": {
+        "elo": true,
+        "speed": true
+      }
+    },
+    {
+      "id": "deepseek-v4-flash",
+      "name": "DeepSeek V4 Flash",
+      "provider": "深度求索",
+      "open": true,
+      "region": "china",
+      "desc": "最便宜的高可用模型之一",
+      "release": "2026-07",
+      "elo": 1300,
+      "superclue": 65.6,
+      "priceIn": 1.0,
+      "priceOut": 2.0,
+      "context": 1000000,
+      "speed": 180,
+      "est": {
+        "elo": true,
+        "speed": true
+      }
+    },
+    {
+      "id": "doubao-seed-2.1-pro",
+      "name": "Doubao Seed 2.1 Pro",
+      "provider": "字节跳动",
+      "open": false,
+      "region": "china",
+      "desc": "豆包大模型旗舰，多模态能力均衡",
+      "release": "2026-08",
+      "elo": 1410,
+      "superclue": 65.94,
+      "priceIn": 6.0,
+      "priceOut": 30.0,
+      "context": 1000000,
+      "speed": 130,
+      "est": {
+        "elo": true,
+        "speed": true
+      }
+    },
+    {
+      "id": "hunyuan-hy3",
+      "name": "混元 Hy3",
+      "provider": "腾讯",
+      "open": true,
+      "region": "china",
+      "desc": "腾讯开源旗舰，数学推理表现亮眼",
+      "release": "2026-07",
+      "elo": 1380,
+      "superclue": 62.13,
+      "priceIn": 1.0,
+      "priceOut": 4.0,
+      "context": 256000,
+      "speed": 90,
+      "est": {
+        "elo": true,
+        "speed": true
+      }
+    },
+    {
+      "id": "minimax-m3",
+      "name": "MiniMax M3",
+      "provider": "稀宇科技",
+      "open": true,
+      "region": "china",
+      "desc": "开源权重，SWE-bench 高分性价比选择",
+      "release": "2026-05",
+      "elo": 1390,
+      "superclue": 56.9,
+      "priceIn": 2.1,
+      "priceOut": 8.4,
+      "context": 1000000,
+      "speed": 120,
+      "est": {
+        "elo": true,
+        "speed": true
+      }
+    },
+    {
+      "id": "grok-4.5",
+      "name": "Grok 4.5",
+      "provider": "xAI",
+      "open": false,
+      "region": "overseas",
+      "desc": "长上下文与实时信息能力",
+      "release": "2026-06",
+      "elo": 1430,
+      "superclue": 68.0,
+      "priceIn": 2.0,
+      "priceOut": 6.0,
+      "context": 500000,
+      "speed": 100,
+      "est": {
+        "elo": true,
+        "superclue": true,
+        "speed": true
+      }
+    },
+    {
+      "id": "llama-4-maverick",
+      "name": "Llama 4 Maverick",
+      "provider": "Meta",
+      "open": true,
+      "region": "overseas",
+      "desc": "开放权重阵营标杆，1M 上下文",
+      "release": "2025-04",
+      "elo": 1340,
+      "superclue": 62.0,
+      "priceIn": 0.27,
+      "priceOut": 0.85,
+      "context": 1000000,
+      "speed": 90,
+      "est": {
+        "elo": true,
+        "superclue": true,
+        "speed": true
+      }
+    }
+  ]
+}

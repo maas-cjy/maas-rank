@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="多模型横向对比：能力得分、API 价格、上下文长度、输出速度。">
+<title>模型对比 · MaaS 模型排行</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="index.html"><span class="brand-dot"></span>MaaS 模型排行</a>
+    <nav>
+      <a href="index.html">排行榜</a>
+      <a href="compare.html" class="active">模型对比</a>
+      <a href="index.html#data">数据说明</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>多模型对比</h1>
+    <p>在左侧勾选 2–4 个模型，对比能力得分、API 价格、上下文窗口与输出速度。雷达图维度经过 0–100 归一化，仅用于相对比较。</p>
+  </section>
+
+  <section class="cmp-grid">
+    <div class="card picker-card">
+      <h2>选择模型</h2>
+      <p class="sub">最多 4 个</p>
+      <input class="search" id="search" type="text" placeholder="搜索模型或厂商…">
+      <div class="picker-list" id="pickerList"></div>
+      <p class="hint">勾选模型后，右侧雷达图与对比表实时更新。</p>
+    </div>
+
+    <div class="cmp-main">
+      <div class="card">
+        <h2>能力雷达图</h2>
+        <p class="sub">维度：竞技场 Elo · 中文能力 · 上下文 · 输出速度 · 性价比（相对所选模型）</p>
+        <div id="chartRadar"></div>
+        <p class="dim-note">Elo 按 1300–1550 映射；SuperCLUE 按 50–78 映射；上下文按 10 万–100 万对数映射；速度按 0–250 tok/s 映射。</p>
+      </div>
+
+      <div class="card">
+        <h2>价格对比</h2>
+        <p class="sub">每百万 tokens 价格（¥，按 $1≈¥7.2 换算）</p>
+        <div id="chartPrice"></div>
+      </div>
+
+      <div class="card">
+        <h2>详细参数</h2>
+        <p class="sub">绿色高亮为该行最优值</p>
+        <div class="cmp-table-wrap">
+          <table class="cmp-table" id="cmpTable"></table>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div>MaaS 模型排行 · 数据快照 <span id="footDate">–</span> · 开源数据，标注来源引用</div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<script src="js/common.js"></script>
+<script src="js/compare.js"></script>
+</body>
+</html>

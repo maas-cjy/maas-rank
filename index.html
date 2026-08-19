@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="聚合 LMArena 与 SuperCLUE 的大模型 API 排行榜，覆盖国内外主流 MaaS 模型的能力、价格、上下文与速度。">
+<title>MaaS 模型排行 · 大模型 API 榜单</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="index.html"><span class="brand-dot"></span>MaaS 模型排行</a>
+    <nav>
+      <a href="index.html" class="active">排行榜</a>
+      <a href="compare.html">模型对比</a>
+      <a href="#data">数据说明</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>大模型 API 排行榜</h1>
+    <p>聚合 LMArena 人类偏好竞技场与 SuperCLUE 中文综合测评，覆盖国内外主流 MaaS 模型的能力、价格、上下文与输出速度。点击任意模型可进入对比页。</p>
+    <div class="hero-meta">
+      <span class="chip">数据快照 <b id="dataDate">–</b></span>
+      <span class="chip">收录模型 <b id="modelCount">–</b></span>
+      <span class="chip">价格按 <b>$1 ≈ ¥7.2</b> 换算，仅供参考</span>
+    </div>
+  </section>
+
+  <section class="tabs" id="tabs">
+    <button class="tab active" data-key="elo">竞技场 Elo</button>
+    <button class="tab" data-key="superclue">中文能力</button>
+    <button class="tab" data-key="priceIn">输入价格</button>
+    <button class="tab" data-key="context">上下文</button>
+    <button class="tab" data-key="speed">输出速度</button>
+  </section>
+
+  <section class="grid2">
+    <div class="card">
+      <h2 id="tableTitle">竞技场 Elo 排名</h2>
+      <p class="sub" id="tableSub">LMArena 全球人类盲测投票 · 分数越高代表真实用户偏好越强</p>
+      <div class="table-wrap">
+        <table id="rankTable">
+          <thead>
+            <tr>
+              <th>排名</th>
+              <th>模型</th>
+              <th data-key="elo">Elo <span class="arr"></span></th>
+              <th data-key="superclue">SuperCLUE</th>
+              <th data-key="priceIn">输入价</th>
+              <th data-key="priceOut">输出价</th>
+              <th data-key="context">上下文</th>
+              <th data-key="speed">输出速度</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="rankBody"></tbody>
+        </table>
+      </div>
+      <p class="dim-note" id="tableNote"></p>
+    </div>
+
+    <div class="card chart-card">
+      <h2 id="chartTitle">Top 10 竞技场 Elo</h2>
+      <p class="sub">当前排序维度下得分最高的 10 个模型</p>
+      <div id="chart"></div>
+    </div>
+  </section>
+
+  <section class="card data-card" id="data">
+    <h2>数据说明</h2>
+    <ul id="sources"></ul>
+    <p class="disclaimer">
+      <b>免责声明：</b>本榜单为第三方聚合展示，非官方发布。Elo 数据来自 LMArena 公开快照（2026-08-19），
+      SuperCLUE 数据来自其 2026 年 7/8 月公开测评（海外模型为参考值），价格来自各厂商公开定价页。
+      标注 <span class="est-mark">*</span> 的字段为合理估算值。所有数据仅供选型参考，正式决策请以官方发布为准。
+      榜单采用开源方式维护，欢迎通过数据文件提交修正。
+    </p>
+  </section>
+</main>
+
+<footer>
+  <div>MaaS 模型排行 · 数据快照 <span id="footDate">–</span> · 开源数据，标注来源引用</div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<script src="js/common.js"></script>
+<script src="js/rank.js"></script>
+</body>
+</html>
