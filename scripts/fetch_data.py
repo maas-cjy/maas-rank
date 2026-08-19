@@ -361,6 +361,7 @@ def main() -> int:
         return 1
     with open(data_path, encoding="utf-8") as f:
         data = json.load(f)
+    meta = data["meta"]
 
     today = date.today().isoformat()
     diff = {"updated": today, "sources": {}, "changes": []}
@@ -389,7 +390,6 @@ def main() -> int:
     diff["changes"] = changes
 
     # meta 更新（仅当确有数据变化时，避免空跑产生无意义提交）
-    meta = data["meta"]
     if changes:
         meta["updated"] = today
         meta["lastAutoUpdate"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
