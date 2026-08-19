@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="MaaS 模型排行更新日志：从榜单上线、SEO 优化、模型详情页到数据说明页的完整迭代记录，透明公开每一次功能与数据更新。">
+<meta name="keywords" content="MaaS模型排行,更新日志,changelog,版本记录,大模型排行榜">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://maas-cjy.github.io/maas-rank/changelog.html">
+<meta name="theme-color" content="#185FA5">
+<title>更新日志 · 版本迭代记录 | MaaS 模型排行</title>
+
+<!-- Open Graph：社交分享卡片 -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MaaS 模型排行">
+<meta property="og:title" content="更新日志 · MaaS 模型排行">
+<meta property="og:description" content="从榜单上线、SEO 优化、模型详情页到数据说明页的完整迭代记录。">
+<meta property="og:url" content="https://maas-cjy.github.io/maas-rank/changelog.html">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="更新日志 · MaaS 模型排行">
+<meta name="twitter:description" content="站点完整迭代记录，透明公开每一次更新。">
+
+<!-- 结构化数据：WebPage -->
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","name":"更新日志","url":"https://maas-cjy.github.io/maas-rank/changelog.html","description":"MaaS 模型排行的版本迭代记录。","isPartOf":{"@type":"WebSite","name":"MaaS 模型排行","url":"https://maas-cjy.github.io/maas-rank/"}}
+</script>
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="index.html"><span class="brand-dot"></span>MaaS 模型排行</a>
+    <nav>
+      <a href="index.html">排行榜</a>
+      <a href="compare.html">模型对比</a>
+      <a href="about.html">数据说明</a>
+      <a href="changelog.html" class="active">更新日志</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>更新日志</h1>
+    <p>站点每一次功能迭代与数据更新都记录在这里，保持完全透明。数据本身的每周快照变化见<a href="about.html">数据说明</a>。</p>
+  </section>
+
+  <section class="timeline">
+    <div class="tl-item">
+      <div class="tl-marker"></div>
+      <div class="card tl-card">
+        <div class="tl-head">
+          <span class="tl-ver">v1.3</span>
+          <span class="tl-date">2026-08-19</span>
+        </div>
+        <h2>数据说明页 + 更新日志页</h2>
+        <ul class="tl-points">
+          <li>新增独立<a href="about.html">数据说明页</a>：数据来源、自动更新机制、指标口径（Elo / 智能指数 / 价格 / 上下文 / 速度）、估算值精度说明与免责声明。</li>
+          <li>新增<a href="changelog.html">更新日志页</a>：记录全部版本迭代，便于搜索引擎收录与用户了解站点可信度。</li>
+          <li>全站导航增加「数据说明」「更新日志」入口；<code>sitemap.xml</code> 同步收录两个新页面。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-marker"></div>
+      <div class="card tl-card">
+        <div class="tl-head">
+          <span class="tl-ver">v1.2</span>
+          <span class="tl-date">2026-08-19</span>
+        </div>
+        <h2>模型详情页上线</h2>
+        <ul class="tl-points">
+          <li>新增 <code>model.html?id=模型ID</code> 详情页，覆盖 20 个模型，每个模型一个独立页面。</li>
+          <li>详情页展示：竞技场 Elo 全榜排名、SuperCLUE 中文榜排名、API 价格及价格排名、上下文窗口、输出速度、能力雷达图、Elo 位次图、同厂商模型。</li>
+          <li>按模型动态注入 SEO 标签（title / description / canonical / Open Graph / JSON-LD），直接承接「模型名 + 价格」类搜索流量。</li>
+          <li>首页排行榜模型名改为链接到详情页。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-marker"></div>
+      <div class="card tl-card">
+        <div class="tl-head">
+          <span class="tl-ver">v1.1</span>
+          <span class="tl-date">2026-08-19</span>
+        </div>
+        <h2>SEO 基础优化</h2>
+        <ul class="tl-points">
+          <li>全站补充 canonical 标签（声明 GitHub Pages 为正版地址）、Open Graph / Twitter Card 社交卡片、JSON-LD 结构化数据。</li>
+          <li>新增 <code>robots.txt</code> 与 <code>sitemap.xml</code>，便于搜索引擎收录。</li>
+          <li>工作流增加 push 触发：代码改动自动重新部署。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-marker"></div>
+      <div class="card tl-card">
+        <div class="tl-head">
+          <span class="tl-ver">v1.0</span>
+          <span class="tl-date">2026-08-19</span>
+        </div>
+        <h2>站点上线</h2>
+        <ul class="tl-points">
+          <li>排行榜首页：竞技场 Elo / 中文能力 / 输入价格 / 上下文 / 输出速度 五维排序 + Top 10 图表。</li>
+          <li>模型对比页：2–4 模型多选对比，雷达图 + 价格图 + 详细参数表。</li>
+          <li>自动化数据管线：GitHub Actions 每周一自动抓取 LMArena 与 SuperCLUE 数据并部署，零人工维护。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div>MaaS 模型排行 · 数据快照 <span id="footDate">–</span> · 开源数据，标注来源引用</div>
+</footer>
+
+<script src="js/common.js"></script>
+<script>
+(function () {
+  'use strict';
+  MRank.loadData().then(function () {
+    document.getElementById('footDate').textContent = MRank.getMeta().updated;
+  }).catch(function () {});
+})();
+</script>
+</body>
+</html>

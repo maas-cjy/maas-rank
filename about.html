@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="MaaS 模型排行数据说明：数据来源为 LMArena、SuperCLUE 与各厂商公开定价页，每周一自动更新。了解 Elo、智能指数、API 价格、上下文与输出速度的指标口径，以及估算值与免责声明。">
+<meta name="keywords" content="MaaS模型排行,数据来源,LMArena,SuperCLUE,Elo,大模型API价格,数据说明,更新机制">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://maas-cjy.github.io/maas-rank/about.html">
+<meta name="theme-color" content="#185FA5">
+<title>数据说明 · 数据来源、更新机制与指标口径 | MaaS 模型排行</title>
+
+<!-- Open Graph：社交分享卡片 -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MaaS 模型排行">
+<meta property="og:title" content="数据说明 · MaaS 模型排行">
+<meta property="og:description" content="数据来源（LMArena / SuperCLUE / 厂商定价）、每周自动更新机制、各指标口径与免责声明。">
+<meta property="og:url" content="https://maas-cjy.github.io/maas-rank/about.html">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数据说明 · MaaS 模型排行">
+<meta name="twitter:description" content="数据来源、每周自动更新机制、各指标口径与免责声明。">
+
+<!-- 结构化数据：AboutPage -->
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"AboutPage","name":"数据说明","url":"https://maas-cjy.github.io/maas-rank/about.html","description":"MaaS 模型排行的数据来源、更新机制、指标口径与免责声明。","isPartOf":{"@type":"WebSite","name":"MaaS 模型排行","url":"https://maas-cjy.github.io/maas-rank/"}}
+</script>
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="index.html"><span class="brand-dot"></span>MaaS 模型排行</a>
+    <nav>
+      <a href="index.html">排行榜</a>
+      <a href="compare.html">模型对比</a>
+      <a href="about.html" class="active">数据说明</a>
+      <a href="changelog.html">更新日志</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>数据说明</h1>
+    <p>本站聚合 LMArena 人类偏好竞技场与 SuperCLUE 中文综合测评的能力得分，叠加各厂商公开 API 定价，覆盖国内外主流 MaaS 模型。以下说明数据从哪来、怎么更新、口径是什么。</p>
+    <div class="hero-meta">
+      <span class="chip">数据快照 <b id="dataDate">–</b></span>
+      <span class="chip">收录模型 <b id="modelCount">–</b></span>
+      <span class="chip">更新频率 <b>每周一自动</b></span>
+      <span class="chip">价格按 <b>$1 ≈ ¥7.2</b> 换算</span>
+    </div>
+  </section>
+
+  <section class="card data-card">
+    <h2>数据来源</h2>
+    <p class="sub">三个公开数据源，均保留原始链接，标注来源引用</p>
+    <ul id="sources"></ul>
+  </section>
+
+  <section class="card data-card">
+    <h2>更新机制</h2>
+    <ul class="flow-list">
+      <li><span class="flow-step">1</span><div><b>每周一 09:30（北京时间）自动抓取</b><p>GitHub Actions 定时任务运行抓取脚本：LMArena Elo 来自 HuggingFace 公开数据集快照，中文能力与价格来自 SuperCLUE 官方公开测评表格，其余字段保留上次快照。</p></div></li>
+      <li><span class="flow-step">2</span><div><b>有变化才提交</b><p>脚本对抓取结果与现有数据做逐字段比对（含浮点精度归一化），仅在榜单数据实际变化时生成新快照提交，避免无效更新。</p></div></li>
+      <li><span class="flow-step">3</span><div><b>自动部署上线</b><p>提交后 GitHub Pages 自动发布，通常几分钟内生效。代码改动（含本页）推送后同样自动部署。</p></div></li>
+      <li><span class="flow-step">4</span><div><b>数据源故障时保留旧值</b><p>任一数据源暂时不可用，脚本会跳过该源并保留上次抓取值，榜单不出现空白，故障会在下次运行时自动恢复。</p></div></li>
+    </ul>
+  </section>
+
+  <section class="card data-card">
+    <h2>指标口径</h2>
+    <ul class="flow-list">
+      <li><span class="flow-step elo">Elo</span><div><b>竞技场 Elo 分</b><p>来自 LMArena（原 Chatbot Arena）全球匿名盲测投票，采用 Bradley-Terry 模型计算。分数反映真实用户对模型输出的偏好强度，分数越高代表综合体验越好，与"考试分数"无直接换算关系。</p></div></li>
+      <li><span class="flow-step cn">CN</span><div><b>SuperCLUE 智能指数</b><p>来自 SuperCLUE 中文通用大模型综合测评，覆盖数学推理、科学推理、智能体编程、指令遵循、幻觉控制、任务规划等维度。海外模型若未参加当期测评，展示为参考估算值。</p></div></li>
+      <li><span class="flow-step price">¥</span><div><b>API 价格</b><p>按每百万 tokens 计价，取自各厂商官方定价页。统一以 <code>$1 ≈ ¥7.2</code> 汇率换算为人民币展示（美元原价同时保留）。实际计费请以开通时官方价格为准。</p></div></li>
+      <li><span class="flow-step ctx">CTX</span><div><b>上下文窗口</b><p>模型支持的最大输入上下文长度（tokens），以官方技术文档为准；部分模型按同系列/同代产品合理推算并标注 <span class="est-mark">*</span>。</p></div></li>
+      <li><span class="flow-step spd">SPD</span><div><b>输出速度</b><p>输出吞吐量（tokens/s），取公开测评或厂商公布值的合理估算，不同测试环境下差异较大，仅作横向量级参考。</p></div></li>
+    </ul>
+  </section>
+
+  <section class="card data-card">
+    <h2>估算值与精度说明</h2>
+    <p class="text-block">榜单中带 <span class="est-mark">*</span> 的字段为<b>合理估算值</b>——包括：未公开精确数值的字段（如部分输出速度）、未参加当期中文测评的海外模型得分、以同系列产品推算的上下文长度。估算遵循保守原则，宁缺毋滥，且仅影响单个字段，不影响其他已确认数据。任何字段只要拿到官方精确数值，会在下一次自动更新时替换为准确值。</p>
+  </section>
+
+  <section class="card data-card">
+    <p class="disclaimer">
+      <b>免责声明：</b>本榜单为第三方聚合展示，非官方发布，与 LMArena、SuperCLUE 及各模型厂商无隶属或合作关系。
+      数据仅供选型参考与学习交流，正式决策请以各官方发布为准。如数据有误，欢迎通过
+      <a href="https://github.com/maas-cjy/maas-rank" target="_blank" rel="noopener">GitHub 仓库</a>
+      提交修正（数据文件为 <code>data/models.json</code>），或查看
+      <a href="changelog.html">更新日志</a> 了解站点迭代历史。
+    </p>
+  </section>
+</main>
+
+<footer>
+  <div>MaaS 模型排行 · 数据快照 <span id="footDate">–</span> · 开源数据，标注来源引用</div>
+</footer>
+
+<script src="js/common.js"></script>
+<script>
+(function () {
+  'use strict';
+  MRank.loadData().then(function () {
+    var meta = MRank.getMeta();
+    document.getElementById('dataDate').textContent = meta.updated;
+    document.getElementById('modelCount').textContent = MRank.getModels().length;
+    document.getElementById('footDate').textContent = meta.updated;
+    var list = document.getElementById('sources');
+    var html = '';
+    (meta.sources || []).forEach(function (s) {
+      html += '<li><span class="src-name">' + MRank.esc(s.name) + '</span>'
+        + '<span class="src-desc">' + MRank.esc(s.desc)
+        + (s.url ? ' · <a href="' + MRank.esc(s.url) + '" target="_blank" rel="noopener">访问官网</a>' : '')
+        + '</span></li>';
+    });
+    list.innerHTML = html;
+  }).catch(function () {
+    document.getElementById('dataDate').textContent = '加载失败';
+  });
+})();
+</script>
+</body>
+</html>

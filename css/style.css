@@ -141,6 +141,7 @@ tbody tr:last-child td { border-bottom: none; }
 #chartPrice { width: 100%; height: 260px; }
 
 .data-card { margin-top: 24px; }
+.dim-link { font-size: 12px; font-weight: 400; margin-left: 8px; }
 .data-card ul { list-style: none; margin: 8px 0 12px; }
 .data-card li { padding: 6px 0; border-bottom: 1px dashed var(--line); display: flex; gap: 10px; align-items: baseline; font-size: 13px; }
 .data-card li:last-child { border-bottom: none; }
@@ -221,3 +222,48 @@ footer a { color: var(--muted); }
 }
 .link-item:hover { border-color: #c9cbf5; background: var(--brand-weak); text-decoration: none; }
 .link-item span { font-family: var(--mono); font-size: 12px; color: var(--muted); font-weight: 400; }
+
+/* ===== 数据说明页 ===== */
+.flow-list { list-style: none; margin: 8px 0 0; }
+.flow-list li { display: flex; gap: 14px; padding: 12px 0; border-bottom: 1px dashed var(--line); align-items: flex-start; }
+.flow-list li:last-child { border-bottom: none; }
+.flow-step {
+  flex-shrink: 0; width: 34px; height: 34px; border-radius: 9px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--brand-weak); color: var(--brand-ink);
+  font-weight: 600; font-size: 14px; font-family: var(--mono);
+}
+.flow-step.elo { background: #fef3c7; color: #b45309; }
+.flow-step.cn { background: #ecfdf3; color: #15803d; }
+.flow-step.price { background: #eff4ff; color: #1d4ed8; }
+.flow-step.ctx { background: #fdf2f8; color: #be185d; }
+.flow-step.spd { background: #f5f3ff; color: #6d28d9; }
+.flow-list b { font-size: 13.5px; }
+.flow-list p { color: var(--muted); font-size: 13px; margin-top: 2px; }
+.flow-list code { font-family: var(--mono); font-size: 12px; background: var(--bg); padding: 1px 5px; border-radius: 5px; }
+.text-block { font-size: 13.5px; color: var(--muted); margin-top: 8px; }
+.text-block b { color: var(--ink); }
+
+/* ===== 更新日志页 ===== */
+.timeline { position: relative; padding-left: 26px; display: flex; flex-direction: column; gap: 18px; }
+.timeline::before {
+  content: ""; position: absolute; left: 7px; top: 6px; bottom: 6px;
+  width: 2px; background: var(--line); border-radius: 2px;
+}
+.tl-item { position: relative; }
+.tl-marker {
+  position: absolute; left: -26px; top: 22px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--card); border: 3px solid var(--brand);
+}
+.tl-card { padding: 18px 20px; }
+.tl-head { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.tl-ver {
+  font-family: var(--mono); font-weight: 600; font-size: 13px; color: var(--brand-ink);
+  background: var(--brand-weak); border: 1px solid #dfe1fb; border-radius: 7px; padding: 2px 10px;
+}
+.tl-date { font-size: 12px; color: var(--muted); font-family: var(--mono); }
+.tl-card h2 { font-size: 15.5px; }
+.tl-points { margin: 10px 0 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; }
+.tl-points li { font-size: 13px; color: var(--ink); }
+.tl-points code { font-family: var(--mono); font-size: 12px; background: var(--bg); padding: 1px 5px; border-radius: 5px; }
