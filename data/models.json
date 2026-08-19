@@ -2,7 +2,7 @@
   "meta": {
     "name": "MaaS 模型排行 · 数据快照",
     "updated": "2026-08-19",
-    "note": "榜单数据自动更新：中文能力/价格来自 SuperCLUE（2026年7月 测评，自动抓取）；未抓取到的字段保留上次快照。",
+    "note": "榜单数据自动更新：Elo 来自 LMArena（HuggingFace 数据集，自动抓取）；中文能力/价格来自 SuperCLUE（2026年7月 测评，自动抓取）；未抓取到的字段保留上次快照。",
     "exchangeRate": 7.2,
     "sources": [
       {
@@ -21,7 +21,7 @@
         "desc": "OpenAI / Anthropic / Google / DeepSeek / 阿里云 / 智谱 / 月之暗面 / 字节 等官方 API 定价"
       }
     ],
-    "lastAutoUpdate": "2026-08-19 14:06:03"
+    "lastAutoUpdate": "2026-08-19 10:05:11"
   },
   "models": [
     {
@@ -175,7 +175,7 @@
       "region": "china",
       "desc": "开源权重，智能体与工具调用能力强",
       "release": "2026-07",
-      "elo": 1466,
+      "elo": 1465,
       "superclue": 63.27,
       "priceIn": 8.0,
       "priceOut": 28.0,
@@ -263,14 +263,13 @@
       "region": "china",
       "desc": "开源旗舰，性价比之王，1M 上下文",
       "release": "2026-07",
-      "elo": 1350,
+      "elo": 1451,
       "superclue": 70.1,
       "priceIn": 3.0,
       "priceOut": 6.0,
       "context": 1000000,
       "speed": 120,
       "est": {
-        "elo": true,
         "speed": true
       }
     },
@@ -282,14 +281,13 @@
       "region": "china",
       "desc": "最便宜的高可用模型之一",
       "release": "2026-07",
-      "elo": 1300,
+      "elo": 1431,
       "superclue": 65.6,
       "priceIn": 1.0,
       "priceOut": 2.0,
       "context": 1000000,
       "speed": 180,
       "est": {
-        "elo": true,
         "speed": true
       }
     },
@@ -320,14 +318,13 @@
       "region": "china",
       "desc": "腾讯开源旗舰，数学推理表现亮眼",
       "release": "2026-07",
-      "elo": 1380,
+      "elo": 1441,
       "superclue": 62.13,
       "priceIn": 1.0,
       "priceOut": 4.0,
       "context": 256000,
       "speed": 90,
       "est": {
-        "elo": true,
         "speed": true
       }
     },
@@ -339,14 +336,13 @@
       "region": "china",
       "desc": "开源权重，SWE-bench 高分性价比选择",
       "release": "2026-05",
-      "elo": 1390,
+      "elo": 1435,
       "superclue": 56.9,
       "priceIn": 2.1,
       "priceOut": 8.4,
       "context": 1000000,
       "speed": 120,
       "est": {
-        "elo": true,
         "speed": true
       }
     },
@@ -358,14 +354,13 @@
       "region": "overseas",
       "desc": "长上下文与实时信息能力",
       "release": "2026-06",
-      "elo": 1430,
+      "elo": 1451,
       "superclue": 68.0,
       "priceIn": 2.0,
       "priceOut": 6.0,
       "context": 500000,
       "speed": 100,
       "est": {
-        "elo": true,
         "superclue": true,
         "speed": true
       }
@@ -378,14 +373,13 @@
       "region": "overseas",
       "desc": "开放权重阵营标杆，1M 上下文",
       "release": "2025-04",
-      "elo": 1340,
+      "elo": 1288,
       "superclue": 62.0,
       "priceIn": 0.27,
       "priceOut": 0.85,
       "context": 1000000,
       "speed": 90,
       "est": {
-        "elo": true,
         "superclue": true,
         "speed": true
       }
