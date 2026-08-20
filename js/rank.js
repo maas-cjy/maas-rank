@@ -1,9 +1,14 @@
 /* 排行榜页逻辑 */
+  /* eslint-disable no-var */
 (function () {
   'use strict';
   var R = window.MRank;
 
-  var state = { key: 'elo', dir: -1, showAll: false, query: '' };
+  // 全维度筛选状态：state.filters. providers / regions / opens 都是字符串数组（多选）
+  var state = {
+    key: 'elo', dir: -1, showAll: false, query: '',
+    filters: { providers: [], regions: [], opens: [] }
+  };
   var PAGE = 50;
   var chart = null;
 
@@ -40,6 +45,21 @@
     return v == null ? (state.dir === 1 ? Infinity : -Infinity) : v;
   }
 
+  function applyFilters(list) {
+    var f = state.filters;
+    if (!f.providers.length && !f.regions.length && !f.opens.length) return list;
+    return list.filter(function (m) {
+      if (f.providers.length && f.providers.indexOf(m.provider) === -1) return false;
+      if (f.regions.length && f.regions.indexOf(m.region) === -1) return false;
+      if (f.opens.length) {
+        var want = f.opens.indexOf('open') !== -1;
+        if (want && !m.open) return false;
+        if (!want && m.open) return false;
+      }
+      return true;
+    });
+  }
+
   function ranked() {
     var t = TAB[state.key];
     var list = R.getModels().slice().sort(function (a, b) {
@@ -48,9 +68,9 @@
     return list;
   }
 
-  /* 按搜索词过滤（模型名 / 厂商 / id），返回全部匹配 */
+  /* 按筛选 chip 与搜索词过滤（chip 优先，再叠加搜索词） */
   function filtered() {
-    var list = ranked();
+    var list = applyFilters(ranked());
     var q = state.query.trim().toLowerCase();
     if (!q) return list;
     return list.filter(function (m) {
@@ -172,6 +192,238 @@
     renderChart();
   }
 
+  /* ============== Hero 区扩展（Top 3 / 本周变化 / 关键冠军 / 筛选 chip） ============== */
+  var PROVIDER_ORDER = ['OpenAI', 'Anthropic', 'Google', 'xAI', 'DeepSeek', '阿里云', '字节跳动',
+                        '月之暗面', 'MiniMax', '智谱', '腾讯', '百度', 'Meta', 'Mistral AI', 'NVIDIA',
+                        'Amazon', '零一万物', '阶跃星辰', '小米', '美团'];
+  var REGION_OPTIONS = [
+    { v: 'china', label: '国产' }, { v: 'overseas', label: '海外' }
+  ];
+  var OPEN_OPTIONS = [
+    { v: 'open', label: '开源' }, { v: 'closed', label: '闭源' }
+  ];
+
+  function renderTop3() {
+    var list = R.getModels().slice()
+      .sort(function (a, b) { return (b.elo || 0) - (a.elo || 0); })
+      .slice(0, 3);
+    var meta = list.length ? '快照 ' + R.getMeta().updated : '暂无数据';
+    document.getElementById('top3Meta').textContent = meta;
+    var grid = document.getElementById('top3Grid');
+    grid.innerHTML = list.map(function (m, i) {
+      var rank = i + 1, rcls = 'r' + rank;
+      return '<a class="top3-item ' + rcls + '" href="model.html?id=' + R.esc(m.id) + '">'
+        + '<div class="top3-medal">' + rank + '</div>'
+        + '<div class="top3-info">'
+        +   '<div class="top3-rank">NO.' + rank + '</div>'
+        +   '<div class="top3-name">' + R.esc(m.name) + '</div>'
+        +   '<div class="top3-meta">' + R.esc(m.provider || '–') + ' · ' + R.esc(R.regionName(m.region)) + '</div>'
+        + '</div>'
+        + '<div class="top3-elo">' + (m.elo || '–') + '<small>Elo</small></div>'
+        + '</a>';
+    }).join('');
+  }
+
+  /* 「关键冠军 4 卡片」：竞技场 Elo / 中文能力 / 输入价最低 / 上下文最大 */
+  function renderKpi() {
+    var models = R.getModels();
+    var pickBy = function (key, dir) {
+      return models.filter(function (m) { return m[key] != null; })
+        .reduce(function (best, m) {
+          if (!best) return m;
+          return dir > 0 ? (m[key] < best[key] ? m : best) : (m[key] > best[key] ? m : best);
+        }, null);
+    };
+    var fmtPrice = function (v) { return v == null ? '–' : '¥' + v.toFixed(2); };
+    var fmtCtx = function (v) {
+      if (v == null) return '–';
+      if (v >= 10000) return (v / 10000).toFixed(0) + '万';
+      return v.toLocaleString('zh-CN');
+    };
+    var cards = [
+      { label: '竞技场 Elo 第一',   pick: pickBy('elo', -1),       val: function (m) { return m.elo; },       unit: 'Elo',     tab: 'elo' },
+      { label: '中文能力第一',        pick: pickBy('superclue', -1), val: function (m) { return m.superclue; }, unit: '分',      tab: 'superclue' },
+      { label: '输入价最低',         pick: pickBy('priceIn', 1),   val: function (m) { return fmtPrice(m.priceIn); }, unit: '/ 百万tok', tab: 'priceIn' },
+      { label: '上下文最长',         pick: pickBy('context', -1),  val: function (m) { return fmtCtx(m.context); }, unit: 'tokens', tab: 'context' }
+    ];
+    var grid = document.getElementById('kpiSection');
+    grid.innerHTML = cards.map(function (c) {
+      if (!c.pick) return '';
+      var m = c.pick, v = c.val(m);
+      return '<div class="card kpi-card kpi" data-tab="' + c.tab + '">'
+        + '<a href="model.html?id=' + R.esc(m.id) + '">'
+        + '<div class="kpi-label">' + c.label + '</div>'
+        + '<div class="kpi-num">' + (typeof v === 'number' ? v : R.esc(String(v))) + '<span class="kpi-unit"> ' + c.unit + '</span></div>'
+        + '<div class="kpi-name">' + R.esc(m.name) + '</div>'
+        + '<div class="kpi-sub">' + R.esc(m.provider || '–') + ' · ' + R.esc(R.regionName(m.region)) + '</div>'
+        + '</a></div>';
+    }).join('');
+    /* KPI 卡片点击：跳转到对应排序 tab（用 hash 锚点 + 自定义事件切换 tab） */
+    grid.querySelectorAll('[data-tab]').forEach(function (el) {
+      el.addEventListener('click', function (e) {
+        if (e.target.closest('a')) return;
+        e.preventDefault();
+        var k = el.dataset.tab;
+        if (TAB[k]) setTab(k);
+        var tbl = document.getElementById('rankTable');
+        if (tbl) tbl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  }
+
+  /* 多维筛选 chip：按厂商 / 产地 / 授权 过滤 */
+  function renderFilters() {
+    var models = R.getModels();
+    /* 厂商：取全量数据中出现 ≥ 2 次的，并按 PROVIDER_ORDER 优先级排序 */
+    var counts = {};
+    models.forEach(function (m) {
+      if (m.provider) counts[m.provider] = (counts[m.provider] || 0) + 1;
+    });
+    var providers = Object.keys(counts).filter(function (p) { return counts[p] >= 2; });
+    providers.sort(function (a, b) {
+      var ai = PROVIDER_ORDER.indexOf(a), bi = PROVIDER_ORDER.indexOf(b);
+      if (ai === -1 && bi === -1) return b.length - a.length;
+      if (ai === -1) return 1;
+      if (bi === -1) return -1;
+      return ai - bi;
+    });
+    document.getElementById('filterProviders').innerHTML =
+      providers.map(function (p) {
+        return '<button class="filter-chip" data-type="provider" data-val="' + R.esc(p) + '">'
+          + R.esc(p) + ' <small style="opacity:.6">' + counts[p] + '</small></button>';
+      }).join('');
+    document.getElementById('filterRegions').innerHTML =
+      REGION_OPTIONS.map(function (r) {
+        return '<button class="filter-chip" data-type="region" data-val="' + r.v + '">'
+          + r.label + '</button>';
+      }).join('');
+    document.getElementById('filterOpens').innerHTML =
+      OPEN_OPTIONS.map(function (r) {
+        return '<button class="filter-chip" data-type="open" data-val="' + r.v + '">'
+          + r.label + '</button>';
+      }).join('');
+
+    /* 「N 个匹配 / 共 N 个」指示器 + 清除按钮 */
+    var bar = document.getElementById('filterSection');
+    if (!bar.querySelector('.filter-meta')) {
+      var meta = document.createElement('span');
+      meta.className = 'filter-meta';
+      meta.innerHTML = '<span id="filterMetaText">已显示全部 332 个</span>'
+        + '<button id="clearFilters" type="button" hidden>清除筛选</button>';
+      bar.appendChild(meta);
+    }
+  }
+
+  function applyFiltersUI() {
+    var chips = document.querySelectorAll('.filter-chip');
+    chips.forEach(function (c) {
+      var t = c.dataset.type, v = c.dataset.val;
+      var arr = state.filters[t === 'provider' ? 'providers' : t === 'region' ? 'regions' : 'opens'];
+      c.classList.toggle('on', arr.indexOf(v) !== -1);
+    });
+    var matched = filtered().length;
+    var total = R.getModels().length;
+    var metaText = document.getElementById('filterMetaText');
+    var clearBtn = document.getElementById('clearFilters');
+    if (metaText) {
+      metaText.textContent = matched === total
+        ? '已显示全部 ' + total + ' 个'
+        : '已筛选为 ' + matched + ' / ' + total + ' 个';
+    }
+    if (clearBtn) clearBtn.hidden = (state.filters.providers.length === 0
+      && state.filters.regions.length === 0 && state.filters.opens.length === 0);
+  }
+
+  function toggleFilter(type, val) {
+    var key = type === 'provider' ? 'providers' : type === 'region' ? 'regions' : 'opens';
+    var arr = state.filters[key];
+    var idx = arr.indexOf(val);
+    if (idx === -1) arr.push(val); else arr.splice(idx, 1);
+    applyFiltersUI();
+    renderTable();
+    renderChart();
+  }
+
+  function clearFilters() {
+    state.filters = { providers: [], regions: [], opens: [] };
+    applyFiltersUI();
+    renderTable();
+    renderChart();
+  }
+
+  function renderWeekly(prev) {
+    var grid = document.getElementById('weeklyGrid');
+    var subEl = document.getElementById('weeklySub');
+    var rangeEl = document.getElementById('weeklyRange');
+    if (!prev || !prev.models || !prev.date) {
+      grid.innerHTML = '<div class="weekly-empty" style="grid-column: 1 / -1;">本周首次同步 LMArena 全量榜单，<b>下周一开始记录周对比</b>。</div>';
+      if (subEl) subEl.textContent = '本次扩容覆盖全量 LMArena 模型，未有历史周对比数据。';
+      return;
+    }
+    var cur = R.getModels();
+    var curMap = {}; cur.forEach(function (m) { curMap[m.id] = m; });
+    var prevMap = {}; prev.models.forEach(function (m) { prevMap[m.id] = m; });
+
+    var upList = [], newList = [], downList = [], outList = [];
+    cur.forEach(function (m) {
+      var prevM = prevMap[m.id];
+      if (!prevM) {
+        newList.push(m);
+        return;
+      }
+      var dElo = (m.elo || 0) - (prevM.elo || 0);
+      if (dElo >= 1) upList.push({ m: m, d: dElo });
+      else if (dElo <= -1) downList.push({ m: m, d: dElo });
+    });
+    Object.keys(prevMap).forEach(function (id) {
+      if (!curMap[id]) outList.push(prevMap[id]);
+    });
+    upList.sort(function (a, b) { return b.d - a.d; });
+    downList.sort(function (a, b) { return a.d - b.d; });
+    newList.sort(function (a, b) { return (b.elo || 0) - (a.elo || 0); });
+    outList.sort(function (a, b) { return (b.elo || 0) - (a.elo || 0); });
+
+    var today = R.getMeta().updated || '';
+    if (rangeEl) rangeEl.textContent = prev.date + ' → ' + today;
+
+    var renderList = function (ulId, items, kind) {
+      var ul = document.getElementById(ulId);
+      if (!items.length) {
+        ul.innerHTML = '<li class="weekly-empty" style="border:none;padding:8px 0">暂无</li>';
+        return;
+      }
+      ul.innerHTML = items.slice(0, 5).map(function (it) {
+        var m = it.m || it;
+        var d = it.d != null ? it.d : null;
+        var dStr = d == null ? ''
+          : (kind === 'up'   ? '+' + d
+            : kind === 'down' ? d
+            : kind === 'new'  ? '+新'
+            : '');
+        return '<li>'
+          + '<span class="wk-name"><a href="model.html?id=' + R.esc(m.id) + '">' + R.esc(m.name) + '</a>'
+          + '<small>' + R.esc(m.provider || '') + '</small></span>'
+          + (dStr ? '<span class="wk-delta">' + dStr + (kind === 'new' || kind === 'out' ? '' : ' Elo') + '</span>' : '')
+          + '</li>';
+      }).join('');
+    };
+
+    if (subEl) {
+      var totalChanges = upList.length + downList.length + newList.length + outList.length;
+      subEl.textContent = totalChanges === 0
+        ? '本周数据无变化（首次部署 vs 上周快照）'
+        : '对比 ' + prev.date + ' 快照：' + upList.length + ' 涨 / ' + downList.length + ' 跌 / ' + newList.length + ' 新进 / ' + outList.length + ' 退出。';
+    }
+
+    renderList('weeklyUp', upList, 'up');
+    renderList('weeklyNew', newList, 'new');
+    renderList('weeklyDown', downList.length ? downList : outList, downList.length ? 'down' : 'out');
+    /* 退出模型用同一卡片展示：当 downList 为空但有 outList，标题改为「退出模型」 */
+    if (downList.length === 0 && outList.length) {
+      document.querySelector('#weeklySection .weekly-cell:nth-child(3) h3').textContent = '退出模型 Top 5';
+    }
+  }
+
   function init() {
     document.getElementById('tabs').addEventListener('click', function (e) {
       var btn = e.target.closest('.tab');
@@ -194,6 +446,14 @@
       state.query = e.target.value;
       renderTable();
       renderChart();
+      applyFiltersUI();
+    });
+    /* 筛选 chip 事件委托：点击切换 */
+    document.getElementById('filterSection').addEventListener('click', function (e) {
+      var chip = e.target.closest('.filter-chip');
+      if (chip) toggleFilter(chip.dataset.type, chip.dataset.val);
+      var clear = e.target.closest('#clearFilters');
+      if (clear) clearFilters();
     });
     document.querySelectorAll('#rankTable thead th[data-key]').forEach(function (th) {
       th.addEventListener('click', function () {
@@ -207,6 +467,16 @@
       });
     });
     window.addEventListener('resize', function () { if (chart) chart.resize(); });
+
+    /* Hero 区渲染（不依赖搜索/筛选） */
+    renderTop3();
+    renderKpi();
+    renderFilters();
+    applyFiltersUI();
+    fetch('data/prev.json', { cache: 'no-cache' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (data) { renderWeekly(data); })
+      .catch(function () { renderWeekly(null); });
   }
 
   R.loadData().then(function () {

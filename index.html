@@ -56,6 +56,53 @@
     </div>
   </section>
 
+  <!-- 1) 本周竞技场 Top 3（大卡片高视觉重量） -->
+  <section class="card top3-card" id="top3Section">
+    <h2>本周竞技场 Top 3</h2>
+    <p class="sub">LMArena 人类偏好分数最高 · <span id="top3Meta">载入中…</span> · <a href="#rankTable">查看完整榜单 →</a></p>
+    <div class="top3-grid" id="top3Grid"></div>
+  </section>
+
+  <!-- 2) 本周榜单变化摘要 -->
+  <section class="card weekly-card" id="weeklySection">
+    <h2>本周榜单变化 <span class="dim" id="weeklyRange">–</span></h2>
+    <p class="sub" id="weeklySub">对比上周快照数据。</p>
+    <div class="weekly-grid" id="weeklyGrid">
+      <div class="weekly-cell">
+        <h3>涨幅 Top 5</h3>
+        <ol class="weekly-list weekly-up-list" id="weeklyUp"></ol>
+      </div>
+      <div class="weekly-cell">
+        <h3>新进模型 Top 5</h3>
+        <ol class="weekly-list weekly-new-list" id="weeklyNew"></ol>
+      </div>
+      <div class="weekly-cell">
+        <h3>退出模型 Top 5</h3>
+        <ol class="weekly-list weekly-down-list" id="weeklyDown"></ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3) 关键冠军 4 卡片 -->
+  <section class="kpi-grid" id="kpiSection"></section>
+
+  <!-- 4) 多维筛选 chip（厂商 / 产地 / 授权） -->
+  <section class="filter-bar" id="filterSection">
+    <span class="filter-label">快速筛选</span>
+    <div class="filter-group">
+      <span class="filter-title">厂商</span>
+      <span class="filter-row" id="filterProviders"></span>
+    </div>
+    <div class="filter-group">
+      <span class="filter-title">产地</span>
+      <span class="filter-row" id="filterRegions"></span>
+    </div>
+    <div class="filter-group">
+      <span class="filter-title">授权</span>
+      <span class="filter-row" id="filterOpens"></span>
+    </div>
+  </section>
+
   <section class="tabs" id="tabs">
     <button class="tab active" data-key="elo">竞技场 Elo</button>
     <button class="tab" data-key="superclue">中文能力</button>

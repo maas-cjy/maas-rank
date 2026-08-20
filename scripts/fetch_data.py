@@ -553,6 +553,15 @@ def main() -> int:
     log(f"✓ 已写入 {data_path}")
     log(f"✓ 已写入变更摘要 {DIFF_FILE}")
 
+    # 上周快照（用于首页「本周榜单变化」摘要卡片做对比）
+    prev_path = ROOT / "data" / "prev.json"
+    prev_tmp = prev_path.with_suffix(".json.tmp")
+    with open(prev_tmp, "w", encoding="utf-8") as f:
+        json.dump({"date": prev_snapshot["date"], "models": prev_snapshot["models"]},
+                  f, ensure_ascii=False, indent=2)
+    prev_tmp.replace(prev_path)
+    log(f"✓ 已保存上周快照 {prev_path}（{len(prev_snapshot['models'])} 个模型）")
+
     # 历史快照归档：仅当数据确有变化时，把「更新前」的榜单写入 history.json，
     # 供榜单变化周报页对比展示。同一天重复更新则覆盖最后一条，避免堆积重复快照。
     if changes:
