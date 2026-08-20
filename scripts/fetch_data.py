@@ -127,21 +127,22 @@ def to_num(v) -> float | None:
 # ---------------------------------------------------------------------------
 # 1. LMArena Elo —— HuggingFace datasets-server
 # ---------------------------------------------------------------------------
-def fetch_lmarena() -> dict[str, float]:
-    """返回 {模型名(小写): elo}；失败返回 {}。"""
+def fetch_lmarena() -> tuple[dict[str, float], list[dict]]:
+    """返回 (elo_map: {模型名小写: elo}, rows: 全量原始行)。失败返回 ({}, [])。"""
     log("→ 抓取 LMArena Elo (HuggingFace lmarena-ai/leaderboard-dataset)")
     dataset = "lmarena-ai/leaderboard-dataset"
     out: dict[str, float] = {}
+    rows: list[dict] = []
     try:
         offset, page_size = 0, 100
         while True:
             url = hf_rows_url(dataset, "text", "latest", offset, page_size)
             raw = http_get(url)
             data = json.loads(raw)
-            rows = data.get("rows", [])
-            if not rows:
+            page = data.get("rows", [])
+            if not page:
                 break
-            for row in rows:
+            for row in page:
                 f = row.get("row", {})
                 category = str(f.get("category", "")).lower()
                 if category and category != "overall":
@@ -149,15 +150,22 @@ def fetch_lmarena() -> dict[str, float]:
                 name = f.get("model_name") or f.get("model") or f.get("name")
                 rating = to_num(f.get("rating") if f.get("rating") is not None else f.get("score"))
                 if name and rating is not None:
-                    out[str(name).lower().strip()] = rating
-            offset += len(rows)
-            if len(rows) < page_size:
+                    key = str(name).lower().strip()
+                    out[key] = rating
+                    rows.append({
+                        "name": key,
+                        "org": str(f.get("organization") or "").strip(),
+                        "license": str(f.get("license") or "").strip(),
+                        "rating": rating,
+                    })
+            offset += len(page)
+            if len(page) < page_size:
                 break
     except Exception as e:  # noqa: BLE001
         log(f"  ✗ LMArena 抓取失败：{e}（保留旧 Elo）")
-        return {}
-    log(f"  ✓ 拿到 {len(out)} 个模型的 Elo")
-    return out
+        return {}, []
+    log(f"  ✓ 拿到 {len(out)} 个模型的 Elo（overall 分类）")
+    return out, rows
 
 
 # ---------------------------------------------------------------------------
@@ -274,6 +282,92 @@ def fetch_superclue() -> tuple[dict[str, float], dict[str, dict], str]:
 # ---------------------------------------------------------------------------
 # 合并
 # ---------------------------------------------------------------------------
+# LMArena organization -> 厂商显示名；中国厂商集合（用于区域徽章）
+ORG_NAMES = {
+    "anthropic": "Anthropic", "openai": "OpenAI", "google": "Google",
+    "alibaba": "阿里云", "meta": "Meta", "xai": "xAI", "deepseek": "DeepSeek",
+    "zai": "智谱", "zhipu": "智谱", "baidu": "百度", "moonshot": "月之暗面",
+    "xiaomi": "小米", "bytedance": "字节跳动", "minimax": "MiniMax",
+    "mistral": "Mistral AI", "nvidia": "NVIDIA", "tencent": "腾讯",
+    "meituan": "美团", "amazon": "Amazon", "thinky": "Thinky",
+    "01-ai": "零一万物", "stepfun": "阶跃星辰",
+}
+CN_ORGS = {"alibaba", "deepseek", "zai", "zhipu", "baidu", "moonshot", "xiaomi",
+           "bytedance", "minimax", "tencent", "meituan", "01-ai", "stepfun"}
+
+# 专有名词段 -> 规范大小写（用于生成新模型展示名）
+PROPER_NOUNS = {
+    "claude": "Claude", "opus": "Opus", "sonnet": "Sonnet", "haiku": "Haiku",
+    "gpt": "GPT", "chatgpt": "ChatGPT", "gemini": "Gemini", "gemma": "Gemma",
+    "qwen": "Qwen", "deepseek": "DeepSeek", "kimi": "Kimi", "glm": "GLM",
+    "grok": "Grok", "llama": "Llama", "mistral": "Mistral", "minimax": "MiniMax",
+    "ernie": "ERNIE", "mimo": "MiMo", "doubao": "Doubao", "hunyuan": "混元",
+    "hy": "混元", "nova": "Nova", "nemotron": "Nemotron", "muse": "Muse",
+    "spark": "Spark", "longcat": "LongCat", "nvidia": "NVIDIA", "moonshot": "Moonshot",
+    "xai": "xAI", "openai": "OpenAI", "amazon": "Amazon", "gemma": "Gemma",
+}
+
+# LMArena 模型名的「档位/状态/快照」剥离规则（用于家族归并：同一模型的
+# -high/-max/-thinking/-preview/日期快照等变体合并为一个条目，取 Elo 最高者）
+STRIP_RE = [
+    re.compile(r"\s*\([^)]*\)"),        # gemini-3-flash (thinking-minimal)（连同前导空格）
+    re.compile(r"-\d{8}"),              # 20251101 日期快照
+    re.compile(r"-\d{2}-\d{2}-\d{2}"),  # 26-02-10 日期快照（三位，须先于 MM-DD 规则）
+    re.compile(r"-\d{2}-\d{2}$"),       # 12-10 日期快照（两位 MM-DD，锚定结尾避免误伤版本号）
+    re.compile(r"-\d{4}"),              # 0110 / 2507 月日快照
+    re.compile(r"-\d{1,3}k"),           # -32k 上下文档位
+    re.compile(r"-latest"),
+    re.compile(r"-(?:high|xhigh|max|medium|lite|low|thinking|reasoning|preview|beta\d*|exp)(?=-|$)"),
+]
+
+
+def normalize_family(name: str) -> str:
+    """把 LMArena 模型名归并到「家族主干」：循环剥离档位/状态/日期快照后缀。"""
+    key = str(name).lower().strip()
+    for _ in range(6):
+        new = key
+        for rx in STRIP_RE:
+            new = rx.sub("", new)
+        new = re.sub(r"-+", "-", new).strip("- ").strip()
+        if new == key:
+            break
+        key = new
+    return key
+
+
+def pretty_name(key: str) -> str:
+    """家族主干 -> 展示名：claude-opus-5 -> Claude Opus 5；claude-opus-4-6 -> Claude Opus 4.6。"""
+    # 把 "4-6" 这类版本号断句合并为 "4.6"，但避免误伤 "4-31b" 等参数量命名
+    text = re.sub(r"(\d+)-(\d+)(?!\w)", r"\1.\2", key)
+    parts = [p for p in text.split("-") if p]
+    out = []
+    for p in parts:
+        if p in PROPER_NOUNS:
+            out.append(PROPER_NOUNS[p])
+        elif p[:1].isdigit():
+            out.append(p)
+        else:
+            out.append(p[:1].upper() + p[1:])
+    return " ".join(out)
+
+
+def merge_families(rows: list[dict]) -> dict[str, dict]:
+    """家族归并：同一家族保留 Elo 最高的条目（附带 org/license/展示名）。"""
+    fam: dict[str, dict] = {}
+    for r in rows:
+        key = normalize_family(r["name"])
+        cur = fam.get(key)
+        if cur is None or r["rating"] > cur["rating"]:
+            fam[key] = {
+                "name": key,
+                "display": pretty_name(key),
+                "org": r["org"],
+                "license": r["license"],
+                "rating": r["rating"],
+            }
+    return fam
+
+
 def match_model(src_name: str, mid: str) -> bool:
     """判断数据源模型名是否对应 models.json 中的 id。"""
     n = src_name.lower()
@@ -283,8 +377,9 @@ def match_model(src_name: str, mid: str) -> bool:
     return False
 
 
-def apply_updates(models, elo_map, scores, prices) -> list[str]:
+def apply_updates(models, elo_map, families, scores, prices) -> tuple[list[str], set[str]]:
     changed: list[str] = []
+    covered: set[str] = set()  # 已被现有模型消费的家族键（避免重复新增）
     n_elo = n_sc = n_price = 0
     for m in models:
         mid = m["id"]
@@ -299,7 +394,20 @@ def apply_updates(models, elo_map, scores, prices) -> list[str]:
                     changed.append(f"{mid}.elo {old}→{new_v}")
                 m.get("est", {}).pop("elo", None)
                 hit = True
+                covered.add(normalize_family(src_name))
                 break
+        if not hit:
+            # 未走别名时，尝试家族键直接匹配（全量同步新增的条目 id 即家族主干）
+            fam = families.get(mid)
+            if fam:
+                new_v = round(fam["rating"])
+                old = m.get("elo")
+                if old != new_v:
+                    m["elo"] = new_v
+                    changed.append(f"{mid}.elo {old}→{new_v}")
+                m.get("est", {}).pop("elo", None)
+                hit = True
+                covered.add(mid)
         if hit:
             n_elo += 1
 
@@ -346,7 +454,30 @@ def apply_updates(models, elo_map, scores, prices) -> list[str]:
             log(f"    - {c}")
     else:
         log("  数据无变化")
-    return changed
+    return changed, covered
+
+
+def sync_new_models(models: list[dict], families: dict[str, dict], covered: set[str]) -> int:
+    """把 LMArena 上有、但 models.json 未收录的模型家族追加为条目。返回新增数。"""
+    existing = {m["id"] for m in models}
+    added = 0
+    for key, fam in families.items():
+        if key in covered or key in existing:
+            continue
+        org = fam["org"]
+        provider = ORG_NAMES.get(org) or (org.title() if org else "其他")
+        elo = round(fam["rating"])
+        models.append({
+            "id": key,
+            "name": fam["display"],
+            "provider": provider,
+            "region": "china" if org in CN_ORGS else "overseas",
+            "open": bool(fam["license"] and fam["license"].lower() != "proprietary"),
+            "elo": elo,
+            "desc": f"来自 {provider} 的模型，竞技场 Elo {elo} 分。数据每周自动更新。",
+        })
+        added += 1
+    return added
 
 
 def main() -> int:
@@ -367,8 +498,9 @@ def main() -> int:
     diff = {"updated": today, "sources": {}, "changes": []}
 
     # 1) LMArena
-    elo_map = fetch_lmarena()
+    elo_map, lm_rows = fetch_lmarena()
     diff["sources"]["lmarena"] = {"ok": bool(elo_map), "count": len(elo_map)}
+    families = merge_families(lm_rows)
 
     # 2/3) SuperCLUE
     sc_scores, sc_prices, used_date = fetch_superclue()
@@ -386,7 +518,14 @@ def main() -> int:
             for m in data["models"]
         ],
     }
-    changes = apply_updates(data["models"], elo_map, sc_scores, sc_prices)
+    changes, covered = apply_updates(data["models"], elo_map, families, sc_scores, sc_prices)
+    n_added = sync_new_models(data["models"], families, covered)
+    if n_added:
+        changes.append(f"+新增 {n_added} 个模型（家族归并后 LMArena 全量同步）")
+        log(f"  ✓ 新增 {n_added} 个模型，当前共 {len(data['models'])} 个")
+    # 按 Elo 降序重排（前端自行排序不受影响，仅便于人工审阅与快照对比）
+    data["models"].sort(
+        key=lambda m: m.get("elo") if m.get("elo") is not None else -1, reverse=True)
     diff["changes"] = changes
 
     # meta 更新（仅当确有数据变化时，避免空跑产生无意义提交）
