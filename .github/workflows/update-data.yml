@@ -71,7 +71,13 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      # update-data 可能已经提交了新的 models.json，因此 deploy-pages 必须显式
+      # checkout main 最新,而不是 workflow run 触发时的固定 commit,否则部署的
+      # 还是旧数据。
       - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
 
       - uses: actions/configure-pages@v5
 
