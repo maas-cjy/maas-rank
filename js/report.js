@@ -235,7 +235,7 @@
   function setSeo(prevDate, curDate, nUp, nDown, nPrice, nAdded, summary) {
     var url = SITE + 'report.html';
     var title = '大模型榜单周报（' + prevDate + ' → ' + curDate + '）：'
-      + nUp + ' 个模型 Elo 上升' + (nPrice ? '、' + nPrice + ' 个调整价格' : '') + ' | 大模型排行榜';
+      + nUp + ' 个模型 Elo 上升' + (nPrice ? '、' + nPrice + ' 个调整价格' : '') + ' | MaaS Rank 大模型排行榜';
     var desc = '本周大模型榜单变化汇总：' + nUp + ' 个模型 Elo 上升、' + nDown + ' 个下降'
       + (nPrice ? '、' + nPrice + ' 个模型调整 API 价格' : '')
       + (nAdded ? '、新增收录 ' + nAdded + ' 个模型' : '')
@@ -257,7 +257,7 @@
       'datePublished': curDate,
       'description': summary,
       'url': url,
-      'publisher': { '@type': 'Organization', 'name': '大模型排行榜' },
+      'publisher': { '@type': 'Organization', 'name': 'MaaS Rank' },
       'inLanguage': 'zh-CN'
     };
     document.getElementById('ldReport').textContent = JSON.stringify(ld);

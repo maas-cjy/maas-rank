@@ -31,7 +31,7 @@
     var url = SITE + 'model.html?id=' + encodeURIComponent(m.id);
     var pIn = m.priceIn == null ? '—' : R.fmtCny(m.priceIn);
     var pOut = m.priceOut == null ? '—' : R.fmtCny(m.priceOut);
-    var title = m.name + '（' + m.provider + '）价格、Elo 排名、上下文长度 | 大模型排行榜';
+    var title = m.name + '（' + m.provider + '）价格、Elo 排名、上下文长度 | MaaS Rank 大模型排行榜';
     var desc = m.name + '（' + m.provider + '）——' + m.desc
       + '。竞技场 Elo ' + (m.elo == null ? '—' : m.elo) + ' 分，SuperCLUE 中文能力 ' + (m.superclue == null ? '—' : m.superclue) + ' 分，'
       + '输入 ' + pIn + ' / 百万 tokens，输出 ' + pOut + ' / 百万 tokens，上下文 ' + R.fmtCtx(m.context) + '，'
