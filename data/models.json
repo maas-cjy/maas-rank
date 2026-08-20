@@ -112,6 +112,24 @@
       "speed": 55
     },
     {
+      "id": "qwen3.7-max",
+      "name": "Qwen3.7-Max",
+      "provider": "阿里巴巴",
+      "open": false,
+      "region": "china",
+      "desc": "闭源旗舰，代码生成接近海外头部",
+      "release": "2026-06",
+      "elo": 1474,
+      "superclue": 70.2,
+      "priceIn": 1.25,
+      "priceOut": 3.75,
+      "context": 1000000,
+      "speed": 95,
+      "est": {
+        "speed": true
+      }
+    },
+    {
       "id": "gpt-5.5",
       "name": "GPT-5.5",
       "provider": "OpenAI",
@@ -238,24 +256,6 @@
       }
     },
     {
-      "id": "qwen3.7-max",
-      "name": "Qwen3.7-Max",
-      "provider": "阿里巴巴",
-      "open": false,
-      "region": "china",
-      "desc": "闭源旗舰，代码生成接近海外头部",
-      "release": "2026-06",
-      "elo": 1474,
-      "superclue": 70.2,
-      "priceIn": 1.25,
-      "priceOut": 3.75,
-      "context": 1000000,
-      "speed": 95,
-      "est": {
-        "speed": true
-      }
-    },
-    {
       "id": "deepseek-v4-pro",
       "name": "DeepSeek V4 Pro",
       "provider": "深度求索",
@@ -274,39 +274,21 @@
       }
     },
     {
-      "id": "deepseek-v4-flash",
-      "name": "DeepSeek V4 Flash",
-      "provider": "深度求索",
-      "open": true,
-      "region": "china",
-      "desc": "最便宜的高可用模型之一",
-      "release": "2026-07",
-      "elo": 1431,
-      "superclue": 65.6,
-      "priceIn": 1.0,
-      "priceOut": 2.0,
-      "context": 1000000,
-      "speed": 180,
-      "est": {
-        "speed": true
-      }
-    },
-    {
-      "id": "doubao-seed-2.1-pro",
-      "name": "Doubao Seed 2.1 Pro",
-      "provider": "字节跳动",
+      "id": "grok-4.5",
+      "name": "Grok 4.5",
+      "provider": "xAI",
       "open": false,
-      "region": "china",
-      "desc": "豆包大模型旗舰，多模态能力均衡",
-      "release": "2026-08",
-      "elo": 1410,
-      "superclue": 65.94,
-      "priceIn": 6.0,
-      "priceOut": 30.0,
-      "context": 1000000,
-      "speed": 130,
+      "region": "overseas",
+      "desc": "长上下文与实时信息能力",
+      "release": "2026-06",
+      "elo": 1451,
+      "superclue": 68.0,
+      "priceIn": 2.0,
+      "priceOut": 6.0,
+      "context": 500000,
+      "speed": 100,
       "est": {
-        "elo": true,
+        "superclue": true,
         "speed": true
       }
     },
@@ -347,21 +329,39 @@
       }
     },
     {
-      "id": "grok-4.5",
-      "name": "Grok 4.5",
-      "provider": "xAI",
-      "open": false,
-      "region": "overseas",
-      "desc": "长上下文与实时信息能力",
-      "release": "2026-06",
-      "elo": 1451,
-      "superclue": 68.0,
-      "priceIn": 2.0,
-      "priceOut": 6.0,
-      "context": 500000,
-      "speed": 100,
+      "id": "deepseek-v4-flash",
+      "name": "DeepSeek V4 Flash",
+      "provider": "深度求索",
+      "open": true,
+      "region": "china",
+      "desc": "最便宜的高可用模型之一",
+      "release": "2026-07",
+      "elo": 1431,
+      "superclue": 65.6,
+      "priceIn": 1.0,
+      "priceOut": 2.0,
+      "context": 1000000,
+      "speed": 180,
       "est": {
-        "superclue": true,
+        "speed": true
+      }
+    },
+    {
+      "id": "doubao-seed-2.1-pro",
+      "name": "Doubao Seed 2.1 Pro",
+      "provider": "字节跳动",
+      "open": false,
+      "region": "china",
+      "desc": "豆包大模型旗舰，多模态能力均衡",
+      "release": "2026-08",
+      "elo": 1410,
+      "superclue": 65.94,
+      "priceIn": 6.0,
+      "priceOut": 30.0,
+      "context": 1000000,
+      "speed": 130,
+      "est": {
+        "elo": true,
         "speed": true
       }
     },
