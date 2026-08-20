@@ -108,4 +108,16 @@
     dims: dims,
     qs: qs
   };
+
+  /* 移动端导航展开/收起 */
+  document.addEventListener('DOMContentLoaded', function () {
+    const nav = document.querySelector('.nav');
+    const toggle = document.querySelector('.nav-toggle');
+    if (!toggle || !nav) return;
+    toggle.addEventListener('click', function () {
+      const open = nav.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.textContent = open ? '✕' : '☰';
+    });
+  });
 })();
