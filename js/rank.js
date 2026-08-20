@@ -3,7 +3,8 @@
   'use strict';
   var R = window.MRank;
 
-  var state = { key: 'elo', dir: -1 };
+  var state = { key: 'elo', dir: -1, showAll: false, query: '' };
+  var PAGE = 50;
   var chart = null;
 
   var TAB = {
@@ -47,14 +48,39 @@
     return list;
   }
 
+  /* 按搜索词过滤（模型名 / 厂商 / id），返回全部匹配 */
+  function filtered() {
+    var list = ranked();
+    var q = state.query.trim().toLowerCase();
+    if (!q) return list;
+    return list.filter(function (m) {
+      return (m.name || '').toLowerCase().indexOf(q) !== -1
+        || (m.provider || '').toLowerCase().indexOf(q) !== -1
+        || (m.id || '').toLowerCase().indexOf(q) !== -1;
+    });
+  }
+
+  /* 无搜索词时默认只显示前 PAGE 条，直到点击「显示全部」 */
+  function visible() {
+    var list = filtered();
+    if (!state.query && !state.showAll && list.length > PAGE) {
+      return list.slice(0, PAGE);
+    }
+    return list;
+  }
+
   function rankClass(i) {
     return i === 0 ? 'r1' : i === 1 ? 'r2' : i === 2 ? 'r3' : '';
   }
 
   function renderTable() {
     var t = TAB[state.key];
-    var list = ranked();
+    var all = filtered();
+    var list = visible();
     var html = '';
+    if (!list.length) {
+      html = '<tr><td colspan="9" class="empty">没有匹配的模型，换个关键词试试。</td></tr>';
+    }
     list.forEach(function (m, i) {
       var rank = state.dir === 1 ? '' : '<span class="rank ' + rankClass(i) + '">' + (i + 1) + '</span>';
       var rowCls = i < 3 ? ' class="row-top3"' : '';
@@ -76,13 +102,28 @@
     document.getElementById('tableSub').textContent = t.desc;
     document.getElementById('tableNote').textContent = '注：' + t.note;
     document.getElementById('chartTitle').textContent = 'Top 10 · ' + t.label;
+
+    /* 工具栏状态：搜索词 / 显示全部按钮 */
+    var hint = document.getElementById('matchHint');
+    var btn = document.getElementById('showAllBtn');
+    if (state.query) {
+      hint.textContent = '找到 ' + all.length + ' 个匹配';
+      btn.hidden = true;
+    } else if (all.length > PAGE) {
+      hint.textContent = (state.showAll ? '共 ' : 'Top ' + PAGE + ' · 共 ') + all.length + ' 个模型';
+      btn.hidden = false;
+      btn.textContent = state.showAll ? '收起至 Top ' + PAGE : '显示全部 ' + all.length + ' 个';
+    } else {
+      hint.textContent = '共 ' + all.length + ' 个模型';
+      btn.hidden = true;
+    }
   }
 
   function renderChart() {
     if (typeof echarts === 'undefined') return;
     if (!chart) chart = echarts.init(document.getElementById('chart'));
     var t = TAB[state.key];
-    var list = ranked().slice(0, 10);
+    var list = visible().slice(0, 10);
     var vals = list.map(function (m) { return m[state.key]; });
     var names = list.map(function (m) { return m.name; });
     var colors = list.map(function (_, i) {
@@ -115,6 +156,7 @@
   function setTab(key) {
     state.key = key;
     state.dir = TAB[key].dir;
+    state.showAll = false;
     document.querySelectorAll('.tab').forEach(function (b) {
       b.classList.toggle('active', b.dataset.key === key);
     });
@@ -127,11 +169,22 @@
       var btn = e.target.closest('.tab');
       if (btn) setTab(btn.dataset.key);
     });
+    document.getElementById('showAllBtn').addEventListener('click', function () {
+      state.showAll = !state.showAll;
+      renderTable();
+      renderChart();
+    });
+    document.getElementById('searchBox').addEventListener('input', function (e) {
+      state.query = e.target.value;
+      renderTable();
+      renderChart();
+    });
     document.querySelectorAll('#rankTable thead th[data-key]').forEach(function (th) {
       th.addEventListener('click', function () {
         var k = th.dataset.key;
         if (state.key === k) { state.dir = -state.dir; }
         else { state.key = k; state.dir = TAB[k].dir; }
+        state.showAll = false;
         document.querySelectorAll('.tab').forEach(function (b) { b.classList.toggle('active', b.dataset.key === k); });
         renderTable();
         renderChart();

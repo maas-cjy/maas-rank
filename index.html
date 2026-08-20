@@ -68,6 +68,11 @@
     <div class="card">
       <h2 id="tableTitle">竞技场 Elo 排名</h2>
       <p class="sub" id="tableSub">LMArena 全球人类盲测投票 · 分数越高代表真实用户偏好越强</p>
+      <div class="table-toolbar">
+        <input id="searchBox" type="search" placeholder="搜索模型 / 厂商，如 claude、deepseek、阿里…" autocomplete="off" spellcheck="false">
+        <span class="match-hint" id="matchHint"></span>
+        <button id="showAllBtn" class="show-all" hidden>显示全部</button>
+      </div>
       <div class="table-wrap">
         <table id="rankTable">
           <thead>
