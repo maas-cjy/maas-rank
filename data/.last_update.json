@@ -2,8 +2,8 @@
   "updated": "2026-08-20",
   "sources": {
     "lmarena": {
-      "ok": false,
-      "count": 0
+      "ok": true,
+      "count": 389
     },
     "superclue": {
       "ok": true,
@@ -11,5 +11,7 @@
       "date": "2026年7月"
     }
   },
-  "changes": []
+  "changes": [
+    "+新增 308 个模型（家族归并后 LMArena 全量同步）"
+  ]
 }

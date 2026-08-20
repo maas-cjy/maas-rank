@@ -1,0 +1,173 @@
+{
+  "meta": {
+    "count": 1,
+    "generated": "2026-08-20"
+  },
+  "snapshots": [
+    {
+      "date": "2026-08-19",
+      "models": [
+        {
+          "id": "claude-opus-5",
+          "name": "Claude Opus 5",
+          "elo": 1508,
+          "superclue": 75.0,
+          "priceIn": 5.0,
+          "priceOut": 25.0
+        },
+        {
+          "id": "qwen3.8-max",
+          "name": "Qwen3.8-Max",
+          "elo": 1492,
+          "superclue": 71.48,
+          "priceIn": 12.0,
+          "priceOut": 36.0
+        },
+        {
+          "id": "gemini-3.5-flash",
+          "name": "Gemini 3.5 Flash",
+          "elo": 1482,
+          "superclue": 71.5,
+          "priceIn": 1.5,
+          "priceOut": 9.0
+        },
+        {
+          "id": "gemini-3.1-pro",
+          "name": "Gemini 3.1 Pro",
+          "elo": 1480,
+          "superclue": 75.7,
+          "priceIn": 2.0,
+          "priceOut": 12.0
+        },
+        {
+          "id": "kimi-k3",
+          "name": "Kimi K3",
+          "elo": 1476,
+          "superclue": 70.68,
+          "priceIn": 20.0,
+          "priceOut": 100.0
+        },
+        {
+          "id": "qwen3.7-max",
+          "name": "Qwen3.7-Max",
+          "elo": 1474,
+          "superclue": 70.2,
+          "priceIn": 1.25,
+          "priceOut": 3.75
+        },
+        {
+          "id": "gpt-5.5",
+          "name": "GPT-5.5",
+          "elo": 1471,
+          "superclue": 74.3,
+          "priceIn": 5.0,
+          "priceOut": 30.0
+        },
+        {
+          "id": "gpt-5.4",
+          "name": "GPT-5.4",
+          "elo": 1470,
+          "superclue": 72.0,
+          "priceIn": 2.5,
+          "priceOut": 15.0
+        },
+        {
+          "id": "ernie-5.1",
+          "name": "ERNIE 5.1",
+          "elo": 1468,
+          "superclue": 54.56,
+          "priceIn": 4.0,
+          "priceOut": 18.0
+        },
+        {
+          "id": "glm-5.2",
+          "name": "GLM-5.2",
+          "elo": 1465,
+          "superclue": 63.27,
+          "priceIn": 8.0,
+          "priceOut": 28.0
+        },
+        {
+          "id": "mimo-v2.5-pro",
+          "name": "MiMo V2.5 Pro",
+          "elo": 1465,
+          "superclue": 53.01,
+          "priceIn": 3.0,
+          "priceOut": 6.0
+        },
+        {
+          "id": "claude-opus-4.8",
+          "name": "Claude Opus 4.8",
+          "elo": 1461,
+          "superclue": 73.9,
+          "priceIn": 5.0,
+          "priceOut": 25.0
+        },
+        {
+          "id": "claude-sonnet-4.6",
+          "name": "Claude Sonnet 4.6",
+          "elo": 1458,
+          "superclue": 70.0,
+          "priceIn": 3.0,
+          "priceOut": 15.0
+        },
+        {
+          "id": "deepseek-v4-pro",
+          "name": "DeepSeek V4 Pro",
+          "elo": 1451,
+          "superclue": 70.1,
+          "priceIn": 3.0,
+          "priceOut": 6.0
+        },
+        {
+          "id": "grok-4.5",
+          "name": "Grok 4.5",
+          "elo": 1451,
+          "superclue": 68.0,
+          "priceIn": 2.0,
+          "priceOut": 6.0
+        },
+        {
+          "id": "hunyuan-hy3",
+          "name": "混元 Hy3",
+          "elo": 1441,
+          "superclue": 62.13,
+          "priceIn": 1.0,
+          "priceOut": 4.0
+        },
+        {
+          "id": "minimax-m3",
+          "name": "MiniMax M3",
+          "elo": 1435,
+          "superclue": 56.9,
+          "priceIn": 2.1,
+          "priceOut": 8.4
+        },
+        {
+          "id": "deepseek-v4-flash",
+          "name": "DeepSeek V4 Flash",
+          "elo": 1431,
+          "superclue": 65.6,
+          "priceIn": 1.0,
+          "priceOut": 2.0
+        },
+        {
+          "id": "doubao-seed-2.1-pro",
+          "name": "Doubao Seed 2.1 Pro",
+          "elo": 1410,
+          "superclue": 65.94,
+          "priceIn": 6.0,
+          "priceOut": 30.0
+        },
+        {
+          "id": "llama-4-maverick",
+          "name": "Llama 4 Maverick",
+          "elo": 1288,
+          "superclue": 62.0,
+          "priceIn": 0.27,
+          "priceOut": 0.85
+        }
+      ]
+    }
+  ]
+}
