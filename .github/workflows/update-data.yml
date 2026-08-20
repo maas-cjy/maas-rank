@@ -10,6 +10,9 @@ on:
     paths:
       - 'index.html'
       - 'compare.html'
+      - 'model.html'
+      - 'report.html'
+      - 'about.html'
       - 'css/**'
       - 'js/**'
       - 'robots.txt'
