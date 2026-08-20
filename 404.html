@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="404 · 页面不存在。MaaS Rank 大模型 API 排行榜">
+<meta name="robots" content="noindex, follow">
+<meta name="theme-color" content="#1E1B4B">
+<link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+<title>404 · 页面不存在 | MaaS Rank 大模型排行榜</title>
+
+<!-- Open Graph：社交分享卡片 -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MaaS Rank">
+<meta property="og:title" content="404 · 页面不存在 | MaaS Rank 大模型排行榜">
+<meta property="og:description" content="404 · 页面不存在。MaaS Rank 大模型 API 排行榜">
+<meta property="og:image" content="https://maas-cjy.github.io/maas-rank/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="MaaS Rank · 大模型 API 排行榜">
+<meta property="og:url" content="https://maas-cjy.github.io/maas-rank/404.html">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="404 · 页面不存在 | MaaS Rank 大模型排行榜">
+<meta name="twitter:description" content="404 · 页面不存在。MaaS Rank 大模型 API 排行榜">
+<meta name="twitter:image" content="https://maas-cjy.github.io/maas-rank/assets/og-image.png">
+<meta name="twitter:image:alt" content="MaaS Rank · 大模型 API 排行榜">
+
+<link rel="stylesheet" href="css/style.css">
+<style>
+.err-wrap { min-height: calc(100vh - 56px - 80px); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 48px 24px; }
+.err-logo { width: 80px; height: 80px; margin-bottom: 24px; }
+.err-code { font-size: 96px; font-weight: 700; color: var(--brand); line-height: 1; letter-spacing: -2px; opacity: .85; }
+.err-title { font-size: 22px; font-weight: 600; margin-top: 16px; }
+.err-desc { color: var(--muted); margin-top: 10px; max-width: 420px; }
+.err-actions { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; justify-content: center; }
+.btn { display: inline-flex; padding: 10px 22px; border-radius: 999px; font-weight: 500; text-decoration: none; transition: all .15s; }
+.btn-primary { background: var(--brand); color: #fff; }
+.btn-primary:hover { background: var(--brand-ink); text-decoration: none; }
+.btn-secondary { background: var(--card); color: var(--ink); border: 1px solid var(--line); }
+.btn-secondary:hover { border-color: #c7cbe0; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="index.html"><svg class="brand-mark" viewBox="0 0 64 64" width="22" height="22" aria-hidden="true" focusable="false"><rect width="64" height="64" rx="16" fill="#1E1B4B"/><text x="19.5" y="44.5" font-size="34" fill="#FFFFFF" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">M</text><rect x="33" y="39" width="4.5" height="11.5" rx="2.2" fill="#8B5CF6"/><rect x="40" y="32" width="4.5" height="18.5" rx="2.2" fill="#8B5CF6"/><rect x="47" y="25" width="4.5" height="25" rx="2.2" fill="#8B5CF6"/></svg>MaaS Rank</a>
+    <button class="nav-toggle" aria-label="打开导航" aria-expanded="false">☰</button>
+    <nav>
+      <a href="index.html">首页</a>
+      <a href="rank.html">排行榜</a>
+      <a href="compare.html">模型对比</a>
+      <a href="report.html">榜单周报</a>
+      <a href="about.html">数据说明</a>
+    </nav>
+    <div class="nav-extra">
+      <a href="https://github.com/maas-cjy/maas-rank" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</header>
+
+<main class="err-wrap">
+  <svg class="err-logo" viewBox="0 0 64 64" aria-label="MaaS Rank"><rect width="64" height="64" rx="16" fill="#1E1B4B"/><text x="19.5" y="44.5" font-size="34" fill="#FFFFFF" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">M</text><rect x="33" y="39" width="4.5" height="11.5" rx="2.2" fill="#8B5CF6"/><rect x="40" y="32" width="4.5" height="18.5" rx="2.2" fill="#8B5CF6"/><rect x="47" y="25" width="4.5" height="25" rx="2.2" fill="#8B5CF6"/></svg>
+  <div class="err-code">404</div>
+  <h1 class="err-title">页面不存在或链接已失效</h1>
+  <p class="err-desc">可能是地址输入有误，或该页面已被移除。你可以返回首页，或从上方导航继续浏览。</p>
+  <div class="err-actions">
+    <a class="btn btn-primary" href="index.html">返回首页</a>
+    <a class="btn btn-secondary" href="rank.html">查看排行榜</a>
+  </div>
+</main>
+
+<footer>
+  <div>MaaS Rank · 大模型排行榜 · 数据快照 <span id="footDate">–</span> · 开源数据，标注来源引用</div>
+</footer>
+
+<script src="js/common.js"></script>
+<script>
+(function () {
+  'use strict';
+  // 导航折叠
+  document.querySelector('.nav-toggle').addEventListener('click', function () {
+    var nav = document.querySelector('.nav');
+    var open = nav.classList.toggle('open');
+    this.setAttribute('aria-expanded', String(open));
+  });
+  // 页脚日期
+  if (window.MRank && MRank.loadData) {
+    MRank.loadData().then(function () {
+      var meta = MRank.getMeta();
+      document.getElementById('footDate').textContent = meta.updated || '–';
+    }).catch(function () {});
+  }
+})();
+</script>
+</body>
+</html>
