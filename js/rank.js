@@ -97,6 +97,14 @@
         + '<td>' + R.badgeOpen(m) + ' ' + R.badgeRegion(m) + '</td>'
         + '</tr>';
     });
+
+    /* 底部引导：用户滚动到第 50 行后，提示还可展开全部 */
+    if (!state.query && !state.showAll && all.length > PAGE) {
+      html += '<tr><td colspan="9" class="more-row">'
+        + '<button class="show-all" data-action="expand">显示全部 ' + all.length + ' 个模型</button>'
+        + '</td></tr>';
+    }
+
     document.getElementById('rankBody').innerHTML = html;
     document.getElementById('tableTitle').textContent = t.title;
     document.getElementById('tableSub').textContent = t.desc;
@@ -171,6 +179,14 @@
     });
     document.getElementById('showAllBtn').addEventListener('click', function () {
       state.showAll = !state.showAll;
+      renderTable();
+      renderChart();
+    });
+    /* 表格底部的「显示全部」按钮是动态生成的，用事件委托 */
+    document.getElementById('rankBody').addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-action="expand"]');
+      if (!btn) return;
+      state.showAll = true;
       renderTable();
       renderChart();
     });
