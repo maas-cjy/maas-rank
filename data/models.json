@@ -1,6 +1,6 @@
 {
   "meta": {
-    "name": "MaaS 模型排行 · 数据快照",
+    "name": "大模型排行榜 · 数据快照",
     "updated": "2026-08-19",
     "note": "榜单数据自动更新：Elo 来自 LMArena（HuggingFace 数据集，自动抓取）；中文能力/价格来自 SuperCLUE（2026年7月 测评，自动抓取）；未抓取到的字段保留上次快照。",
     "exchangeRate": 7.2,

@@ -45,10 +45,9 @@ a:hover { text-decoration: underline; }
 }
 .brand { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 16px; color: var(--ink); }
 .brand:hover { text-decoration: none; }
-.brand-dot {
-  width: 10px; height: 10px; border-radius: 3px;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  display: inline-block;
+.brand-mark {
+  width: 22px; height: 22px; flex-shrink: 0;
+  display: block;
 }
 .nav nav { display: flex; gap: 4px; }
 .nav nav a {
