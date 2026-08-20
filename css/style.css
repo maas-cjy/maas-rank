@@ -437,3 +437,15 @@ footer a { color: var(--muted); }
   .filter-bar { padding: 10px 12px; }
   .filter-label { width: 100%; }
 }
+
+/* 首页「查看完整榜单」CTA */
+.cta-band {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 20px; padding: 22px 24px;
+}
+.cta-band h2 { font-size: 17px; font-weight: 600; margin: 0 0 4px; }
+.cta-band p { margin: 0; color: var(--muted); font-size: 13px; }
+.cta-band .act-btn { flex-shrink: 0; }
+@media (max-width: 720px) {
+  .cta-band { flex-direction: column; align-items: flex-start; }
+}

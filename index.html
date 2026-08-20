@@ -37,7 +37,7 @@
     <button class="nav-toggle" aria-label="打开导航" aria-expanded="false">☰</button>
     <nav>
       <a href="index.html" class="active">首页</a>
-      <a href="index.html#rankTable">排行榜</a>
+      <a href="rank.html">排行榜</a>
       <a href="compare.html">模型对比</a>
       <a href="report.html">榜单周报</a>
       <a href="about.html">数据说明</a>
@@ -65,7 +65,7 @@
   <!-- 1) 本周竞技场 Top 3（大卡片高视觉重量） -->
   <section class="card top3-card" id="top3Section">
     <h2>本周竞技场 Top 3</h2>
-    <p class="sub">LMArena 人类偏好分数最高 · <span id="top3Meta">载入中…</span> · <a href="#rankTable">查看完整榜单 →</a></p>
+    <p class="sub">LMArena 人类偏好分数最高 · <span id="top3Meta">载入中…</span> · <a href="rank.html">查看完整榜单 →</a></p>
     <div class="top3-grid" id="top3Grid"></div>
   </section>
 
@@ -92,66 +92,13 @@
   <!-- 3) 关键冠军 4 卡片 -->
   <section class="kpi-grid" id="kpiSection"></section>
 
-  <!-- 4) 多维筛选 chip（厂商 / 产地 / 授权） -->
-  <section class="filter-bar" id="filterSection">
-    <span class="filter-label">快速筛选</span>
-    <div class="filter-group">
-      <span class="filter-title">厂商</span>
-      <span class="filter-row" id="filterProviders"></span>
+  <!-- 4) 查看完整榜单 CTA -->
+  <section class="card cta-band">
+    <div>
+      <h2>想看完整榜单？</h2>
+      <p>全量模型展示，支持搜索、厂商/产地/开源闭源筛选，可按价格、上下文、速度排序。</p>
     </div>
-    <div class="filter-group">
-      <span class="filter-title">产地</span>
-      <span class="filter-row" id="filterRegions"></span>
-    </div>
-    <div class="filter-group">
-      <span class="filter-title">授权</span>
-      <span class="filter-row" id="filterOpens"></span>
-    </div>
-  </section>
-
-  <section class="tabs" id="tabs">
-    <button class="tab active" data-key="elo">竞技场 Elo</button>
-    <button class="tab" data-key="superclue">中文能力</button>
-    <button class="tab" data-key="priceIn">输入价格</button>
-    <button class="tab" data-key="context">上下文</button>
-    <button class="tab" data-key="speed">输出速度</button>
-  </section>
-
-  <section class="grid2">
-    <div class="card">
-      <h2 id="tableTitle">竞技场 Elo 排名</h2>
-      <p class="sub" id="tableSub">LMArena 全球人类盲测投票 · 分数越高代表真实用户偏好越强</p>
-      <div class="table-toolbar">
-        <input id="searchBox" type="search" placeholder="搜索模型 / 厂商，如 claude、deepseek、阿里…" autocomplete="off" spellcheck="false">
-        <span class="match-hint" id="matchHint"></span>
-        <button id="showAllBtn" class="show-all" hidden>显示全部</button>
-      </div>
-      <div class="table-wrap">
-        <table id="rankTable">
-          <thead>
-            <tr>
-              <th>排名</th>
-              <th>模型</th>
-              <th data-key="elo">Elo <span class="arr"></span></th>
-              <th data-key="superclue">SuperCLUE</th>
-              <th data-key="priceIn">输入价</th>
-              <th data-key="priceOut">输出价</th>
-              <th data-key="context">上下文</th>
-              <th data-key="speed">输出速度</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="rankBody"></tbody>
-        </table>
-      </div>
-      <p class="dim-note" id="tableNote"></p>
-    </div>
-
-    <div class="card chart-card">
-      <h2 id="chartTitle">Top 10 竞技场 Elo</h2>
-      <p class="sub">当前排序维度下得分最高的 10 个模型</p>
-      <div id="chart"></div>
-    </div>
+    <a class="act-btn act-btn-lg" href="rank.html">查看完整榜单 →</a>
   </section>
 
   <section class="card data-card" id="data">
@@ -170,8 +117,7 @@
   <div>大模型排行榜 · 数据快照 <span id="footDate">–</span> · 开源数据，标注来源引用</div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
 <script src="js/common.js"></script>
-<script src="js/rank.js"></script>
+<script src="js/home.js"></script>
 </body>
 </html>

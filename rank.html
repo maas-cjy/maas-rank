@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="全量展示 328 个大模型 API 的能力、价格、上下文与输出速度排名，支持搜索与厂商/产地/开源闭源多维筛选，每周自动更新。">
+<meta name="keywords" content="大模型排行榜,大模型API价格,LLM榜单,模型筛选,DeepSeek,GPT,Claude,Gemini,通义千问">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://maas-cjy.github.io/maas-rank/rank.html">
+<meta name="theme-color" content="#1E1B4B">
+<link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+<title>大模型排行榜 · 完整榜单与模型筛选（每周更新）</title>
+
+<!-- Open Graph：社交分享卡片 -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="大模型排行榜">
+<meta property="og:title" content="大模型排行榜 · 完整榜单与模型筛选">
+<meta property="og:description" content="全量展示大模型 API 能力、价格、上下文与速度排名，支持多维筛选，每周自动更新。">
+<meta property="og:url" content="https://maas-cjy.github.io/maas-rank/rank.html">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="大模型排行榜 · 完整榜单与模型筛选">
+<meta name="twitter:description" content="全量展示大模型 API 能力、价格、上下文与速度排名，支持多维筛选，每周自动更新。">
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="index.html"><svg class="brand-mark" viewBox="0 0 64 64" width="22" height="22" aria-hidden="true" focusable="false"><rect width="64" height="64" rx="16" fill="#1E1B4B"/><text x="19.5" y="44.5" font-size="34" fill="#FFFFFF" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">榜</text><rect x="33" y="39" width="4.5" height="11.5" rx="2.2" fill="#8B5CF6"/><rect x="40" y="32" width="4.5" height="18.5" rx="2.2" fill="#8B5CF6"/><rect x="47" y="25" width="4.5" height="25" rx="2.2" fill="#8B5CF6"/></svg>大模型排行榜</a>
+    <button class="nav-toggle" aria-label="打开导航" aria-expanded="false">☰</button>
+    <nav>
+      <a href="index.html">首页</a>
+      <a href="rank.html" class="active">排行榜</a>
+      <a href="compare.html">模型对比</a>
+      <a href="report.html">榜单周报</a>
+      <a href="about.html">数据说明</a>
+    </nav>
+    <div class="nav-extra">
+      <a href="https://github.com/maas-cjy/maas-rank" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>完整排行榜</h1>
+    <p>全量展示收录模型的竞技场 Elo、中文能力、API 价格、上下文与输出速度，支持搜索与多维筛选。点击模型名可查看详情页。</p>
+    <div class="hero-meta">
+      <span class="chip">数据快照 <b id="dataDate">–</b></span>
+      <span class="chip">收录模型 <b id="modelCount">–</b></span>
+      <span class="chip">价格按 <b>$1 ≈ ¥7.2</b> 换算，仅供参考</span>
+    </div>
+    <div class="hero-links">
+      <a href="index.html">← 返回首页总览</a>
+      <a href="report.html">本周榜单变化 →</a>
+    </div>
+  </section>
+
+  <!-- 多维筛选 chip（厂商 / 产地 / 授权） -->
+  <section class="filter-bar" id="filterSection">
+    <span class="filter-label">快速筛选</span>
+    <div class="filter-group">
+      <span class="filter-title">厂商</span>
+      <span class="filter-row" id="filterProviders"></span>
+    </div>
+    <div class="filter-group">
+      <span class="filter-title">产地</span>
+      <span class="filter-row" id="filterRegions"></span>
+    </div>
+    <div class="filter-group">
+      <span class="filter-title">授权</span>
+      <span class="filter-row" id="filterOpens"></span>
+    </div>
+  </section>
+
+  <section class="tabs" id="tabs">
+    <button class="tab active" data-key="elo">竞技场 Elo</button>
+    <button class="tab" data-key="superclue">中文能力</button>
+    <button class="tab" data-key="priceIn">输入价格</button>
+    <button class="tab" data-key="context">上下文</button>
+    <button class="tab" data-key="speed">输出速度</button>
+  </section>
+
+  <section class="grid2">
+    <div class="card">
+      <h2 id="tableTitle">竞技场 Elo 排名</h2>
+      <p class="sub" id="tableSub">LMArena 全球人类盲测投票 · 分数越高代表真实用户偏好越强</p>
+      <div class="table-toolbar">
+        <input id="searchBox" type="search" placeholder="搜索模型 / 厂商，如 claude、deepseek、阿里…" autocomplete="off" spellcheck="false">
+        <span class="match-hint" id="matchHint"></span>
+        <button id="showAllBtn" class="show-all" hidden>显示全部</button>
+      </div>
+      <div class="table-wrap">
+        <table id="rankTable">
+          <thead>
+            <tr>
+              <th>排名</th>
+              <th>模型</th>
+              <th data-key="elo">Elo <span class="arr"></span></th>
+              <th data-key="superclue">SuperCLUE</th>
+              <th data-key="priceIn">输入价</th>
+              <th data-key="priceOut">输出价</th>
+              <th data-key="context">上下文</th>
+              <th data-key="speed">输出速度</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="rankBody"></tbody>
+        </table>
+      </div>
+      <p class="dim-note" id="tableNote"></p>
+    </div>
+
+    <div class="card chart-card">
+      <h2 id="chartTitle">Top 10 竞技场 Elo</h2>
+      <p class="sub">当前排序维度下得分最高的 10 个模型</p>
+      <div id="chart"></div>
+    </div>
+  </section>
+
+  <section class="card data-card" id="data">
+    <h2>数据说明 <a class="dim-link" href="about.html">查看完整说明 →</a></h2>
+    <ul id="sources"></ul>
+    <p class="disclaimer">
+      <b>免责声明：</b>本榜单为第三方聚合展示，非官方发布。Elo 数据来自 LMArena 公开快照（2026-08-19），
+      SuperCLUE 数据来自其 2026 年 7/8 月公开测评（海外模型为参考值），价格来自各厂商公开定价页。
+      标注 <span class="est-mark">*</span> 的字段为合理估算值。所有数据仅供选型参考，正式决策请以官方发布为准。
+      数据每周自动更新，详细口径见<a href="about.html">数据说明</a>。
+    </p>
+  </section>
+</main>
+
+<footer>
+  <div>大模型排行榜 · 数据快照 <span id="footDate">–</span> · 开源数据，标注来源引用</div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<script src="js/common.js"></script>
+<script src="js/rank.js"></script>
+</body>
+</html>

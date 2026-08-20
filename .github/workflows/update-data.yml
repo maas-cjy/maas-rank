@@ -9,6 +9,7 @@ on:
     branches: [main]
     paths:
       - 'index.html'
+      - 'rank.html'
       - 'compare.html'
       - 'model.html'
       - 'report.html'
