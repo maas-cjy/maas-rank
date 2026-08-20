@@ -3,7 +3,7 @@
   "sources": {
     "lmarena": {
       "ok": true,
-      "count": 389
+      "count": 393
     },
     "superclue": {
       "ok": true,
@@ -12,6 +12,51 @@
     }
   },
   "changes": [
-    "+新增 308 个模型（家族归并后 LMArena 全量同步）"
+    "claude-opus-5.elo 1508→1505",
+    "claude-fable-5.elo 1493→1494",
+    "qwen3.8-max.elo 1492→1483",
+    "gemini-3.5-flash.elo 1482→1483",
+    "gemini-3.1-pro.elo 1480→1479",
+    "gemini-3.6-flash.elo 1480→1477",
+    "muse-spark-1.1.elo 1477→1479",
+    "kimi-k3.elo 1476→1477",
+    "gpt-5.5.elo 1471→1470",
+    "mimo-v2.5-pro.elo 1465→1464",
+    "glm-5.1.elo 1463→1464",
+    "claude-opus-4-8.elo 1461→1462",
+    "gpt-5.6-sol.elo 1453→1454",
+    "grok-4.5.elo 1451→1452",
+    "grok-4.6.elo 1446→1444",
+    "gpt-5.6-terra.elo 1446→1445",
+    "ernie-5.0.elo 1445→1444",
+    "claude-sonnet-5.elo 1443→1442",
+    "hunyuan-hy3.elo 1441→1442",
+    "inkling.elo 1441→1439",
+    "mimo-v2-pro.elo 1436→1437",
+    "minimax-m3.elo 1435→1434",
+    "deepseek-v4-flash.elo 1431→1432",
+    "mistral-large-3.elo 1429→1428",
+    "gpt-5.6-luna.elo 1428→1429",
+    "mimo-v2.5.elo 1428→1427",
+    "gpt-5.5-instant.elo 1420→1419",
+    "grok-4.3.elo 1398→1397",
+    "claude-haiku-4-5.elo 1394→1395",
+    "solar-pro4.elo 1378→1377",
+    "nvidia-nemotron-3-super-120b-a12b.elo 1377→1378",
+    "glm-4.6v.elo 1374→1375",
+    "gpt-5-mini.elo 1374→1373",
+    "gpt-oss-120b.elo 1365→1366",
+    "mercury-2.elo 1357→1358",
+    "gpt-4.1-mini.elo 1341→1340",
+    "nvidia-nemotron-3.5-lightning-30b-a3b-nvfp4.elo 1329→1328",
+    "qwen-plus.elo 1327→1326",
+    "llama-3.1-nemotron-ultra-253b-v1.elo 1320→1319",
+    "hunyuan-turbo.elo 1312→1311",
+    "reka-core.elo 1249→1248",
+    "gemma-2-9b-it.elo 1208→1207",
+    "llama-2-7b-chat.elo 1054→1053",
+    "rwkv-4-raven-14b.elo 949→948",
+    "fastchat-t5-3b.elo 895→894",
+    "+新增 4 个模型（家族归并后 LMArena 全量同步）"
   ]
 }
