@@ -4,6 +4,7 @@
   var R = window.MRank;
   var radar = null;
   var posChart = null;
+  var trendChart = null;
   var SITE = 'https://maas-cjy.github.io/maas-rank/';
 
   /* ---------- 排序 / 排名工具 ---------- */
@@ -34,6 +35,7 @@
     var title = m.name + '（' + m.provider + '）价格、Elo 排名、上下文长度 | MaaS Rank 大模型排行榜';
     var desc = m.name + '（' + m.provider + '）——' + m.desc
       + '。竞技场 Elo ' + (m.elo == null ? '—' : m.elo) + ' 分，SuperCLUE 中文能力 ' + (m.superclue == null ? '—' : m.superclue) + ' 分，'
+      + '综合能力 ' + R.fmtBench(m.bench) + ' 分，'
       + '输入 ' + pIn + ' / 百万 tokens，输出 ' + pOut + ' / 百万 tokens，上下文 ' + R.fmtCtx(m.context) + '，'
       + '输出速度 ' + (m.speed == null ? '—' : m.speed + ' tok/s') + '。数据每周自动更新。';
 
@@ -162,6 +164,9 @@
     var all = R.getModels();
     var d = R.dims(m, all);
     var dm = R.dims(fakeMedian(), all);
+    function med(key) {
+      return median(all.map(function (x) { return x[key]; }));
+    }
     function fmt(v) { return v == null ? null : +v.toFixed(1); }
     radar.setOption({
       tooltip: {},
@@ -170,6 +175,7 @@
         indicator: [
           { name: '竞技场 Elo', max: 100 },
           { name: '中文能力', max: 100 },
+          { name: '综合能力', max: 100 },
           { name: '上下文', max: 100 },
           { name: '输出速度', max: 100 },
           { name: '性价比', max: 100 }
@@ -185,7 +191,7 @@
         data: [
           {
             name: '本模型',
-            value: [d.elo, d.cn, d.ctx, d.spd, d.val].map(fmt),
+            value: [d.elo, d.cn, m.bench == null ? null : m.bench, d.ctx, d.spd, d.val].map(fmt),
             lineStyle: { color: '#4f46e5', width: 2 },
             itemStyle: { color: '#4f46e5' },
             areaStyle: { opacity: 0.1 },
@@ -193,7 +199,7 @@
           },
           {
             name: '榜单中位',
-            value: [dm.elo, dm.cn, dm.ctx, dm.spd, dm.val].map(fmt),
+            value: [dm.elo, dm.cn, med('bench'), dm.ctx, dm.spd, dm.val].map(fmt),
             lineStyle: { color: '#94a3b8', width: 1.5, type: 'dashed' },
             itemStyle: { color: '#94a3b8' },
             symbolSize: 3
@@ -241,6 +247,84 @@
     }, true);
   }
 
+  /* ---------- 渲染：SuperCLUE 能力六维（横向条） ---------- */
+
+  function renderDims(m) {
+    var list = R.dimList(m);
+    var box = document.getElementById('chartDims');
+    var note = document.getElementById('dimsNote');
+    if (!list.length) {
+      box.innerHTML = '';
+      note.textContent = '该模型暂无 SuperCLUE 六维评测数据（海外模型多为参考值）。';
+      return;
+    }
+    note.textContent = '综合能力分 ' + R.fmtBench(m.bench) + ' = 六维子分平均值，满分 100。';
+    box.innerHTML = list.map(function (x) {
+      var w = Math.max(0, Math.min(100, x.value));
+      return '<div class="dim-row">'
+        + '<span class="dim-label">' + R.esc(x.label) + '</span>'
+        + '<div class="dim-track"><div class="dim-fill" style="width:' + w + '%"></div></div>'
+        + '<span class="dim-val">' + (+x.value).toFixed(1) + '</span>'
+        + '</div>';
+    }).join('');
+  }
+
+  /* ---------- 渲染：竞技场 Elo 历史趋势（每周快照） ---------- */
+
+  function renderTrend(m, hist) {
+    var note = document.getElementById('trendNote');
+    if (typeof echarts === 'undefined') { note.textContent = '图表库未加载，无法渲染趋势。'; return; }
+    var snaps = (hist && hist.snapshots) ? hist.snapshots : [];
+    var dates = [], elos = [];
+    snaps.forEach(function (s) {
+      var sm = s.models ? s.models.filter(function (x) { return x.id === m.id; })[0] : null;
+      if (sm && sm.elo != null) {
+        dates.push(s.date);
+        elos.push(sm.elo);
+      }
+    });
+    var curDate = R.getMeta().updated;
+    if (!dates.length || dates[dates.length - 1] !== curDate) {
+      if (m.elo != null) {
+        dates.push(curDate);
+        elos.push(m.elo);
+      }
+    } else {
+      elos[elos.length - 1] = m.elo;
+    }
+    if (dates.length < 2) {
+      if (!trendChart) trendChart = echarts.init(document.getElementById('chartTrend'));
+      trendChart.clear();
+      note.textContent = '历史快照积累中（当前 ' + dates.length + ' 期）。数据每周自动更新，趋势将逐渐丰富。';
+      return;
+    }
+    note.textContent = '折线展示该模型在各周数据快照中的竞技场 Elo，末端为最新一期。';
+    if (!trendChart) trendChart = echarts.init(document.getElementById('chartTrend'));
+    trendChart.setOption({
+      grid: { left: 12, right: 30, top: 24, bottom: 10, containLabel: true },
+      tooltip: {
+        trigger: 'axis',
+        formatter: function (p) {
+          return '<b>' + R.esc(m.name) + '</b><br/>' + R.esc(dates[p[0].dataIndex])
+            + ' · Elo：<b>' + R.fmtNum(elos[p[0].dataIndex]) + '</b>';
+        }
+      },
+      xAxis: { type: 'category', data: dates, axisLabel: { color: '#6a7180', fontSize: 11 } },
+      yAxis: {
+        type: 'value', scale: true,
+        axisLabel: { color: '#6a7180', fontSize: 11 },
+        splitLine: { lineStyle: { color: '#eef0f5' } }
+      },
+      series: [{
+        type: 'line', data: elos, smooth: true, symbolSize: 7,
+        lineStyle: { color: '#4f46e5', width: 2 },
+        itemStyle: { color: '#4f46e5' },
+        areaStyle: { color: 'rgba(79, 70, 229, 0.08)' },
+        label: { show: true, position: 'top', fontSize: 11, color: '#6a7180' }
+      }]
+    }, true);
+  }
+
   /* ---------- 渲染：详细参数表 ---------- */
 
   function renderParams(m) {
@@ -251,6 +335,7 @@
       ['发布时间', R.esc(m.release || '—')],
       ['竞技场 Elo', R.fmtNum(m.elo) + R.estMark(m, 'elo')],
       ['SuperCLUE 智能指数', R.fmtNum(m.superclue) + R.estMark(m, 'superclue')],
+      ['综合能力分', R.fmtBench(m.bench) + R.estMark(m, 'bench')],
       ['输入价格', (m.priceIn == null ? '—' : R.fmtUsd(m.priceIn)) + '（约 ' + R.fmtCny(m.priceIn) + '）' + R.estMark(m, 'priceIn')],
       ['输出价格', (m.priceOut == null ? '—' : R.fmtUsd(m.priceOut)) + '（约 ' + R.fmtCny(m.priceOut) + '）' + R.estMark(m, 'priceOut')],
       ['上下文窗口', R.fmtCtx(m.context)],
@@ -291,6 +376,7 @@
     renderKpi(m);
     renderRadar(m);
     renderPos(m);
+    renderDims(m);
     renderParams(m);
     renderProvider(m);
 
@@ -301,9 +387,20 @@
         + (s.url ? ' · <a href="' + R.esc(s.url) + '" target="_blank" rel="noopener">访问官网</a>' : '') + '</span></li>';
     }).join('');
 
+    return fetch('data/history.json', { cache: 'no-store' })
+      .then(function (res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.json();
+      })
+      .catch(function () { return null; });
+  }).then(function (hist) {
+    var m = R.getModel(R.qs('id'));
+    if (m) renderTrend(m, hist);
+
     window.addEventListener('resize', function () {
       if (radar) radar.resize();
       if (posChart) posChart.resize();
+      if (trendChart) trendChart.resize();
     });
   }).catch(function (err) {
     document.getElementById('viewLoading').innerHTML =

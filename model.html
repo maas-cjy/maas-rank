@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="大模型详情页：聚合 LMArena 竞技场 Elo 与 SuperCLUE 中文能力得分，展示 API 价格、上下文窗口与输出速度，数据每周自动更新。">
+<meta name="description" content="大模型详情页：聚合 LMArena 竞技场 Elo、SuperCLUE 中文能力与综合能力分，展示 API 价格、上下文窗口、输出速度与历史趋势，数据每周自动更新。">
 <meta name="keywords" content="大模型,大模型API价格,大模型排行榜,Elo,SuperCLUE,上下文长度,输出速度,模型对比">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://maas-cjy.github.io/maas-rank/model.html">
@@ -79,14 +79,29 @@
     <section class="grid2">
       <div class="card">
         <h2>能力定位</h2>
-        <p class="sub">本模型 vs 榜单中位 · 五维按固定标尺归一化（0–100）</p>
+        <p class="sub">本模型 vs 榜单中位 · 六维按固定标尺归一化（0–100）</p>
         <div id="chartRadar"></div>
-        <p class="dim-note">Elo 按 1300–1550 映射；SuperCLUE 按 50–78 映射；上下文按 10 万–100 万对数映射；速度按 0–250 tok/s 映射；性价比相对全榜输出价计算。</p>
+        <p class="dim-note">Elo 按 1300–1550 映射；SuperCLUE 按 50–78 映射；综合能力分为六维原始分；上下文按 10 万–100 万对数映射；速度按 0–250 tok/s 映射；性价比相对全榜输出价计算。</p>
       </div>
       <div class="card">
         <h2>竞技场 Elo 位次</h2>
         <p class="sub">LMArena 全榜 Top 9 与当前模型 · 黄色为本模型</p>
         <div id="chartPos"></div>
+      </div>
+    </section>
+
+    <section class="grid2">
+      <div class="card">
+        <h2>SuperCLUE 能力六维</h2>
+        <p class="sub">数学推理 / 科学推理 / 智能体编程 / 指令遵循 / 幻觉控制 / 任务规划 · 满分 100</p>
+        <div id="chartDims"></div>
+        <p class="dim-note" id="dimsNote">–</p>
+      </div>
+      <div class="card">
+        <h2>竞技场 Elo 趋势</h2>
+        <p class="sub">各周数据快照中的历史 Elo（LMArena）</p>
+        <div id="chartTrend"></div>
+        <p class="dim-note" id="trendNote">–</p>
       </div>
     </section>
 

@@ -1,9 +1,9 @@
 {
-  "updated": "2026-08-24",
+  "updated": "2026-09-01",
   "sources": {
     "lmarena": {
-      "ok": true,
-      "count": 394
+      "ok": false,
+      "count": 0
     },
     "superclue": {
       "ok": true,
@@ -12,39 +12,15 @@
     }
   },
   "changes": [
-    "claude-opus-5.elo 1505→1504",
-    "claude-fable-5.elo 1494→1495",
-    "gemini-3.7-flash.elo 1491→1490",
-    "muse-spark-1.2.elo 1488→1487",
-    "qwen3.8-max.elo 1483→1482",
-    "gemini-3.1-pro.elo 1479→1480",
-    "muse-spark-1.1.elo 1479→1478",
-    "gemini-3.6-flash.elo 1477→1476",
-    "kimi-k3.elo 1477→1476",
-    "glm-5.3.elo 1474→1477",
-    "muse-spark.elo 1473→1474",
-    "gpt-5.5.elo 1470→1471",
-    "mimo-v2.5-pro.elo 1464→1465",
-    "claude-opus-4-8.elo 1462→1461",
-    "qwen3.7-plus.elo 1457→1456",
-    "gpt-5.6-terra.elo 1445→1446",
-    "hunyuan-hy3.elo 1442→1441",
-    "minimax-m3.elo 1434→1435",
-    "gpt-5.5-instant.elo 1419→1420",
-    "grok-4-fast-chat.elo 1409→1408",
-    "solar-pro4.elo 1377→1376",
-    "gpt-4.1-mini.elo 1340→1341",
-    "step-1o-turbo06.elo 1336→1335",
-    "qwen-plus.elo 1326→1327",
-    "llama-3.1-nemotron-ultra-253b-v1.elo 1319→1320",
-    "hunyuan-turbo.elo 1311→1312",
-    "olmo-3-32b-think.elo 1298→1299",
-    "reka-core.elo 1248→1249",
-    "gemma-2-9b-it.elo 1207→1208",
-    "llama-2-7b-chat.elo 1053→1054",
-    "guanaco-33b.elo 1053→1054",
-    "rwkv-4-raven-14b.elo 948→949",
-    "fastchat-t5-3b.elo 894→895",
-    "+新增 1 个模型（家族归并后 LMArena 全量同步）"
+    "qwen3.8-max.bench None→73.06",
+    "kimi-k3.bench None→71.18",
+    "ernie-5.1.bench None→58.18",
+    "glm-5.2.bench None→63.19",
+    "mimo-v2.5-pro.bench None→53.37",
+    "deepseek-v4-pro.bench None→71.72",
+    "hunyuan-hy3.bench None→63.54",
+    "minimax-m3.bench None→59.13",
+    "deepseek-v4-flash.bench None→67.05",
+    "doubao-seed-2.1-pro.bench None→68.48"
   ]
 }

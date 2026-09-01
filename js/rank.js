@@ -23,6 +23,11 @@
       title: '中文综合能力排名', desc: 'SuperCLUE 智能指数（数学/科学/代码/指令/幻觉/Agent）',
       fmt: function (m) { return R.fmtNum(m.superclue) + R.estMark(m, 'superclue'); }
     },
+    bench: {
+      label: '综合能力', unit: '分', dir: -1, note: '综合能力分 = SuperCLUE 六维子分（数学/科学/代码/指令/幻觉/规划）平均，满分 100，海外模型为参考值',
+      title: '综合能力排名', desc: '综合能力分：SuperCLUE 六维子分平均值，衡量多维度综合能力',
+      fmt: function (m) { return R.fmtBench(m.bench) + R.estMark(m, 'bench'); }
+    },
     priceIn: {
       label: '输入价格', unit: '¥/M', dir: 1, note: '每百万输入 tokens 价格（按 $1≈¥7.2 换算）',
       title: '输入价格排名（由低到高）', desc: '每百万输入 tokens 价格 · 越低越便宜',
@@ -99,7 +104,7 @@
     var list = visible();
     var html = '';
     if (!list.length) {
-      html = '<tr><td colspan="9" class="empty">没有匹配的模型，换个关键词试试。</td></tr>';
+      html = '<tr><td colspan="10" class="empty">没有匹配的模型，换个关键词试试。</td></tr>';
     }
     list.forEach(function (m, i) {
       var rank = state.dir === 1 ? '' : '<span class="rank ' + rankClass(i) + '">' + (i + 1) + '</span>';
@@ -110,6 +115,7 @@
         + '<div class="mprov">' + R.esc(m.provider) + ' · ' + R.regionName(m.region) + '</div></td>'
         + '<td class="num">' + t.fmt(m) + '</td>'
         + '<td class="num">' + R.fmtNum(m.superclue) + R.estMark(m, 'superclue') + '</td>'
+        + '<td class="num">' + R.fmtBench(m.bench) + R.estMark(m, 'bench') + '</td>'
         + '<td class="num">' + R.fmtCny(m.priceIn) + R.estMark(m, 'priceIn') + '</td>'
         + '<td class="num">' + R.fmtCny(m.priceOut) + R.estMark(m, 'priceOut') + '</td>'
         + '<td class="num">' + R.fmtCtx(m.context) + '</td>'
@@ -120,7 +126,7 @@
 
     /* 底部引导：用户滚动到第 50 行后，提示还可展开全部 */
     if (!state.query && !state.showAll && all.length > PAGE) {
-      html += '<tr><td colspan="9" class="more-row">'
+      html += '<tr><td colspan="10" class="more-row">'
         + '<button class="show-all" data-action="expand">显示全部 ' + all.length + ' 个模型</button>'
         + '</td></tr>';
     }
@@ -355,6 +361,6 @@
     renderChart();
   }).catch(function (err) {
     document.getElementById('rankBody').innerHTML =
-      '<tr><td colspan="9" class="empty">数据加载失败：' + R.esc(err.message) + '。请通过本地服务器访问（如 python3 -m http.server）。</td></tr>';
+      '<tr><td colspan="10" class="empty">数据加载失败：' + R.esc(err.message) + '。请通过本地服务器访问（如 python3 -m http.server）。</td></tr>';
   });
 })();

@@ -87,6 +87,7 @@
     <ul class="flow-list">
       <li><span class="flow-step elo">Elo</span><div><b>竞技场 Elo 分</b><p>来自 LMArena（原 Chatbot Arena）全球匿名盲测投票，采用 Bradley-Terry 模型计算。分数反映真实用户对模型输出的偏好强度，分数越高代表综合体验越好，与"考试分数"无直接换算关系。</p></div></li>
       <li><span class="flow-step cn">CN</span><div><b>SuperCLUE 智能指数</b><p>来自 SuperCLUE 中文通用大模型综合测评，覆盖数学推理、科学推理、智能体编程、指令遵循、幻觉控制、任务规划等维度。海外模型若未参加当期测评，展示为参考估算值。</p></div></li>
+      <li><span class="flow-step bench">综合</span><div><b>综合能力分</b><p>对 SuperCLUE（2026 年 7 月）公开的六项子维度得分取平均：数学推理、幻觉控制、科学推理、精确指令遵循、智能体编程、智能体任务规划。仅统计当期公布子分的模型；未公布子分或未参加当期测评的模型不参与该列排序，避免以估算值误导选型。</p></div></li>
       <li><span class="flow-step price">¥</span><div><b>API 价格</b><p>按每百万 tokens 计价，取自各厂商官方定价页。统一以 <code>$1 ≈ ¥7.2</code> 汇率换算为人民币展示（美元原价同时保留）。实际计费请以开通时官方价格为准。</p></div></li>
       <li><span class="flow-step ctx">CTX</span><div><b>上下文窗口</b><p>模型支持的最大输入上下文长度（tokens），以官方技术文档为准；部分模型按同系列/同代产品合理推算并标注 <span class="est-mark">*</span>。</p></div></li>
       <li><span class="flow-step spd">SPD</span><div><b>输出速度</b><p>输出吞吐量（tokens/s），取公开测评或厂商公布值的合理估算，不同测试环境下差异较大，仅作横向量级参考。</p></div></li>

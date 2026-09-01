@@ -180,6 +180,15 @@ tbody tr:last-child td { border-bottom: none; }
 #chart { width: 100%; height: 420px; }
 #chartRadar { width: 100%; height: 380px; }
 #chartPrice { width: 100%; height: 260px; }
+#chartTrend { width: 100%; height: 300px; }
+#chartDims { min-height: 180px; padding-top: 4px; }
+
+/* SuperCLUE 能力六维横向条 */
+.dim-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; }
+.dim-label { flex: 0 0 72px; font-size: 12.5px; color: var(--ink); }
+.dim-track { flex: 1; height: 8px; border-radius: 5px; background: #eef0f5; overflow: hidden; }
+.dim-fill { height: 100%; border-radius: 5px; background: #4f46e5; }
+.dim-val { flex: 0 0 42px; text-align: right; font-family: var(--mono); font-size: 12.5px; color: var(--ink); }
 
 .data-card { margin-top: 24px; }
 .dim-link { font-size: 12px; font-weight: 400; margin-left: 8px; }
@@ -279,6 +288,7 @@ footer a { color: var(--muted); }
 .flow-step.price { background: #eff4ff; color: #1d4ed8; }
 .flow-step.ctx { background: #fdf2f8; color: #be185d; }
 .flow-step.spd { background: #f5f3ff; color: #6d28d9; }
+.flow-step.bench { background: #ecfeff; color: #0e7490; }
 .flow-list b { font-size: 13.5px; }
 .flow-list p { color: var(--muted); font-size: 13px; margin-top: 2px; }
 .flow-list code { font-family: var(--mono); font-size: 12px; background: var(--bg); padding: 1px 5px; border-radius: 5px; }

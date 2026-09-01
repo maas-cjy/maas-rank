@@ -41,6 +41,25 @@
 
   function fmtSpeed(v) { return v == null ? '—' : fmtNum(v) + ' tok/s'; }
 
+  /* 综合能力分（SuperCLUE 六维子分平均，0–100） */
+  function fmtBench(v) { return v == null ? '—' : (+v).toFixed(1); }
+
+  /* SuperCLUE 六维子分：中文键名 -> 展示名 */
+  const DIM_KEYS = {
+    math: '数学推理', hallu: '幻觉控制', science: '科学推理',
+    ifollow: '指令遵循', coding: '智能体编程', plan: '任务规划'
+  };
+
+  /* 返回模型的六维列表 [{key, label, value}]，缺维度自动跳过 */
+  function dimList(m) {
+    if (!m || !m.dims) return [];
+    return Object.keys(DIM_KEYS).filter(function (k) {
+      return m.dims[k] != null;
+    }).map(function (k) {
+      return { key: k, label: DIM_KEYS[k], value: m.dims[k] };
+    });
+  }
+
   function isEst(m, key) {
     if (!m.est) return false;
     if (key && !m.est[key]) return false;
@@ -100,6 +119,9 @@
     fmtCny: fmtCny,
     fmtCtx: fmtCtx,
     fmtSpeed: fmtSpeed,
+    fmtBench: fmtBench,
+    DIM_KEYS: DIM_KEYS,
+    dimList: dimList,
     isEst: isEst,
     estMark: estMark,
     badgeOpen: badgeOpen,

@@ -52,7 +52,7 @@
 <main>
   <section class="hero">
     <h1>完整排行榜</h1>
-    <p>全量展示收录模型的竞技场 Elo、中文能力、API 价格、上下文与输出速度，支持搜索与多维筛选。点击模型名可查看详情页。</p>
+    <p>全量展示收录模型的竞技场 Elo、综合能力、中文能力、API 价格、上下文与输出速度，支持搜索与多维筛选。点击模型名可查看详情页。</p>
     <div class="hero-meta">
       <span class="chip">数据快照 <b id="dataDate">–</b></span>
       <span class="chip">收录模型 <b id="modelCount">–</b></span>
@@ -83,6 +83,7 @@
 
   <section class="tabs" id="tabs">
     <button class="tab active" data-key="elo">竞技场 Elo</button>
+    <button class="tab" data-key="bench">综合能力</button>
     <button class="tab" data-key="superclue">中文能力</button>
     <button class="tab" data-key="priceIn">输入价格</button>
     <button class="tab" data-key="context">上下文</button>
@@ -105,6 +106,7 @@
               <th>排名</th>
               <th>模型</th>
               <th data-key="elo">Elo <span class="arr"></span></th>
+              <th data-key="bench">综合能力</th>
               <th data-key="superclue">SuperCLUE</th>
               <th data-key="priceIn">输入价</th>
               <th data-key="priceOut">输出价</th>

@@ -43,7 +43,17 @@ HISTORY_FILE = ROOT / "data" / "history.json"
 TIMEOUT = 25
 
 # 历史快照仅归档以下字段（自动更新只涉及这几个指标）
-HISTORY_FIELDS = ("id", "name", "elo", "superclue", "priceIn", "priceOut")
+HISTORY_FIELDS = ("id", "name", "elo", "superclue", "bench", "priceIn", "priceOut")
+
+# SuperCLUE 总排行榜中的六维子分列名（用于计算「综合能力分」= 可用子分均值）
+DIM_KEYS = [
+    ("math", "数学推理"),
+    ("hallu", "幻觉控制"),
+    ("science", "科学推理"),
+    ("ifollow", "精确指令遵循"),
+    ("coding", "智能体编程"),
+    ("plan", "智能体任务规划"),
+]
 
 # ---------------------------------------------------------------------------
 # 模型别名表：models.json 的 id -> 各数据源中的名称特征（子串匹配，忽略大小写）
@@ -214,12 +224,12 @@ def sheet_to_rows(ws) -> list[list]:
     return rows
 
 
-def fetch_superclue() -> tuple[dict[str, float], dict[str, dict], str]:
+def fetch_superclue() -> tuple[dict[str, dict], dict[str, dict], str]:
     """
-    返回 (总榜: {模型名小写: 智能指数}, 价格: {模型名小写: {priceIn, priceOut}}, 数据月份)
+    返回 (总榜: {模型名小写: {"total": 总分, "dims": {六维子分}}}, 价格, 数据月份)
     失败时返回空 dict。
     """
-    scores: dict[str, float] = {}
+    scores: dict[str, dict] = {}
     prices: dict[str, dict] = {}
     used_date = ""
     for d in sc_candidate_dates():
@@ -227,17 +237,39 @@ def fetch_superclue() -> tuple[dict[str, float], dict[str, dict], str]:
         wb = sc_load_xlsx(gb_url)
         if wb is None:
             continue
-        # —— 总榜：取「总排行榜」sheet 的 总分 ——
+        # —— 总榜：取「总排行榜」sheet 的总分与六维子分（按表头定位，列序变化不破坏） ——
         try:
             sheet = wb["总排行榜"]
         except KeyError:
             wb.close()
             continue
-        for r in sheet_to_rows(sheet)[1:]:
-            name, total = (r[1] if len(r) > 1 else None), (r[4] if len(r) > 4 else None)
-            t = to_num(total)
-            if name and t is not None:
-                scores[str(name).strip().lower()] = t
+        rows = sheet_to_rows(sheet)
+        headers = [str(h).strip().lower() if h else "" for h in rows[0]]
+
+        def col(keyword: str) -> int:
+            for i, h in enumerate(headers):
+                if keyword.lower() in h:
+                    return i
+            return -1
+
+        i_name, i_total = col("模型名称"), col("总分")
+        i_dims = {k: col(kw) for k, kw in DIM_KEYS}
+        for r in rows[1:]:
+            if i_name < 0 or len(r) <= i_name or not r[i_name]:
+                continue
+            key = str(r[i_name]).strip().lower()
+            entry: dict = {"dims": {}}
+            if i_total >= 0 and len(r) > i_total:
+                t = to_num(r[i_total])
+                if t is not None:
+                    entry["total"] = t
+            for k, i in i_dims.items():
+                if i >= 0 and len(r) > i:
+                    v = to_num(r[i])
+                    if v is not None:
+                        entry["dims"][k] = v
+            if "total" in entry or entry["dims"]:
+                scores[key] = entry
         wb.close()
 
         # —— 价格：latency_and_price 用 `<月份>_2.xlsx`（前端约定），退化为 _1 / 裸名 ——
@@ -411,16 +443,30 @@ def apply_updates(models, elo_map, families, scores, prices) -> tuple[list[str],
         if hit:
             n_elo += 1
 
-        # SuperCLUE 智能指数
+        # SuperCLUE 智能指数 + 六维子分 + 综合能力分
         hit_sc = False
-        for src_name, v in scores.items():
+        for src_name, e in scores.items():
             if match_model(src_name, mid):
-                new_v = round(v, 2)
-                old = m.get("superclue")
-                if old != new_v:
-                    m["superclue"] = new_v
-                    changed.append(f"{mid}.superclue {old}→{new_v}")
-                m.get("est", {}).pop("superclue", None)
+                total = e.get("total")
+                if total is not None:
+                    new_v = round(total, 2)
+                    old = m.get("superclue")
+                    if old != new_v:
+                        m["superclue"] = new_v
+                        changed.append(f"{mid}.superclue {old}→{new_v}")
+                    m.get("est", {}).pop("superclue", None)
+                dims = e.get("dims") or {}
+                if dims:
+                    m["dims"] = {k: round(v, 2) for k, v in dims.items()}
+                    m.get("est", {}).pop("dims", None)
+                    vals = [v for v in dims.values() if v is not None]
+                    if vals:
+                        b = round(sum(vals) / len(vals), 2)
+                        old = m.get("bench")
+                        if old != b:
+                            m["bench"] = b
+                            changed.append(f"{mid}.bench {old}→{b}")
+                        m.get("est", {}).pop("bench", None)
                 hit_sc = True
                 break
         if hit_sc:

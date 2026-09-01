@@ -1,8 +1,8 @@
 {
   "meta": {
     "name": "MaaS Rank · 数据快照",
-    "updated": "2026-08-24",
-    "note": "榜单数据自动更新：Elo 来自 LMArena（HuggingFace 数据集，自动抓取）；中文能力/价格来自 SuperCLUE（2026年7月 测评，自动抓取）；未抓取到的字段保留上次快照。",
+    "updated": "2026-09-01",
+    "note": "榜单数据自动更新：中文能力/价格来自 SuperCLUE（2026年7月 测评，自动抓取）；未抓取到的字段保留上次快照。",
     "exchangeRate": 7.2,
     "sources": [
       {
@@ -21,7 +21,7 @@
         "desc": "OpenAI / Anthropic / Google / DeepSeek / 阿里云 / 智谱 / 月之暗面 / 字节 等官方 API 定价"
       }
     ],
-    "lastAutoUpdate": "2026-08-24 04:12:42"
+    "lastAutoUpdate": "2026-09-01 14:47:41"
   },
   "models": [
     {
@@ -121,7 +121,16 @@
       "speed": 90,
       "est": {
         "speed": true
-      }
+      },
+      "dims": {
+        "math": 77.19,
+        "hallu": 86.08,
+        "science": 71.93,
+        "ifollow": 43.81,
+        "coding": 68.42,
+        "plan": 90.94
+      },
+      "bench": 73.06
     },
     {
       "id": "gemini-3.1-pro",
@@ -190,7 +199,16 @@
       "priceIn": 20.0,
       "priceOut": 100.0,
       "context": 1000000,
-      "speed": 55
+      "speed": 55,
+      "dims": {
+        "math": 71.93,
+        "hallu": 83.85,
+        "science": 70.17,
+        "ifollow": 40.95,
+        "coding": 75.79,
+        "plan": 84.35
+      },
+      "bench": 71.18
     },
     {
       "id": "qwen3.7-max",
@@ -282,7 +300,16 @@
       "est": {
         "speed": true,
         "context": true
-      }
+      },
+      "dims": {
+        "math": 64.91,
+        "hallu": 83.02,
+        "science": 59.65,
+        "ifollow": 41.9,
+        "coding": 27.37,
+        "plan": 72.21
+      },
+      "bench": 58.18
     },
     {
       "id": "gemini-3-flash",
@@ -309,7 +336,16 @@
       "speed": 100,
       "est": {
         "speed": true
-      }
+      },
+      "dims": {
+        "math": 70.18,
+        "hallu": 80.66,
+        "science": 68.42,
+        "ifollow": 30.48,
+        "coding": 64.13,
+        "plan": 65.27
+      },
+      "bench": 63.19
     },
     {
       "id": "mimo-v2.5-pro",
@@ -327,7 +363,16 @@
       "speed": 110,
       "est": {
         "speed": true
-      }
+      },
+      "dims": {
+        "math": 66.67,
+        "hallu": 63.17,
+        "science": 68.42,
+        "ifollow": 15.24,
+        "coding": 49.47,
+        "plan": 57.25
+      },
+      "bench": 53.37
     },
     {
       "id": "glm-5.1",
@@ -461,7 +506,16 @@
       "speed": 120,
       "est": {
         "speed": true
-      }
+      },
+      "dims": {
+        "math": 77.19,
+        "hallu": 89.73,
+        "science": 71.93,
+        "ifollow": 42.86,
+        "coding": 63.16,
+        "plan": 85.48
+      },
+      "bench": 71.72
     },
     {
       "id": "grok-4.20",
@@ -605,7 +659,16 @@
       "speed": 90,
       "est": {
         "speed": true
-      }
+      },
+      "dims": {
+        "math": 77.19,
+        "hallu": 79.2,
+        "science": 75.44,
+        "ifollow": 35.24,
+        "coding": 47.37,
+        "plan": 66.82
+      },
+      "bench": 63.54
     },
     {
       "id": "gpt-5.1",
@@ -749,7 +812,16 @@
       "speed": 120,
       "est": {
         "speed": true
-      }
+      },
+      "dims": {
+        "math": 70.18,
+        "hallu": 70.44,
+        "science": 70.17,
+        "ifollow": 20.0,
+        "coding": 46.32,
+        "plan": 77.68
+      },
+      "bench": 59.13
     },
     {
       "id": "deepseek-v4-flash",
@@ -767,7 +839,16 @@
       "speed": 180,
       "est": {
         "speed": true
-      }
+      },
+      "dims": {
+        "math": 78.95,
+        "hallu": 78.25,
+        "science": 70.17,
+        "ifollow": 35.24,
+        "coding": 58.95,
+        "plan": 80.72
+      },
+      "bench": 67.05
     },
     {
       "id": "glm-4.5",
@@ -1056,7 +1137,16 @@
       "est": {
         "elo": true,
         "speed": true
-      }
+      },
+      "dims": {
+        "math": 75.44,
+        "hallu": 78.85,
+        "science": 77.19,
+        "ifollow": 42.86,
+        "coding": 51.58,
+        "plan": 84.95
+      },
+      "bench": 68.48
     },
     {
       "id": "grok-4",
