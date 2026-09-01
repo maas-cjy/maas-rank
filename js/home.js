@@ -44,6 +44,7 @@
     };
     var cards = [
       { label: '竞技场 Elo 第一',   pick: pickBy('elo', -1),       val: function (m) { return m.elo; },       unit: 'Elo',     tab: 'elo' },
+      { label: '综合能力第一',       pick: pickBy('bench', -1),    val: function (m) { return R.fmtBench(m.bench); }, unit: '分', tab: 'bench' },
       { label: '中文能力第一',        pick: pickBy('superclue', -1), val: function (m) { return m.superclue; }, unit: '分',      tab: 'superclue' },
       { label: '输入价最低',         pick: pickBy('priceIn', 1),   val: function (m) { return fmtPrice(m.priceIn); }, unit: '/ 百万tok', tab: 'priceIn' },
       { label: '上下文最长',         pick: pickBy('context', -1),  val: function (m) { return fmtCtx(m.context); }, unit: 'tokens', tab: 'context' }
@@ -131,8 +132,13 @@
     if (subEl) {
       var totalChanges = upList.length + downList.length + newList.length + outList.length;
       subEl.textContent = totalChanges === 0
-        ? '本周数据无变化（首次部署 vs 上周快照）'
+        ? '与上周快照相比，本期榜单保持稳定'
         : '对比 ' + prev.date + ' 快照：' + upList.length + ' 涨 / ' + downList.length + ' 跌 / ' + newList.length + ' 新进 / ' + outList.length + ' 退出。';
+    }
+
+    if (totalChanges === 0) {
+      renderStableFallback(cur);
+      return;
     }
 
     renderList('weeklyUp', upList, 'up');
@@ -142,6 +148,40 @@
     if (downList.length === 0 && outList.length) {
       document.querySelector('#weeklySection .weekly-cell:nth-child(3) h3').textContent = '退出模型 Top 5';
     }
+  }
+
+  /* 周对比无变化时：用静态 Top 3 榜单兜底，避免大面积「暂无」 */
+  function renderStableFallback(cur) {
+    var grid = document.getElementById('weeklyGrid');
+    if (!grid) return;
+    function miniList(list, key, unit, tab) {
+      if (!list.length) {
+        return '<li class="weekly-empty" style="border:none;padding:8px 0">暂无数据</li>';
+      }
+      return list.slice(0, 3).map(function (m, i) {
+        var v = key === 'bench' ? R.fmtBench(m.bench)
+          : key === 'priceIn' ? R.fmtCny(m.priceIn)
+          : R.fmtNum(m[key]);
+        return '<li>'
+          + '<span class="wk-name"><span class="wk-rank">' + (i + 1) + '</span>'
+          + '<a href="model.html?id=' + R.esc(m.id) + '">' + R.esc(m.name) + '</a>'
+          + '<small>' + R.esc(m.provider || '') + '</small></span>'
+          + '<span class="wk-delta">' + v + (unit ? ' ' + unit : '') + '</span>'
+          + '</li>';
+      }).join('');
+    }
+    var topElo = cur.slice().sort(function (a, b) { return (b.elo || 0) - (a.elo || 0); });
+    var topBench = cur.filter(function (m) { return m.bench != null; })
+      .sort(function (a, b) { return b.bench - a.bench; });
+    var lowPrice = cur.filter(function (m) { return m.priceIn != null; })
+      .sort(function (a, b) { return a.priceIn - b.priceIn; });
+    grid.innerHTML = '<div class="weekly-stable-note">'
+      + '<b>本期榜单保持稳定</b> · 与上周快照相比，竞技场 Elo、综合能力分与 API 价格均无变化。'
+      + 'LMArena 官方数据更新较慢时，这种情况会偶尔出现。'
+      + '<a href="report.html">查看完整周报 →</a></div>'
+      + '<div class="weekly-cell"><h3>Elo Top 3</h3><ol class="weekly-list weekly-up-list">' + miniList(topElo, 'elo', 'Elo', 'elo') + '</ol></div>'
+      + '<div class="weekly-cell"><h3>综合能力 Top 3</h3><ol class="weekly-list weekly-new-list">' + miniList(topBench, 'bench', '分', 'bench') + '</ol></div>'
+      + '<div class="weekly-cell"><h3>输入价最低 Top 3</h3><ol class="weekly-list weekly-down-list">' + miniList(lowPrice, 'priceIn', '/Mtok', 'priceIn') + '</ol></div>';
   }
 
   function init() {

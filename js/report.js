@@ -89,7 +89,7 @@
 
   /* ---------- 正式周报视图 ---------- */
 
-  function renderReport(prev) {
+  function renderReport(prev, hist) {
     var cur = R.getModels();
     var prevMap = {};
     prev.models.forEach(function (p) { prevMap[p.id] = p; });
@@ -215,11 +215,67 @@
     }
 
     if (!html) {
-      html = '<section class="card r-section"><h2>本期无变化</h2>'
-        + '<p class="sub">与上一期快照相比，本期榜单的排名与价格均无变化。</p></section>';
+      html = renderStableSection(prev, hist);
     }
 
     document.getElementById('rBody').innerHTML = html;
+  }
+
+  /* ---------- 无变化时的兜底视图 ---------- */
+
+  function renderStableSection(prev, hist) {
+    var cur = R.getModels();
+    var top = cur.slice().sort(function (a, b) { return (b.elo || -Infinity) - (a.elo || -Infinity); }).slice(0, 10);
+    var rows = top.map(function (m, i) {
+      return '<tr><td>' + (i + 1) + '</td><td>' + modelCell(m) + '</td>'
+        + '<td>' + R.fmtNum(m.elo) + '</td>'
+        + '<td>' + (m.bench == null ? '—' : R.fmtBench(m.bench)) + '</td>'
+        + '<td>' + (m.superclue == null ? '—' : R.fmtNum(m.superclue)) + '</td>'
+        + '<td>' + (m.priceIn == null ? '—' : R.fmtCny(m.priceIn)) + '</td></tr>';
+    }).join('');
+
+    var html = '<section class="card r-section">'
+      + '<h2>本期榜单保持稳定</h2>'
+      + '<p class="sub">与 ' + R.esc(prev.date || '上期') + ' 快照相比，竞技场 Elo、综合能力分与 API 价格均未变化。'
+      + 'LMArena 官方数据更新较慢，或 SuperCLUE 尚未发布新一期榜单时，会出现这种情况。'
+      + '下方提供当前 Top 10 与历史趋势作为参考。</p>'
+      + '</section>';
+
+    html += tableCard('当前榜单 Top 10', '本期各维度领先模型一览，便于横向对比', ['排名', '模型', '竞技场 Elo', '综合能力', 'SuperCLUE', '输入价'], rows);
+
+    if (hist && hist.snapshots && hist.snapshots.length > 1) {
+      html += '<section class="card chart-card r-section">'
+        + '<h2>竞技场 Elo 历史趋势（Top 5）</h2>'
+        + '<p class="sub">基于最近 ' + hist.snapshots.length + ' 期快照，观察头部模型分数走势</p>'
+        + '<div id="rTrendChart" style="width:100%;height:320px;"></div></section>';
+    }
+    return html;
+  }
+
+  function renderTrendChart(hist) {
+    var dom = document.getElementById('rTrendChart');
+    if (!dom || typeof echarts === 'undefined') return;
+    var dates = hist.snapshots.map(function (s) { return s.date; });
+    var top5 = R.getModels().slice().sort(function (a, b) { return (b.elo || 0) - (a.elo || 0); }).slice(0, 5);
+    var series = top5.map(function (m) {
+      var data = hist.snapshots.map(function (s) {
+        var sm = s.models.find(function (x) { return x.id === m.id; });
+        return sm ? (sm.elo || null) : null;
+      });
+      data.push(m.elo || null);
+      return { name: m.name, type: 'line', smooth: 0.3, symbolSize: 6, data: data };
+    });
+    var chart = echarts.init(dom);
+    chart.setOption({
+      tooltip: { trigger: 'axis' },
+      legend: { data: top5.map(function (m) { return m.name; }), bottom: 0 },
+      grid: { left: '3%', right: '4%', bottom: '16%', top: '10%', containLabel: true },
+      xAxis: { type: 'category', boundaryGap: false, data: dates.concat([R.getMeta().updated]) },
+      yAxis: { type: 'value', scale: true, name: 'Elo' },
+      series: series,
+      color: ['#7F77DD', '#1D9E75', '#D85A30', '#378ADD', '#D4537E']
+    });
+    window.addEventListener('resize', function () { chart.resize(); });
   }
 
   function priceCell(oldV, newV) {
@@ -275,9 +331,12 @@
       .catch(function () { return null; });
   }).then(function (hist) {
     var snaps = hist && hist.snapshots && hist.snapshots.length ? hist.snapshots : [];
-    if (snaps.length) renderReport(snaps[snaps.length - 1]);
+    if (snaps.length) renderReport(snaps[snaps.length - 1], hist);
     else renderBaseline();
     showContent();
+    if (hist && hist.snapshots && hist.snapshots.length > 1) {
+      renderTrendChart(hist);
+    }
   }).catch(function (err) {
     document.getElementById('viewLoading').innerHTML =
       '<h1>数据加载失败</h1><p>' + R.esc(err.message) + '。请通过本地服务器访问（如 python3 -m http.server）。</p>';
