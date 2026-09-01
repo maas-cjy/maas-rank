@@ -11,7 +11,7 @@
  *       切换域名时需同步修改该脚本顶部的 SITE_URL 并重新运行。
  * ========================================================= */
 (function () {
-  var DOMAIN = '';
+  var DOMAIN = 'https://maasrank.com';
 
   var OLD_BASE = 'https://maas-cjy.github.io/maas-rank/';
 

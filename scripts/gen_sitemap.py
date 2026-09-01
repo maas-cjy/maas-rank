@@ -17,7 +17,7 @@ from datetime import date
 # ============================================================
 # 站点地址配置：绑定自定义域名后改这里（结尾不带斜杠）
 # ============================================================
-SITE_URL = "https://maas-cjy.github.io/maas-rank"
+SITE_URL = "https://maasrank.com"
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 

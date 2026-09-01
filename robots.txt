@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://maas-cjy.github.io/maas-rank/sitemap.xml
+Sitemap: https://maasrank.com/sitemap.xml
