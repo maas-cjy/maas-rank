@@ -11,16 +11,5 @@
       "date": "2026年7月"
     }
   },
-  "changes": [
-    "qwen3.8-max.bench None→73.06",
-    "kimi-k3.bench None→71.18",
-    "ernie-5.1.bench None→58.18",
-    "glm-5.2.bench None→63.19",
-    "mimo-v2.5-pro.bench None→53.37",
-    "deepseek-v4-pro.bench None→71.72",
-    "hunyuan-hy3.bench None→63.54",
-    "minimax-m3.bench None→59.13",
-    "deepseek-v4-flash.bench None→67.05",
-    "doubao-seed-2.1-pro.bench None→68.48"
-  ]
+  "changes": []
 }

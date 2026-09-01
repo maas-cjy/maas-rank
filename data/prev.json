@@ -1,5 +1,5 @@
 {
-  "date": "2026-08-24",
+  "date": "2026-09-01",
   "models": [
     {
       "id": "claude-opus-5",
@@ -69,7 +69,7 @@
       "name": "Qwen3.8-Max",
       "elo": 1482,
       "superclue": 71.48,
-      "bench": null,
+      "bench": 73.06,
       "priceIn": 12.0,
       "priceOut": 36.0
     },
@@ -123,7 +123,7 @@
       "name": "Kimi K3",
       "elo": 1476,
       "superclue": 70.68,
-      "bench": null,
+      "bench": 71.18,
       "priceIn": 20.0,
       "priceOut": 100.0
     },
@@ -177,7 +177,7 @@
       "name": "ERNIE 5.1",
       "elo": 1468,
       "superclue": 54.56,
-      "bench": null,
+      "bench": 58.18,
       "priceIn": 4.0,
       "priceOut": 18.0
     },
@@ -195,7 +195,7 @@
       "name": "GLM-5.2",
       "elo": 1465,
       "superclue": 63.27,
-      "bench": null,
+      "bench": 63.19,
       "priceIn": 8.0,
       "priceOut": 28.0
     },
@@ -204,7 +204,7 @@
       "name": "MiMo V2.5 Pro",
       "elo": 1465,
       "superclue": 53.01,
-      "bench": null,
+      "bench": 53.37,
       "priceIn": 3.0,
       "priceOut": 6.0
     },
@@ -303,7 +303,7 @@
       "name": "DeepSeek V4 Pro",
       "elo": 1451,
       "superclue": 70.1,
-      "bench": null,
+      "bench": 71.72,
       "priceIn": 3.0,
       "priceOut": 6.0
     },
@@ -438,7 +438,7 @@
       "name": "混元 Hy3",
       "elo": 1441,
       "superclue": 62.13,
-      "bench": null,
+      "bench": 63.54,
       "priceIn": 1.0,
       "priceOut": 4.0
     },
@@ -573,7 +573,7 @@
       "name": "MiniMax M3",
       "elo": 1435,
       "superclue": 56.9,
-      "bench": null,
+      "bench": 59.13,
       "priceIn": 2.1,
       "priceOut": 8.4
     },
@@ -582,7 +582,7 @@
       "name": "DeepSeek V4 Flash",
       "elo": 1432,
       "superclue": 65.6,
-      "bench": null,
+      "bench": 67.05,
       "priceIn": 1.0,
       "priceOut": 2.0
     },
@@ -861,7 +861,7 @@
       "name": "Doubao Seed 2.1 Pro",
       "elo": 1410,
       "superclue": 65.94,
-      "bench": null,
+      "bench": 68.48,
       "priceIn": 6.0,
       "priceOut": 30.0
     },
