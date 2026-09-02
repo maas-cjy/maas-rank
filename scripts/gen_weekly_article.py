@@ -359,6 +359,7 @@ def build_page(date, issue, title, summary, tags, body_html):
 </footer>
 
 <script src="../js/site.js"></script>
+<script src="../js/analytics.js"></script>
 </body>
 </html>
 """
