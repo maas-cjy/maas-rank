@@ -1,5 +1,18 @@
 [
   {
+    "file": "insight-2026-09.html",
+    "title": "2026-09 大模型行业观察：涨价与降本齐飞，开源正在改写竞争规则",
+    "date": "2026-09-02",
+    "issue": null,
+    "summary": "复盘 8 月大模型行业的三大主线：DeepSeek 峰谷定价开启「按价值收费」、中国厂商开源海啸重塑底座格局、Agent 化把竞争从模型智商推向系统能力，并结合 MaaS Rank 榜单数据给出对选型者的启示。",
+    "tags": [
+      "行业观察",
+      "价格战",
+      "开源生态",
+      "Agent"
+    ]
+  },
+  {
     "file": "compare-2026-09.html",
     "title": "2026-09 国产旗舰实测：Qwen3.8-Max vs Kimi K3 vs DeepSeek V4 Pro 六维对比",
     "date": "2026-09-01",
