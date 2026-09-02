@@ -51,6 +51,15 @@ jobs:
       - name: 生成本周榜单解读文章
         run: python scripts/gen_weekly_article.py
 
+      - name: 刷新选型指南
+        run: python scripts/gen_guide_article.py
+
+      - name: 刷新厂商盘点
+        run: python scripts/gen_provider_article.py
+
+      - name: 刷新模型对比实测
+        run: python scripts/gen_compare_article.py
+
       - name: 重新生成 sitemap 与 robots
         run: python scripts/gen_sitemap.py
 
