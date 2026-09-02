@@ -184,9 +184,37 @@
       + '<div class="weekly-cell"><h3>输入价最低 Top 3</h3><ol class="weekly-list weekly-down-list">' + miniList(lowPrice, 'priceIn', '/Mtok', 'priceIn') + '</ol></div>';
   }
 
+  /* 最新解读：从 data/articles.json 取最近 3 篇（过滤草稿），与文章中心同一数据源 */
+  function renderLatest() {
+    var section = document.getElementById('latestSection');
+    if (!section) return;
+    fetch('data/articles.json')
+      .then(function (r) { return r.ok ? r.json() : []; })
+      .then(function (arts) {
+        var list = (arts || []).filter(function (a) { return !a.draft; }).slice(0, 3);
+        if (!list.length) { section.style.display = 'none'; return; }
+        var grid = document.getElementById('latestGrid');
+        grid.innerHTML = list.map(function (a) {
+          var tags = (a.tags || []).map(function (t) {
+            return '<span class="art-tag">' + R.esc(t) + '</span>';
+          }).join('');
+          return '<a class="art-card" href="articles/' + encodeURIComponent(a.file) + '">'
+            + '<div class="art-date">' + R.esc(a.date) + (a.issue ? ' · 第 ' + a.issue + ' 期' : '') + '</div>'
+            + '<h2 class="art-title">' + R.esc(a.title) + '</h2>'
+            + '<p class="art-summary">' + R.esc(a.summary) + '</p>'
+            + (tags ? '<div class="art-tags">' + tags + '</div>' : '')
+            + '</a>';
+        }).join('');
+        var dateEl = document.getElementById('latestDate');
+        if (dateEl) dateEl.textContent = '最近更新 ' + list[0].date;
+      })
+      .catch(function () { section.style.display = 'none'; });
+  }
+
   function init() {
     renderTop3();
     renderKpi();
+    renderLatest();
     fetch('data/prev.json', { cache: 'no-cache' })
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (data) { renderWeekly(data); })

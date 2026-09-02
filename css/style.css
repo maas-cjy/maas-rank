@@ -468,6 +468,12 @@ footer a { color: var(--muted); }
 /* ===================== 文章中心 · 列表 ===================== */
 .art-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 20px; }
 @media (max-width: 860px) { .art-list { grid-template-columns: 1fr; } }
+/* 首页「最新解读」三列紧凑版 */
+.art-list-latest { grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px; }
+.art-list-latest .art-card { padding: 16px 18px; }
+.art-list-latest .art-summary { -webkit-line-clamp: 3; }
+@media (max-width: 1020px) { .art-list-latest { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 860px) { .art-list-latest { grid-template-columns: 1fr; } }
 .art-card {
   display: block; background: var(--card); border: 1px solid var(--line);
   border-radius: var(--radius); padding: 20px 22px; text-decoration: none;
