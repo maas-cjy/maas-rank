@@ -1,14 +1,14 @@
 [
   {
-    "file": "weekly-2026-09-01.html",
-    "title": "2026-09-01 榜单解读：Claude Opus 5 继续 Elo 领跑，头部竞争胶着",
+    "file": "compare-2026-09.html",
+    "title": "2026-09 国产旗舰实测：Qwen3.8-Max vs Kimi K3 vs DeepSeek V4 Pro 六维对比",
     "date": "2026-09-01",
-    "issue": 1,
-    "summary": "第 1 期：本期收录 333 个模型，竞技场第一 Claude Opus 5（1504），榜单与上期一致，进入稳定期，附 Top 10 总览、六维能力看点、价格动向与选型建议。",
+    "issue": null,
+    "summary": "基于 SuperCLUE 六维评分与 LMArena Elo，对 Qwen3.8-Max vs Kimi K3 vs DeepSeek V4 Pro 三个开源旗舰模型做六维雷达、Elo 趋势、价格与性价比的横向实测，给出分场景选型结论，随数据每周自动更新。",
     "tags": [
-      "周榜解读",
-      "Elo",
-      "选型建议"
+      "模型对比",
+      "六维评测",
+      "国产大模型"
     ]
   },
   {
@@ -21,6 +21,18 @@
       "厂商盘点",
       "模型生态",
       "大模型厂商"
+    ]
+  },
+  {
+    "file": "weekly-2026-09-01.html",
+    "title": "2026-09-01 榜单解读：Claude Opus 5 继续 Elo 领跑，头部竞争胶着",
+    "date": "2026-09-01",
+    "issue": 1,
+    "summary": "第 1 期：本期收录 333 个模型，竞技场第一 Claude Opus 5（1504），榜单与上期一致，进入稳定期，附 Top 10 总览、六维能力看点、价格动向与选型建议。",
+    "tags": [
+      "周榜解读",
+      "Elo",
+      "选型建议"
     ]
   },
   {
