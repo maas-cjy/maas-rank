@@ -359,6 +359,16 @@ def build_page(date, issue, title, summary, tags, body_html):
 </footer>
 
 <script src="../js/site.js"></script>
+<!-- 百度统计 -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?d3e2eb9c2ec97fd57da3493e0b6788f3";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
 <script src="../js/analytics.js"></script>
 </body>
 </html>
