@@ -490,6 +490,15 @@ footer a { color: var(--muted); }
 .article-head h1 { font-size: 24px; line-height: 1.4; font-weight: 700; margin: 0 0 12px; }
 .article-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 12.5px; color: var(--muted); }
 .article-meta .art-tag { font-size: 11.5px; }
+.update-banner {
+  display: inline-flex; align-items: center; gap: 7px;
+  margin-top: 12px; padding: 6px 14px;
+  font-size: 12.5px; font-weight: 550;
+  color: #166534; background: #f0fdf4; border: 1px solid #bbf7d0;
+  border-radius: 999px;
+}
+.update-banner::before { content: "🔄"; font-size: 12px; }
+@media (max-width: 720px) { .update-banner { display: flex; } }
 .article-body {
   background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
   box-shadow: var(--shadow); padding: 26px 30px; margin-top: 16px;

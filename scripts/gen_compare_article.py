@@ -343,6 +343,7 @@ def build_page(date, title, summary, tags, body_html, fname, category="模型对
         <span>MaaS Rank</span>
         <span class="art-tags">{tag_html}</span>
       </div>
+      <div class="update-banner">本周已更新 · 数据截至 {date}</div>
     </div>
     <article class="article-body">
 {body_html}
