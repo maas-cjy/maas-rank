@@ -5,7 +5,7 @@
   var radar = null;
   var posChart = null;
   var trendChart = null;
-  var SITE = (window.MR_SITE && window.MR_SITE.base) || 'https://maas-cjy.github.io/maas-rank/';
+  var SITE = (window.MR_SITE && window.MR_SITE.base) || 'https://maasrank.com/';
 
   /* ---------- 排序 / 排名工具 ---------- */
 

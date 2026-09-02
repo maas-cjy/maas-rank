@@ -2,7 +2,7 @@
 (function () {
   'use strict';
   var R = window.MRank;
-  var SITE = 'https://maas-cjy.github.io/maas-rank/';
+  var SITE = 'https://maasrank.com/';
 
   /* ---------- 工具 ---------- */
 

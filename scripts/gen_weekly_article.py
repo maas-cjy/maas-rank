@@ -17,7 +17,7 @@ import os
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-OLD_BASE = "https://maas-cjy.github.io/maas-rank/"
+BASE = "https://maasrank.com/"
 
 DIM_LABELS = [
     ("math", "数学推理"), ("hallu", "幻觉控制"), ("science", "科学推理"),
@@ -317,7 +317,7 @@ def build_page(date, issue, title, summary, tags, body_html):
 <meta name="description" content="{esc(summary)}">
 <meta name="keywords" content="大模型排行榜,榜单解读,大模型评测,模型选型,{esc(','.join(tags))}">
 <meta name="robots" content="index, follow">
-<link rel="canonical" href="{OLD_BASE}articles/weekly-{date}.html">
+<link rel="canonical" href="{BASE}articles/weekly-{date}.html">
 <meta name="theme-color" content="#1E1B4B">
 <link rel="icon" type="image/svg+xml" href="../assets/logo.svg">
 <title>{esc(title)} | MaaS Rank 大模型排行榜</title>
@@ -325,19 +325,19 @@ def build_page(date, issue, title, summary, tags, body_html):
 <meta property="og:site_name" content="MaaS Rank">
 <meta property="og:title" content="{esc(title)}">
 <meta property="og:description" content="{esc(summary)}">
-<meta property="og:image" content="{OLD_BASE}assets/og-image.png">
+<meta property="og:image" content="{BASE}assets/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:url" content="{OLD_BASE}articles/weekly-{date}.html">
+<meta property="og:url" content="{BASE}articles/weekly-{date}.html">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="{date}">
 {tag_meta}
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{esc(title)}">
 <meta name="twitter:description" content="{esc(summary)}">
-<meta name="twitter:image" content="{OLD_BASE}assets/og-image.png">
+<meta name="twitter:image" content="{BASE}assets/og-image.png">
 <script type="application/ld+json">
-{{"@context":"https://schema.org","@type":"BlogPosting","headline":{json.dumps(title, ensure_ascii=False)},"datePublished":"{date}","url":"{OLD_BASE}articles/weekly-{date}.html","publisher":{{"@type":"Organization","name":"MaaS Rank"}},"inLanguage":"zh-CN"}}
+{{"@context":"https://schema.org","@type":"BlogPosting","headline":{json.dumps(title, ensure_ascii=False)},"datePublished":"{date}","url":"{BASE}articles/weekly-{date}.html","publisher":{{"@type":"Organization","name":"MaaS Rank"}},"inLanguage":"zh-CN"}}
 </script>
 <link rel="stylesheet" href="../css/style.css">
 </head>

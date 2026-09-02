@@ -84,7 +84,7 @@ d.text((lx + lsize + 36, 436),
 
 # 底部：URL（左）+ 每周更新（右）
 f_url = font(ARIAL, 24)
-d.text((lx, 552), "maas-cjy.github.io/maas-rank", font=f_url, fill=DIM)
+d.text((lx, 552), "maasrank.com", font=f_url, fill=DIM)
 f_tip = font(HIRAGINO, 24, index=2)
 tip = "数据每周自动更新"
 tw = d.textlength(tip, font=f_tip)
