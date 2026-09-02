@@ -15,6 +15,7 @@ on:
       - 'report.html'
       - 'articles.html'
       - 'about.html'
+      - 'baidu_verify_*.html' # 百度站长验证文件（更换验证文件也自动触发部署）
       - 'css/**'
       - 'js/**'
       - 'articles/**'
