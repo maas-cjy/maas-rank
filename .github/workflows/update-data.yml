@@ -16,6 +16,7 @@ on:
       - 'articles.html'
       - 'about.html'
       - 'baidu_verify_*.html' # 百度站长验证文件（更换验证文件也自动触发部署）
+      - 'google*.html' # Google Search Console 验证文件
       - 'css/**'
       - 'js/**'
       - 'articles/**'
