@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-07",
+  "updated": "2026-09-14",
   "sources": {
     "lmarena": {
       "ok": false,
@@ -7,9 +7,12 @@
     },
     "superclue": {
       "ok": true,
-      "count": 13,
+      "count": 18,
       "date": "2026年7月"
     }
   },
-  "changes": []
+  "changes": [
+    "qwen3.8-max.superclue 71.48→72.62",
+    "qwen3.8-max.bench 73.06→73.92"
+  ]
 }
