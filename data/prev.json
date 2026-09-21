@@ -1,5 +1,5 @@
 {
-  "date": "2026-09-01",
+  "date": "2026-09-14",
   "models": [
     {
       "id": "claude-opus-5",
@@ -68,8 +68,8 @@
       "id": "qwen3.8-max",
       "name": "Qwen3.8-Max",
       "elo": 1482,
-      "superclue": 71.48,
-      "bench": 73.06,
+      "superclue": 72.62,
+      "bench": 73.92,
       "priceIn": 12.0,
       "priceOut": 36.0
     },
