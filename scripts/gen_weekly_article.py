@@ -73,9 +73,9 @@ def analyze(models, prev, hist):
         if m.get("elo") is not None and pm.get("elo") is not None:
             d = m["elo"] - pm["elo"]
             if d > 0:
-                ups.append((m, d))
+                ups.append((m, pm["elo"], d))
             elif d < 0:
-                downs.append((m, d))
+                downs.append((m, pm["elo"], d))
         for pk, label in (("priceIn", "输入"), ("priceOut", "输出")):
             if m.get(pk) is not None and pm.get(pk) is not None and m[pk] != pm[pk]:
                 price_changes.append((m, label, pm[pk], m[pk]))
@@ -147,14 +147,14 @@ def build_sections(d, date):
     if has_change:
         parts = ["<h2>二、本周变化</h2>"]
         if d["ups"]:
-            ups_sorted = sorted(d["ups"], key=lambda x: -x[1])[:5]
-            lis = "".join(f"<li><a href=\"../model.html?id={esc(m['id'])}\">{esc(m['name'])}</a>：{pm['elo']} → {m['elo']}（<b>+{delta}</b>）</li>"
-                          for m, delta in ups_sorted)
+            ups_sorted = sorted(d["ups"], key=lambda x: -x[2])[:5]
+            lis = "".join(f"<li><a href=\"../model.html?id={esc(m['id'])}\">{esc(m['name'])}</a>：{old} → {m['elo']}（<b>+{delta}</b>）</li>"
+                          for m, old, delta in ups_sorted)
             parts.append(f"<h3>涨幅居前</h3><ul>{lis}</ul>")
         if d["downs"]:
-            downs_sorted = sorted(d["downs"], key=lambda x: x[1])[:5]
-            lis = "".join(f"<li><a href=\"../model.html?id={esc(m['id'])}\">{esc(m['name'])}</a>：{pm['elo']} → {m['elo']}（{delta}）</li>"
-                          for m, delta in downs_sorted)
+            downs_sorted = sorted(d["downs"], key=lambda x: x[2])[:5]
+            lis = "".join(f"<li><a href=\"../model.html?id={esc(m['id'])}\">{esc(m['name'])}</a>：{old} → {m['elo']}（{delta}）</li>"
+                          for m, old, delta in downs_sorted)
             parts.append(f"<h3>回落明显</h3><ul>{lis}</ul>")
         if d["news"]:
             lis = "".join(f"<li><a href=\"../model.html?id={esc(m['id'])}\">{esc(m['name'])}</a>（{esc(m.get('provider',''))}，Elo {m.get('elo','—')}）</li>"
@@ -260,7 +260,7 @@ def build_title_summary(d, date):
     e1 = d["elo_top"][0] if d["elo_top"] else None
     has_change = bool(d["ups"] or d["downs"] or d["news"] or d["price_changes"])
     if has_change and d["ups"]:
-        m, delta = sorted(d["ups"], key=lambda x: -x[1])[0]
+        m, old, delta = sorted(d["ups"], key=lambda x: -x[2])[0]
         title = f"{date} 榜单解读：{m['name']} 领涨 {delta} 分"
         if e1 and e1["id"] != m["id"]:
             title += f"，{e1['name']}稳居榜首"

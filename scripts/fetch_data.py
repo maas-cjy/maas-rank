@@ -29,6 +29,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import sys
 import urllib.parse
@@ -137,16 +138,119 @@ def to_num(v) -> float | None:
 # ---------------------------------------------------------------------------
 # 1. LMArena Elo —— HuggingFace datasets-server
 # ---------------------------------------------------------------------------
-def fetch_lmarena() -> tuple[dict[str, float], list[dict]]:
-    """返回 (elo_map: {模型名小写: elo}, rows: 全量原始行)。失败返回 ({}, [])。"""
+def fetch_lmarena(as_of: str = "") -> tuple[dict[str, float], list[dict]]:
+    """
+    返回 (elo_map: {模型名小写: elo}, rows: 全量原始行)。失败返回 ({}, [])。
+
+    数据获取策略（按顺序尝试）：
+      1. Hub parquet 直载：huggingface.co → hf-mirror.com（国内镜像）
+         /api/datasets/lmarena-ai/leaderboard-dataset/parquet/text/{latest|full}/0.parquet
+         （datasets-server 的 /rows 接口对该数据集已不可用，2026-09 起持续失败，
+          故改为直接下载官方 parquet 导出，pyarrow 解析，无 pandas 依赖）
+      2. 兜底：datasets-server /rows 分页接口（历史行为，保留）
+    """
     log("→ 抓取 LMArena Elo (HuggingFace lmarena-ai/leaderboard-dataset)")
-    dataset = "lmarena-ai/leaderboard-dataset"
+    split = "full" if as_of else "latest"
+    rows = fetch_lmarena_parquet(split, as_of)
+    if not rows:
+        log("  ⚠ parquet 下载失败，回退 datasets-server /rows 接口")
+        elo_map, rows = fetch_lmarena_rows()
+        return elo_map, rows
+    elo_map = {r["name"]: r["rating"] for r in rows}
+    log(f"  ✓ parquet 解析成功：{len(elo_map)} 个模型（overall 分类）")
+    return elo_map, rows
+
+
+LM_DS = "lmarena-ai/leaderboard-dataset"
+LM_PARQUET_HOSTS = ["https://huggingface.co", "https://hf-mirror.com"]
+LM_FULL_CACHE = "/tmp/lmarena_text_full.parquet"
+
+
+def fetch_lmarena_parquet(split: str, as_of: str = "") -> list[dict]:
+    """下载 parquet 并解析为 [{name, org, license, rating}]；as_of 非空时取 ≤as_of 的最近一期。"""
+    import io
+
+    try:
+        import pyarrow.parquet as pq
+    except ImportError:
+        log("  ✗ 缺少 pyarrow，无法解析 parquet（pip install pyarrow）")
+        return []
+
+    path = f"/api/datasets/{LM_DS}/parquet/text/{split}/0.parquet"
+    raw = None
+    if as_of and os.path.exists(LM_FULL_CACHE):
+        log(f"  使用缓存 full parquet：{LM_FULL_CACHE}")
+        raw = open(LM_FULL_CACHE, "rb").read()
+    if raw is None:
+        for host in LM_PARQUET_HOSTS:
+            url = host + path
+            try:
+                raw = http_get(url, retries=1)
+                if raw[:4] != b"PAR1":
+                    log(f"  ⚠ {url} 返回非 parquet 内容，跳过")
+                    raw = None
+                    continue
+                if as_of:
+                    try:
+                        with open(LM_FULL_CACHE, "wb") as f:
+                            f.write(raw)
+                    except OSError:
+                        pass  # 缓存写失败不影响主流程
+                break
+            except Exception as e:  # noqa: BLE001
+                log(f"  ⚠ {url} 下载失败：{e}")
+                raw = None
+    if raw is None:
+        return []
+
+    try:
+        table = pq.read_table(io.BytesIO(raw))
+        cols = {c: table.column(c).to_pylist()
+                for c in ("model_name", "organization", "license", "rating",
+                          "category", "leaderboard_publish_date")
+                if c in table.column_names}
+        if "leaderboard_publish_date" not in cols:
+            cols["leaderboard_publish_date"] = [""] * table.num_rows
+        names = cols["model_name"]
+        out: list[dict] = []
+        latest_seen = ""
+        for i in range(table.num_rows):
+            cat = str(cols["category"][i] or "").lower()
+            if cat and cat != "overall":
+                continue
+            pub = str(cols["leaderboard_publish_date"][i] or "")[:10]
+            if as_of:
+                # full split 含历史多期：只保留 ≤as_of 的最近一期快照
+                if pub > as_of:
+                    continue
+                if latest_seen and pub < latest_seen:
+                    continue
+                latest_seen = pub
+            name = names[i]
+            rating = to_num(cols["rating"][i])
+            if name and rating is not None:
+                out.append({
+                    "name": str(name).lower().strip(),
+                    "org": str(cols["organization"][i] or "").strip(),
+                    "license": str(cols["license"][i] or "").strip(),
+                    "rating": rating,
+                })
+        if as_of:
+            log(f"  ✓ LMArena 历史快照选用：{latest_seen}（≤ {as_of} 的最近一期）")
+        return out
+    except Exception as e:  # noqa: BLE001
+        log(f"  ✗ parquet 解析失败：{e}")
+        return []
+
+
+def fetch_lmarena_rows() -> tuple[dict[str, float], list[dict]]:
+    """旧的 datasets-server /rows 分页抓取（兜底）。返回 (elo_map, rows)。"""
     out: dict[str, float] = {}
     rows: list[dict] = []
     try:
         offset, page_size = 0, 100
         while True:
-            url = hf_rows_url(dataset, "text", "latest", offset, page_size)
+            url = hf_rows_url(LM_DS, "text", "latest", offset, page_size)
             raw = http_get(url)
             data = json.loads(raw)
             page = data.get("rows", [])
@@ -530,6 +634,10 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="MaaS Rank 数据自动更新")
     ap.add_argument("--data", default=str(DATA_FILE), help="models.json 路径")
     ap.add_argument("--dry-run", action="store_true", help="只打印变更不写文件")
+    ap.add_argument("--as-of", dest="as_of", default="",
+                    help="补历史用：只用 LMArena 该日期（含）之前的最近一期快照，如 2026-10-05")
+    ap.add_argument("--date", dest="run_date", default="",
+                    help="补历史用：覆盖快照日期（写入 meta.updated / .last_update.json），如 2026-10-05")
     args = ap.parse_args()
 
     data_path = Path(args.data)
@@ -540,11 +648,11 @@ def main() -> int:
         data = json.load(f)
     meta = data["meta"]
 
-    today = date.today().isoformat()
+    today = args.run_date or date.today().isoformat()
     diff = {"updated": today, "sources": {}, "changes": []}
 
     # 1) LMArena
-    elo_map, lm_rows = fetch_lmarena()
+    elo_map, lm_rows = fetch_lmarena(as_of=args.as_of)
     diff["sources"]["lmarena"] = {"ok": bool(elo_map), "count": len(elo_map)}
     families = merge_families(lm_rows)
 

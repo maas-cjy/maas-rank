@@ -21,6 +21,9 @@ on:
       - 'js/**'
       - 'articles/**'
       - 'scripts/**'
+      - 'data/**' # 数据目录（手动补更/修数据推送时触发部署）
+      - 'sitemap.xml'
+      - 'robots.txt'
       - '.github/**'
 
 permissions:
