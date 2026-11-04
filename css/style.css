@@ -550,3 +550,17 @@ footer a { color: var(--muted); }
 }
 .cv-chart svg { width: 100%; height: auto; max-width: 480px; }
 .article-body td.cv-best { background: #F3EFFF; color: var(--brand); }
+
+/* 数据源异常提示条（data/health.json 判定 stale 时由 common.js 插入） */
+.data-alert {
+  display: flex; gap: 10px; align-items: flex-start;
+  background: var(--amber-weak); border: 1px solid #fcd34d;
+  border-left: 3px solid var(--amber);
+  border-radius: 10px; padding: 12px 14px; margin-bottom: 18px;
+  color: #78350f; font-size: 13px; line-height: 1.7;
+}
+.data-alert-icon { font-size: 15px; line-height: 1.5; flex-shrink: 0; }
+.data-alert-body { display: flex; flex-direction: column; gap: 2px; }
+.data-alert-body b { font-size: 13px; font-weight: 700; color: #92400e; }
+.data-alert-body a { color: #92400e; text-decoration: underline; text-underline-offset: 2px; }
+.data-alert-body a:hover { color: #78350f; }

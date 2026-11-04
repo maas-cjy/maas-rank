@@ -131,8 +131,39 @@
     qs: qs
   };
 
+  /* 数据源异常提示条：
+     由 scripts/check_health.py 生成 data/health.json。只有判定为 stale
+     （连续 2 周抓取失败，或数据超过 14 天无变化）时才展示，避免误报噪音。 */
+  function renderHealthBanner() {
+    const main = document.querySelector('main');
+    if (!main) return;
+
+    fetch('data/health.json', { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (h) {
+        if (!h || !h.stale || !h.message) return;
+        if (document.querySelector('.data-alert')) return;
+
+        const bar = document.createElement('div');
+        bar.className = 'data-alert';
+        bar.setAttribute('role', 'status');
+        bar.innerHTML = '<span class="data-alert-icon" aria-hidden="true">⚠</span>'
+          + '<div class="data-alert-body">'
+          +   '<b>数据更新延迟</b>'
+          +   '<span>' + esc(h.message)
+          +     ' 最近核对：' + esc(h.checked || '—') + '。'
+          +     '<a href="about.html">查看数据说明</a>'
+          +   '</span>'
+          + '</div>';
+        main.insertBefore(bar, main.firstChild);
+      })
+      .catch(function () { /* health.json 缺失或损坏时静默跳过，不影响页面 */ });
+  }
+
   /* 移动端导航展开/收起 */
   document.addEventListener('DOMContentLoaded', function () {
+    renderHealthBanner();
+
     const nav = document.querySelector('.nav');
     const toggle = document.querySelector('.nav-toggle');
     if (!toggle || !nav) return;

@@ -53,6 +53,10 @@ jobs:
       - name: 运行数据抓取
         run: python scripts/fetch_data.py
 
+      - name: 检查数据源健康度
+        # 生成 data/health.json：连续抓取失败或数据长期无变化时，站点顶部会显示提示条
+        run: python scripts/check_health.py
+
       - name: 生成本周榜单解读文章
         run: python scripts/gen_weekly_article.py
 
@@ -73,7 +77,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/models.json data/.last_update.json data/prev.json
+          git add data/models.json data/.last_update.json data/prev.json data/health.json
           if [ -f data/history.json ]; then
             git add data/history.json
           fi
@@ -118,3 +122,21 @@ jobs:
 
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  health-gate:
+    # 部署完成后再判定数据源健康度：任务变红会触发 GitHub 的失败通知，
+    # 避免「抓取一直失败、页面看起来却正常」的静默停更再次发生。
+    needs: [update-data, deploy-pages]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 数据源连续异常则标记任务失败
+        run: python scripts/check_health.py --strict --check-only
