@@ -381,6 +381,8 @@ def build_page(date, issue, title, summary, tags, body_html):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--draft", action="store_true", help="生成草稿（不进 sitemap 与列表）")
+    ap.add_argument("--force", action="store_true",
+                    help="已存在同日周报时强制重新生成（默认跳过，避免重复运行覆盖已发布内容）")
     args = ap.parse_args()
 
     data = load("data/models.json", {})
@@ -396,6 +398,10 @@ def main():
     d = analyze(models, prev, hist)
     articles = load("data/articles.json", [])
     fname = f"weekly-{date}.html"
+    out_path = os.path.join(ROOT, "articles", fname)
+    if os.path.exists(out_path) and not args.force:
+        print(f"[skip] articles/{fname} 已存在，跳过（如需重生成加 --force）")
+        return 0
     issue = len([a for a in articles if "weekly" in a.get("file", "") and a.get("file") != fname]) + 1
 
     title, summary = build_title_summary(d, date)
