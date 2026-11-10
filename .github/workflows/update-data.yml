@@ -60,17 +60,38 @@ jobs:
       - name: 生成本周榜单解读文章
         run: python scripts/gen_weekly_article.py
 
+      # 常青文章属于「锦上添花」：单个生成器出 bug 时不应拖累整条更新链，
+      # 否则数据抓取成功、却因为一篇文章崩掉导致站点整周不更新（2026-11-09 就是这样）。
       - name: 刷新选型指南
+        id: guide
+        continue-on-error: true
         run: python scripts/gen_guide_article.py
 
       - name: 刷新厂商盘点
+        id: provider
+        continue-on-error: true
         run: python scripts/gen_provider_article.py
 
       - name: 刷新模型对比实测
+        id: compare
+        continue-on-error: true
         run: python scripts/gen_compare_article.py
 
       - name: 重新生成 sitemap 与 robots
         run: python scripts/gen_sitemap.py
+
+      - name: 检查常青文章生成结果
+        if: always()
+        run: |
+          failed=""
+          [ "${{ steps.guide.outcome }}" = "failure" ] && failed="$failed 选型指南"
+          [ "${{ steps.provider.outcome }}" = "failure" ] && failed="$failed 厂商盘点"
+          [ "${{ steps.compare.outcome }}" = "failure" ] && failed="$failed 模型对比"
+          if [ -n "$failed" ]; then
+            echo "::warning::常青文章生成失败:$failed（已保留上一版，数据与周报照常更新）"
+          else
+            echo "全部常青文章生成成功"
+          fi
 
       - name: 提交并推送（数据有变化才提交）
         id: commit

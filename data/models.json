@@ -1,8 +1,8 @@
 {
   "meta": {
     "name": "MaaS Rank · 数据快照",
-    "updated": "2026-11-04",
-    "note": "榜单数据自动更新：Elo 来自 LMArena（HuggingFace 数据集，自动抓取）；中文能力/价格来自 SuperCLUE（2026年7月 测评，自动抓取）；未抓取到的字段保留上次快照。",
+    "updated": "2026-11-10",
+    "note": "榜单数据自动更新：Elo 来自 LMArena（HuggingFace 数据集，自动抓取）；中文能力/价格来自 SuperCLUE（2026年11月 测评，自动抓取）；未抓取到的字段保留上次快照。",
     "exchangeRate": 7.2,
     "sources": [
       {
@@ -21,7 +21,7 @@
         "desc": "OpenAI / Anthropic / Google / DeepSeek / 阿里云 / 智谱 / 月之暗面 / 字节 等官方 API 定价"
       }
     ],
-    "lastAutoUpdate": "2026-11-04 15:59:52"
+    "lastAutoUpdate": "2026-11-10 17:34:37"
   },
   "models": [
     {
@@ -30,7 +30,7 @@
       "provider": "Google",
       "region": "overseas",
       "open": false,
-      "elo": 1540,
+      "elo": 1538,
       "desc": "来自 Google 的模型，竞技场 Elo 1540 分。数据每周自动更新。"
     },
     {
@@ -48,7 +48,7 @@
       "provider": "Google",
       "region": "overseas",
       "open": false,
-      "elo": 1529,
+      "elo": 1530,
       "desc": "来自 Google 的模型，竞技场 Elo 1532 分。数据每周自动更新。"
     },
     {
@@ -61,13 +61,31 @@
       "desc": "来自 Anthropic 的模型，竞技场 Elo 1518 分。数据每周自动更新。"
     },
     {
+      "id": "claude-fable-5.1",
+      "name": "Claude Fable 5.1",
+      "provider": "Anthropic",
+      "region": "overseas",
+      "open": false,
+      "elo": 1514,
+      "desc": "来自 Anthropic 的模型，竞技场 Elo 1514 分。数据每周自动更新。"
+    },
+    {
       "id": "claude opus 5.5",
       "name": "Claude opus 5.5",
       "provider": "Anthropic",
       "region": "overseas",
       "open": false,
-      "elo": 1516,
+      "elo": 1513,
       "desc": "来自 Anthropic 的模型，竞技场 Elo 1516 分。数据每周自动更新。"
+    },
+    {
+      "id": "claude fable 5.1",
+      "name": "Claude fable 5.1",
+      "provider": "Anthropic",
+      "region": "overseas",
+      "open": false,
+      "elo": 1512,
+      "desc": "来自 Anthropic 的模型，竞技场 Elo 1512 分。数据每周自动更新。"
     },
     {
       "id": "claude-opus-5",
@@ -77,7 +95,7 @@
       "region": "overseas",
       "desc": "前沿智能体编程与复杂推理旗舰",
       "release": "2026-07",
-      "elo": 1516,
+      "elo": 1506,
       "superclue": 75.0,
       "priceIn": 5.0,
       "priceOut": 25.0,
@@ -88,30 +106,12 @@
       }
     },
     {
-      "id": "claude-fable-5.1",
-      "name": "Claude Fable 5.1",
-      "provider": "Anthropic",
-      "region": "overseas",
-      "open": false,
-      "elo": 1514,
-      "desc": "来自 Anthropic 的模型，竞技场 Elo 1514 分。数据每周自动更新。"
-    },
-    {
-      "id": "claude fable 5.1",
-      "name": "Claude fable 5.1",
-      "provider": "Anthropic",
-      "region": "overseas",
-      "open": false,
-      "elo": 1514,
-      "desc": "来自 Anthropic 的模型，竞技场 Elo 1512 分。数据每周自动更新。"
-    },
-    {
       "id": "claude opus 5",
       "name": "Claude opus 5",
       "provider": "Anthropic",
       "region": "overseas",
       "open": false,
-      "elo": 1508,
+      "elo": 1506,
       "desc": "来自 Anthropic 的模型，竞技场 Elo 1508 分。数据每周自动更新。"
     },
     {
@@ -133,6 +133,15 @@
       "desc": "来自 Meta 的模型，竞技场 Elo 1504 分。数据每周自动更新。"
     },
     {
+      "id": "muse wonder",
+      "name": "Muse wonder",
+      "provider": "Meta",
+      "region": "overseas",
+      "open": false,
+      "elo": 1503,
+      "desc": "来自 Meta 的模型，竞技场 Elo 1501 分。数据每周自动更新。"
+    },
+    {
       "id": "claude opus 4.6",
       "name": "Claude opus 4.6",
       "provider": "Anthropic",
@@ -142,13 +151,13 @@
       "desc": "来自 Anthropic 的模型，竞技场 Elo 1502 分。数据每周自动更新。"
     },
     {
-      "id": "muse wonder",
-      "name": "Muse wonder",
-      "provider": "Meta",
+      "id": "gemini 3.8 flash",
+      "name": "Gemini 3.8 flash",
+      "provider": "Google",
       "region": "overseas",
       "open": false,
-      "elo": 1499,
-      "desc": "来自 Meta 的模型，竞技场 Elo 1501 分。数据每周自动更新。"
+      "elo": 1500,
+      "desc": "来自 Google 的模型，竞技场 Elo 1499 分。数据每周自动更新。"
     },
     {
       "id": "gemini-3.8-flash",
@@ -158,15 +167,6 @@
       "open": false,
       "elo": 1499,
       "desc": "来自 Google 的模型，竞技场 Elo 1495 分。数据每周自动更新。"
-    },
-    {
-      "id": "gemini 3.8 flash",
-      "name": "Gemini 3.8 flash",
-      "provider": "Google",
-      "region": "overseas",
-      "open": false,
-      "elo": 1498,
-      "desc": "来自 Google 的模型，竞技场 Elo 1499 分。数据每周自动更新。"
     },
     {
       "id": "claude-fable-5",
@@ -201,7 +201,7 @@
       "provider": "小米",
       "region": "china",
       "open": true,
-      "elo": 1491,
+      "elo": 1492,
       "desc": "来自 小米 的模型，竞技场 Elo 1491 分。数据每周自动更新。"
     },
     {
@@ -268,15 +268,6 @@
       "desc": "来自 Meta 的模型，竞技场 Elo 1488 分。数据每周自动更新。"
     },
     {
-      "id": "muse spark 1.2",
-      "name": "Muse spark 1.2",
-      "provider": "Meta",
-      "region": "overseas",
-      "open": false,
-      "elo": 1483,
-      "desc": "来自 Meta 的模型，竞技场 Elo 1484 分。数据每周自动更新。"
-    },
-    {
       "id": "qwen3.8-max",
       "name": "Qwen3.8-Max",
       "provider": "阿里巴巴",
@@ -284,7 +275,7 @@
       "region": "china",
       "desc": "开源旗舰，中文与推理能力国内第一梯队",
       "release": "2026-08",
-      "elo": 1483,
+      "elo": 1485,
       "superclue": 72.62,
       "priceIn": 12.0,
       "priceOut": 36.0,
@@ -304,6 +295,15 @@
       "bench": 73.92
     },
     {
+      "id": "muse spark 1.2",
+      "name": "Muse spark 1.2",
+      "provider": "Meta",
+      "region": "overseas",
+      "open": false,
+      "elo": 1484,
+      "desc": "来自 Meta 的模型，竞技场 Elo 1484 分。数据每周自动更新。"
+    },
+    {
       "id": "muse-spark-1.1",
       "name": "Muse Spark 1.1",
       "provider": "Meta",
@@ -320,7 +320,7 @@
       "region": "overseas",
       "desc": "高速高性价比的轻量旗舰",
       "release": "2026-06",
-      "elo": 1482,
+      "elo": 1483,
       "superclue": 71.5,
       "priceIn": 1.5,
       "priceOut": 9.0,
@@ -336,7 +336,7 @@
       "provider": "Google",
       "region": "overseas",
       "open": false,
-      "elo": 1482,
+      "elo": 1483,
       "desc": "来自 Google 的模型，竞技场 Elo 1482 分。数据每周自动更新。"
     },
     {
@@ -385,22 +385,22 @@
       "desc": "来自 Google 的模型，竞技场 Elo 1480 分。数据每周自动更新。"
     },
     {
-      "id": "gemini 3.6 flash",
-      "name": "Gemini 3.6 flash",
-      "provider": "Google",
-      "region": "overseas",
-      "open": false,
-      "elo": 1480,
-      "desc": "来自 Google 的模型，竞技场 Elo 1480 分。数据每周自动更新。"
-    },
-    {
       "id": "gemini 3 pro",
       "name": "Gemini 3 pro",
       "provider": "Google",
       "region": "overseas",
       "open": false,
-      "elo": 1479,
+      "elo": 1480,
       "desc": "来自 Google 的模型，竞技场 Elo 1479 分。数据每周自动更新。"
+    },
+    {
+      "id": "gemini 3.6 flash",
+      "name": "Gemini 3.6 flash",
+      "provider": "Google",
+      "region": "overseas",
+      "open": false,
+      "elo": 1479,
+      "desc": "来自 Google 的模型，竞技场 Elo 1480 分。数据每周自动更新。"
     },
     {
       "id": "muse spark 1.1",
@@ -408,7 +408,7 @@
       "provider": "Meta",
       "region": "overseas",
       "open": false,
-      "elo": 1478,
+      "elo": 1479,
       "desc": "来自 Meta 的模型，竞技场 Elo 1478 分。数据每周自动更新。"
     },
     {
@@ -421,37 +421,13 @@
       "desc": "来自 Google 的模型，竞技场 Elo 1457 分。数据每周自动更新。"
     },
     {
-      "id": "kimi k3",
-      "name": "Kimi k3",
-      "provider": "月之暗面",
+      "id": "glm-5.3",
+      "name": "GLM 5.3",
+      "provider": "智谱",
       "region": "china",
       "open": true,
       "elo": 1476,
-      "desc": "来自 月之暗面 的模型，竞技场 Elo 1475 分。数据每周自动更新。"
-    },
-    {
-      "id": "kimi-k3",
-      "name": "Kimi K3",
-      "provider": "月之暗面",
-      "open": true,
-      "region": "china",
-      "desc": "开源开放权重，代码与智能体能力突出",
-      "release": "2026-06",
-      "elo": 1476,
-      "superclue": 70.68,
-      "priceIn": 20.0,
-      "priceOut": 100.0,
-      "context": 1000000,
-      "speed": 55,
-      "dims": {
-        "math": 71.93,
-        "hallu": 83.85,
-        "science": 70.17,
-        "ifollow": 40.95,
-        "coding": 75.79,
-        "plan": 84.35
-      },
-      "bench": 71.18
+      "desc": "来自 智谱 的模型，竞技场 Elo 1474 分。数据每周自动更新。"
     },
     {
       "id": "qwen3.7-max",
@@ -472,13 +448,37 @@
       }
     },
     {
-      "id": "glm-5.3",
-      "name": "GLM 5.3",
-      "provider": "智谱",
+      "id": "kimi k3",
+      "name": "Kimi k3",
+      "provider": "月之暗面",
       "region": "china",
       "open": true,
       "elo": 1474,
-      "desc": "来自 智谱 的模型，竞技场 Elo 1474 分。数据每周自动更新。"
+      "desc": "来自 月之暗面 的模型，竞技场 Elo 1475 分。数据每周自动更新。"
+    },
+    {
+      "id": "kimi-k3",
+      "name": "Kimi K3",
+      "provider": "月之暗面",
+      "open": true,
+      "region": "china",
+      "desc": "开源开放权重，代码与智能体能力突出",
+      "release": "2026-06",
+      "elo": 1474,
+      "superclue": 70.68,
+      "priceIn": 20.0,
+      "priceOut": 100.0,
+      "context": 1000000,
+      "speed": 55,
+      "dims": {
+        "math": 71.93,
+        "hallu": 83.85,
+        "science": 70.17,
+        "ifollow": 40.95,
+        "coding": 75.79,
+        "plan": 84.35
+      },
+      "bench": 71.18
     },
     {
       "id": "muse spark",
@@ -490,24 +490,6 @@
       "desc": "来自 Meta 的模型，竞技场 Elo 1474 分。数据每周自动更新。"
     },
     {
-      "id": "claude sonnet 5.5",
-      "name": "Claude sonnet 5.5",
-      "provider": "Anthropic",
-      "region": "overseas",
-      "open": false,
-      "elo": 1473,
-      "desc": "来自 Anthropic 的模型，竞技场 Elo 1473 分。数据每周自动更新。"
-    },
-    {
-      "id": "glm-5.3-flash",
-      "name": "GLM 5.3 Flash",
-      "provider": "智谱",
-      "region": "china",
-      "open": true,
-      "elo": 1473,
-      "desc": "来自 智谱 的模型，竞技场 Elo 1472 分。数据每周自动更新。"
-    },
-    {
       "id": "gemini-3-flash",
       "name": "Gemini 3 Flash",
       "provider": "Google",
@@ -517,6 +499,15 @@
       "desc": "来自 Google 的模型，竞技场 Elo 1466 分。数据每周自动更新。"
     },
     {
+      "id": "glm-5.3-flash",
+      "name": "GLM 5.3 Flash",
+      "provider": "智谱",
+      "region": "china",
+      "open": true,
+      "elo": 1471,
+      "desc": "来自 智谱 的模型，竞技场 Elo 1472 分。数据每周自动更新。"
+    },
+    {
       "id": "gpt-5.5",
       "name": "GPT-5.5",
       "provider": "OpenAI",
@@ -524,7 +515,7 @@
       "region": "overseas",
       "desc": "通用前沿推理与工具调用旗舰",
       "release": "2026-04",
-      "elo": 1472,
+      "elo": 1471,
       "superclue": 74.3,
       "priceIn": 5.0,
       "priceOut": 30.0,
@@ -567,8 +558,17 @@
       "provider": "阿里云",
       "region": "china",
       "open": false,
-      "elo": 1470,
+      "elo": 1471,
       "desc": "来自 阿里云 的模型，竞技场 Elo 1471 分。数据每周自动更新。"
+    },
+    {
+      "id": "claude sonnet 5.5",
+      "name": "Claude sonnet 5.5",
+      "provider": "Anthropic",
+      "region": "overseas",
+      "open": false,
+      "elo": 1469,
+      "desc": "来自 Anthropic 的模型，竞技场 Elo 1473 分。数据每周自动更新。"
     },
     {
       "id": "glm-5.2",
@@ -578,7 +578,7 @@
       "region": "china",
       "desc": "开源权重，智能体与工具调用能力强",
       "release": "2026-07",
-      "elo": 1470,
+      "elo": 1469,
       "superclue": 63.27,
       "priceIn": 8.0,
       "priceOut": 28.0,
@@ -681,15 +681,6 @@
       "desc": "来自 OpenAI 的模型，竞技场 Elo 1439 分。数据每周自动更新。"
     },
     {
-      "id": "deepseek-v4.1-flash",
-      "name": "DeepSeek V4.1 Flash",
-      "provider": "DeepSeek",
-      "region": "china",
-      "open": true,
-      "elo": 1465,
-      "desc": "来自 DeepSeek 的模型，竞技场 Elo 1465 分。数据每周自动更新。"
-    },
-    {
       "id": "mimo-v2.5-pro",
       "name": "MiMo V2.5 Pro",
       "provider": "小米",
@@ -715,6 +706,15 @@
         "plan": 57.25
       },
       "bench": 53.37
+    },
+    {
+      "id": "deepseek-v4.1-flash",
+      "name": "DeepSeek V4.1 Flash",
+      "provider": "DeepSeek",
+      "region": "china",
+      "open": true,
+      "elo": 1463,
+      "desc": "来自 DeepSeek 的模型，竞技场 Elo 1465 分。数据每周自动更新。"
     },
     {
       "id": "glm-5.1",
@@ -823,12 +823,21 @@
       "desc": "来自 OpenAI 的模型，竞技场 Elo 1457 分。数据每周自动更新。"
     },
     {
+      "id": "kimi k3.1 pro",
+      "name": "Kimi k3.1 pro",
+      "provider": "月之暗面",
+      "region": "china",
+      "open": true,
+      "elo": 1457,
+      "desc": "来自 月之暗面 的模型，竞技场 Elo 1457 分。数据每周自动更新。"
+    },
+    {
       "id": "kimi k2.6",
       "name": "Kimi k2.6",
       "provider": "月之暗面",
       "region": "china",
       "open": true,
-      "elo": 1456,
+      "elo": 1455,
       "desc": "来自 月之暗面 的模型，竞技场 Elo 1455 分。数据每周自动更新。"
     },
     {
@@ -837,7 +846,7 @@
       "provider": "阿里云",
       "region": "china",
       "open": false,
-      "elo": 1455,
+      "elo": 1454,
       "desc": "来自 阿里云 的模型，竞技场 Elo 1457 分。数据每周自动更新。"
     },
     {
@@ -848,15 +857,6 @@
       "open": false,
       "elo": 1452,
       "desc": "来自 xAI 的模型，竞技场 Elo 1450 分。数据每周自动更新。"
-    },
-    {
-      "id": "mimo-v2.6-flash",
-      "name": "MiMo V2.6 Flash",
-      "provider": "小米",
-      "region": "china",
-      "open": true,
-      "elo": 1451,
-      "desc": "来自 小米 的模型，竞技场 Elo 1459 分。数据每周自动更新。"
     },
     {
       "id": "claude opus 4.5",
@@ -922,6 +922,15 @@
       "bench": 71.72
     },
     {
+      "id": "mimo-v2.6-flash",
+      "name": "MiMo V2.6 Flash",
+      "provider": "小米",
+      "region": "china",
+      "open": true,
+      "elo": 1450,
+      "desc": "来自 小米 的模型，竞技场 Elo 1459 分。数据每周自动更新。"
+    },
+    {
       "id": "kimi-k2.5",
       "name": "Kimi K2.5",
       "provider": "月之暗面",
@@ -954,7 +963,7 @@
       "provider": "字节跳动",
       "region": "china",
       "open": false,
-      "elo": 1448,
+      "elo": 1449,
       "desc": "来自 字节跳动 的模型，竞技场 Elo 1448 分。数据每周自动更新。"
     },
     {
@@ -963,7 +972,7 @@
       "provider": "OpenAI",
       "region": "overseas",
       "open": false,
-      "elo": 1448,
+      "elo": 1449,
       "desc": "来自 OpenAI 的模型，竞技场 Elo 1448 分。数据每周自动更新。"
     },
     {
@@ -1009,7 +1018,7 @@
       "provider": "阿里云",
       "region": "china",
       "open": false,
-      "elo": 1447,
+      "elo": 1446,
       "desc": "来自 阿里云 的模型，竞技场 Elo 1446 分。数据每周自动更新。"
     },
     {
@@ -1085,22 +1094,22 @@
       "desc": "来自 NVIDIA 的模型，竞技场 Elo 1445 分。数据每周自动更新。"
     },
     {
-      "id": "ernie 5.0",
-      "name": "Ernie 5.0",
-      "provider": "百度",
-      "region": "china",
-      "open": false,
-      "elo": 1445,
-      "desc": "来自 百度 的模型，竞技场 Elo 1445 分。数据每周自动更新。"
-    },
-    {
       "id": "grok 4.20 beta 1",
       "name": "Grok 4.20 beta 1",
       "provider": "xAI",
       "region": "overseas",
       "open": false,
-      "elo": 1444,
+      "elo": 1445,
       "desc": "来自 xAI 的模型，竞技场 Elo 1445 分。数据每周自动更新。"
+    },
+    {
+      "id": "ernie 5.0",
+      "name": "Ernie 5.0",
+      "provider": "百度",
+      "region": "china",
+      "open": false,
+      "elo": 1444,
+      "desc": "来自 百度 的模型，竞技场 Elo 1445 分。数据每周自动更新。"
     },
     {
       "id": "gemma-4-31b",
@@ -1121,6 +1130,15 @@
       "desc": "来自 OpenAI 的模型，竞技场 Elo 1444 分。数据每周自动更新。"
     },
     {
+      "id": "inkling",
+      "name": "Inkling",
+      "provider": "Thinky",
+      "region": "overseas",
+      "open": true,
+      "elo": 1444,
+      "desc": "来自 Thinky 的模型，竞技场 Elo 1441 分。数据每周自动更新。"
+    },
+    {
       "id": "step 5 preview",
       "name": "Step 5 preview",
       "provider": "阶跃星辰",
@@ -1137,15 +1155,6 @@
       "open": false,
       "elo": 1443,
       "desc": "来自 OpenAI 的模型，竞技场 Elo 1441 分。数据每周自动更新。"
-    },
-    {
-      "id": "inkling",
-      "name": "Inkling",
-      "provider": "Thinky",
-      "region": "overseas",
-      "open": true,
-      "elo": 1443,
-      "desc": "来自 Thinky 的模型，竞技场 Elo 1441 分。数据每周自动更新。"
     },
     {
       "id": "grok-4",
@@ -1166,22 +1175,22 @@
       "desc": "来自 Google 的模型，竞技场 Elo 1443 分。数据每周自动更新。"
     },
     {
-      "id": "claude sonnet 5",
-      "name": "Claude sonnet 5",
-      "provider": "Anthropic",
-      "region": "overseas",
-      "open": false,
-      "elo": 1443,
-      "desc": "来自 Anthropic 的模型，竞技场 Elo 1442 分。数据每周自动更新。"
-    },
-    {
       "id": "ernie-5.0",
       "name": "ERNIE 5.0",
       "provider": "百度",
       "region": "china",
       "open": false,
-      "elo": 1442,
+      "elo": 1443,
       "desc": "来自 百度 的模型，竞技场 Elo 1445 分。数据每周自动更新。"
+    },
+    {
+      "id": "claude sonnet 5",
+      "name": "Claude sonnet 5",
+      "provider": "Anthropic",
+      "region": "overseas",
+      "open": false,
+      "elo": 1442,
+      "desc": "来自 Anthropic 的模型，竞技场 Elo 1442 分。数据每周自动更新。"
     },
     {
       "id": "gpt-6 astra",
@@ -1189,7 +1198,7 @@
       "provider": "OpenAI",
       "region": "overseas",
       "open": false,
-      "elo": 1441,
+      "elo": 1440,
       "desc": "来自 OpenAI 的模型，竞技场 Elo 1442 分。数据每周自动更新。"
     },
     {
@@ -1274,6 +1283,15 @@
       "bench": 63.54
     },
     {
+      "id": "gpt-5.2 chat",
+      "name": "GPT 5.2 chat",
+      "provider": "OpenAI",
+      "region": "overseas",
+      "open": false,
+      "elo": 1439,
+      "desc": "来自 OpenAI 的模型，竞技场 Elo 1438 分。数据每周自动更新。"
+    },
+    {
       "id": "qwen3.5-397b-a17b",
       "name": "Qwen3.5 397b A17b",
       "provider": "阿里云",
@@ -1292,24 +1310,6 @@
       "desc": "来自 智谱 的模型，竞技场 Elo 1437 分。数据每周自动更新。"
     },
     {
-      "id": "qwen3.8-27b",
-      "name": "Qwen3.8 27b",
-      "provider": "阿里云",
-      "region": "china",
-      "open": true,
-      "elo": 1438,
-      "desc": "来自 阿里云 的模型，竞技场 Elo 1441 分。数据每周自动更新。"
-    },
-    {
-      "id": "gpt-5.2 chat",
-      "name": "GPT 5.2 chat",
-      "provider": "OpenAI",
-      "region": "overseas",
-      "open": false,
-      "elo": 1438,
-      "desc": "来自 OpenAI 的模型，竞技场 Elo 1438 分。数据每周自动更新。"
-    },
-    {
       "id": "claude-opus-4-1",
       "name": "Claude Opus 4.1",
       "provider": "Anthropic",
@@ -1317,6 +1317,33 @@
       "open": false,
       "elo": 1437,
       "desc": "来自 Anthropic 的模型，竞技场 Elo 1418 分。数据每周自动更新。"
+    },
+    {
+      "id": "mimo-v2-pro",
+      "name": "MiMo V2 Pro",
+      "provider": "小米",
+      "region": "china",
+      "open": false,
+      "elo": 1437,
+      "desc": "来自 小米 的模型，竞技场 Elo 1436 分。数据每周自动更新。"
+    },
+    {
+      "id": "grok 4.1",
+      "name": "Grok 4.1",
+      "provider": "xAI",
+      "region": "overseas",
+      "open": false,
+      "elo": 1437,
+      "desc": "来自 xAI 的模型，竞技场 Elo 1436 分。数据每周自动更新。"
+    },
+    {
+      "id": "qwen3.8-27b",
+      "name": "Qwen3.8 27b",
+      "provider": "阿里云",
+      "region": "china",
+      "open": true,
+      "elo": 1436,
+      "desc": "来自 阿里云 的模型，竞技场 Elo 1441 分。数据每周自动更新。"
     },
     {
       "id": "qwen3.6-plus",
@@ -1328,15 +1355,6 @@
       "desc": "来自 阿里云 的模型，竞技场 Elo 1437 分。数据每周自动更新。"
     },
     {
-      "id": "mimo-v2-pro",
-      "name": "MiMo V2 Pro",
-      "provider": "小米",
-      "region": "china",
-      "open": false,
-      "elo": 1436,
-      "desc": "来自 小米 的模型，竞技场 Elo 1436 分。数据每周自动更新。"
-    },
-    {
       "id": "mistral",
       "name": "Mistral",
       "provider": "Mistral AI",
@@ -1344,15 +1362,6 @@
       "open": false,
       "elo": 1436,
       "desc": "来自 Mistral AI 的模型，竞技场 Elo 1425 分。数据每周自动更新。"
-    },
-    {
-      "id": "grok 4.1",
-      "name": "Grok 4.1",
-      "provider": "xAI",
-      "region": "overseas",
-      "open": false,
-      "elo": 1436,
-      "desc": "来自 xAI 的模型，竞技场 Elo 1436 分。数据每周自动更新。"
     },
     {
       "id": "glm-4.7",
@@ -1427,33 +1436,6 @@
       "desc": "来自 OpenAI 的模型，竞技场 Elo 1428 分。数据每周自动更新。"
     },
     {
-      "id": "minimax-m3",
-      "name": "MiniMax M3",
-      "provider": "稀宇科技",
-      "open": true,
-      "region": "china",
-      "desc": "开源权重，SWE-bench 高分性价比选择",
-      "release": "2026-05",
-      "elo": 1431,
-      "superclue": 56.9,
-      "priceIn": 2.1,
-      "priceOut": 8.4,
-      "context": 1000000,
-      "speed": 120,
-      "est": {
-        "speed": true
-      },
-      "dims": {
-        "math": 70.18,
-        "hallu": 70.44,
-        "science": 70.17,
-        "ifollow": 20.0,
-        "coding": 46.32,
-        "plan": 77.68
-      },
-      "bench": 59.13
-    },
-    {
       "id": "gpt-5.6 luna",
       "name": "GPT 5.6 luna",
       "provider": "OpenAI",
@@ -1470,15 +1452,6 @@
       "open": true,
       "elo": 1430,
       "desc": "来自 智谱 的模型，竞技场 Elo 1429 分。数据每周自动更新。"
-    },
-    {
-      "id": "mistral large 4",
-      "name": "Mistral large 4",
-      "provider": "Mistral AI",
-      "region": "overseas",
-      "open": false,
-      "elo": 1430,
-      "desc": "来自 Mistral AI 的模型，竞技场 Elo 1432 分。数据每周自动更新。"
     },
     {
       "id": "chatgpt-4o",
@@ -1513,7 +1486,7 @@
       "provider": "xAI",
       "region": "overseas",
       "open": false,
-      "elo": 1429,
+      "elo": 1430,
       "desc": "来自 xAI 的模型，竞技场 Elo 1430 分。数据每周自动更新。"
     },
     {
@@ -1522,8 +1495,35 @@
       "provider": "Mistral AI",
       "region": "overseas",
       "open": true,
-      "elo": 1428,
+      "elo": 1429,
       "desc": "来自 Mistral AI 的模型，竞技场 Elo 1429 分。数据每周自动更新。"
+    },
+    {
+      "id": "minimax-m3",
+      "name": "MiniMax M3",
+      "provider": "稀宇科技",
+      "open": true,
+      "region": "china",
+      "desc": "开源权重，SWE-bench 高分性价比选择",
+      "release": "2026-05",
+      "elo": 1428,
+      "superclue": 56.9,
+      "priceIn": 2.1,
+      "priceOut": 8.4,
+      "context": 1000000,
+      "speed": 120,
+      "est": {
+        "speed": true
+      },
+      "dims": {
+        "math": 70.18,
+        "hallu": 70.44,
+        "science": 70.17,
+        "ifollow": 20.0,
+        "coding": 46.32,
+        "plan": 77.68
+      },
+      "bench": 59.13
     },
     {
       "id": "deepseek-r1",
@@ -1567,7 +1567,7 @@
       "provider": "美团",
       "region": "china",
       "open": false,
-      "elo": 1427,
+      "elo": 1426,
       "desc": "来自 美团 的模型，竞技场 Elo 1427 分。数据每周自动更新。"
     },
     {
@@ -1580,6 +1580,15 @@
       "desc": "来自 xAI 的模型，竞技场 Elo 1398 分。数据每周自动更新。"
     },
     {
+      "id": "grok 3 preview",
+      "name": "Grok 3 preview",
+      "provider": "xAI",
+      "region": "overseas",
+      "open": false,
+      "elo": 1426,
+      "desc": "来自 xAI 的模型，竞技场 Elo 1426 分。数据每周自动更新。"
+    },
+    {
       "id": "deepseek-v3.2",
       "name": "DeepSeek V3.2",
       "provider": "DeepSeek",
@@ -1587,15 +1596,6 @@
       "open": true,
       "elo": 1425,
       "desc": "来自 DeepSeek 的模型，竞技场 Elo 1425 分。数据每周自动更新。"
-    },
-    {
-      "id": "grok 3 preview",
-      "name": "Grok 3 preview",
-      "provider": "xAI",
-      "region": "overseas",
-      "open": false,
-      "elo": 1425,
-      "desc": "来自 xAI 的模型，竞技场 Elo 1426 分。数据每周自动更新。"
     },
     {
       "id": "beam 1.0 501b a23b",
@@ -1621,7 +1621,7 @@
       "provider": "DeepSeek",
       "region": "china",
       "open": true,
-      "elo": 1424,
+      "elo": 1425,
       "desc": "来自 DeepSeek 的模型，竞技场 Elo 1424 分。数据每周自动更新。"
     },
     {
@@ -1630,17 +1630,8 @@
       "provider": "Mistral AI",
       "region": "overseas",
       "open": false,
-      "elo": 1424,
+      "elo": 1425,
       "desc": "来自 Mistral AI 的模型，竞技场 Elo 1424 分。数据每周自动更新。"
-    },
-    {
-      "id": "longcat-flash-chat",
-      "name": "LongCat Flash Chat",
-      "provider": "美团",
-      "region": "china",
-      "open": false,
-      "elo": 1423,
-      "desc": "来自 美团 的模型，竞技场 Elo 1426 分。数据每周自动更新。"
     },
     {
       "id": "mimo-v2-omni",
@@ -1650,6 +1641,15 @@
       "open": false,
       "elo": 1423,
       "desc": "来自 小米 的模型，竞技场 Elo 1422 分。数据每周自动更新。"
+    },
+    {
+      "id": "longcat-flash-chat",
+      "name": "LongCat Flash Chat",
+      "provider": "美团",
+      "region": "china",
+      "open": false,
+      "elo": 1422,
+      "desc": "来自 美团 的模型，竞技场 Elo 1426 分。数据每周自动更新。"
     },
     {
       "id": "mistral-3.5",
@@ -1742,15 +1742,6 @@
       "desc": "来自 OpenAI 的模型，竞技场 Elo 1419 分。数据每周自动更新。"
     },
     {
-      "id": "qwen3.5-122b-a10b",
-      "name": "Qwen3.5 122b A10b",
-      "provider": "阿里云",
-      "region": "china",
-      "open": true,
-      "elo": 1418,
-      "desc": "来自 阿里云 的模型，竞技场 Elo 1418 分。数据每周自动更新。"
-    },
-    {
       "id": "gpt-4.5",
       "name": "GPT 4.5",
       "provider": "OpenAI",
@@ -1758,6 +1749,15 @@
       "open": false,
       "elo": 1418,
       "desc": "来自 OpenAI 的模型，竞技场 Elo 1417 分。数据每周自动更新。"
+    },
+    {
+      "id": "qwen3.5-122b-a10b",
+      "name": "Qwen3.5 122b A10b",
+      "provider": "阿里云",
+      "region": "china",
+      "open": true,
+      "elo": 1417,
+      "desc": "来自 阿里云 的模型，竞技场 Elo 1418 分。数据每周自动更新。"
     },
     {
       "id": "qwen3-next-80b-a3b-instruct",
@@ -1819,7 +1819,7 @@
       "provider": "阿里云",
       "region": "china",
       "open": true,
-      "elo": 1415,
+      "elo": 1416,
       "desc": "来自 阿里云 的模型，竞技场 Elo 1414 分。数据每周自动更新。"
     },
     {
@@ -1830,6 +1830,15 @@
       "open": false,
       "elo": 1415,
       "desc": "来自 xAI 的模型，竞技场 Elo 1409 分。数据每周自动更新。"
+    },
+    {
+      "id": "mistral large 4",
+      "name": "Mistral large 4",
+      "provider": "Mistral AI",
+      "region": "overseas",
+      "open": false,
+      "elo": 1414,
+      "desc": "来自 Mistral AI 的模型，竞技场 Elo 1432 分。数据每周自动更新。"
     },
     {
       "id": "inkling small",
@@ -1977,6 +1986,15 @@
       "desc": "来自 xAI 的模型，竞技场 Elo 1408 分。数据每周自动更新。"
     },
     {
+      "id": "nvidia-nemotron-3.5-super-vl-120b-a12b",
+      "name": "NVIDIA Nemotron 3.5 Super Vl 120b A12b",
+      "provider": "NVIDIA",
+      "region": "overseas",
+      "open": true,
+      "elo": 1408,
+      "desc": "来自 NVIDIA 的模型，竞技场 Elo 1407 分。数据每周自动更新。"
+    },
+    {
       "id": "hunyuan-vision-1.5",
       "name": "混元 Vision 1.5",
       "provider": "腾讯",
@@ -2004,6 +2022,15 @@
       "desc": "来自 xAI 的模型，竞技场 Elo 1407 分。数据每周自动更新。"
     },
     {
+      "id": "gemini 2.5 flash preview",
+      "name": "Gemini 2.5 flash preview",
+      "provider": "Google",
+      "region": "overseas",
+      "open": false,
+      "elo": 1407,
+      "desc": "来自 Google 的模型，竞技场 Elo 1406 分。数据每周自动更新。"
+    },
+    {
       "id": "gpt-5",
       "name": "GPT 5",
       "provider": "OpenAI",
@@ -2013,15 +2040,6 @@
       "desc": "来自 OpenAI 的模型，竞技场 Elo 1406 分。数据每周自动更新。"
     },
     {
-      "id": "gemini 2.5 flash preview",
-      "name": "Gemini 2.5 flash preview",
-      "provider": "Google",
-      "region": "overseas",
-      "open": false,
-      "elo": 1406,
-      "desc": "来自 Google 的模型，竞技场 Elo 1406 分。数据每周自动更新。"
-    },
-    {
       "id": "hunyuan vision 1.5 thinking",
       "name": "Hunyuan vision 1.5 thinking",
       "provider": "腾讯",
@@ -2029,15 +2047,6 @@
       "open": false,
       "elo": 1406,
       "desc": "来自 腾讯 的模型，竞技场 Elo 1406 分。数据每周自动更新。"
-    },
-    {
-      "id": "nvidia-nemotron-3.5-super-vl-120b-a12b",
-      "name": "NVIDIA Nemotron 3.5 Super Vl 120b A12b",
-      "provider": "NVIDIA",
-      "region": "overseas",
-      "open": true,
-      "elo": 1405,
-      "desc": "来自 NVIDIA 的模型，竞技场 Elo 1407 分。数据每周自动更新。"
     },
     {
       "id": "minimax-m2.7",
@@ -2067,6 +2076,15 @@
       "desc": "来自 OpenAI 的模型，竞技场 Elo 1403 分。数据每周自动更新。"
     },
     {
+      "id": "inkling 2 small",
+      "name": "Inkling 2 small",
+      "provider": "Thinky",
+      "region": "overseas",
+      "open": false,
+      "elo": 1403,
+      "desc": "来自 Thinky 的模型，竞技场 Elo 1403 分。数据每周自动更新。"
+    },
+    {
       "id": "hunyuan-t1",
       "name": "混元 T1",
       "provider": "腾讯",
@@ -2094,15 +2112,6 @@
       "desc": "来自 腾讯 的模型，竞技场 Elo 1401 分。数据每周自动更新。"
     },
     {
-      "id": "claude haiku 5.5",
-      "name": "Claude haiku 5.5",
-      "provider": "Anthropic",
-      "region": "overseas",
-      "open": false,
-      "elo": 1401,
-      "desc": "来自 Anthropic 的模型，竞技场 Elo 1401 分。数据每周自动更新。"
-    },
-    {
       "id": "grok-4.7",
       "name": "Grok 4.7",
       "provider": "xAI",
@@ -2117,7 +2126,7 @@
       "provider": "阿里云",
       "region": "china",
       "open": true,
-      "elo": 1400,
+      "elo": 1401,
       "desc": "来自 阿里云 的模型，竞技场 Elo 1401 分。数据每周自动更新。"
     },
     {
@@ -2128,6 +2137,15 @@
       "open": false,
       "elo": 1400,
       "desc": "来自 xAI 的模型，竞技场 Elo 1398 分。数据每周自动更新。"
+    },
+    {
+      "id": "claude haiku 5.5",
+      "name": "Claude haiku 5.5",
+      "provider": "Anthropic",
+      "region": "overseas",
+      "open": false,
+      "elo": 1399,
+      "desc": "来自 Anthropic 的模型，竞技场 Elo 1401 分。数据每周自动更新。"
     },
     {
       "id": "grok 4.7",
@@ -2256,15 +2274,6 @@
       "desc": "来自 MiniMax 的模型，竞技场 Elo 1392 分。数据每周自动更新。"
     },
     {
-      "id": "gpt-6 luna",
-      "name": "GPT 6 luna",
-      "provider": "OpenAI",
-      "region": "overseas",
-      "open": false,
-      "elo": 1389,
-      "desc": "来自 OpenAI 的模型，竞技场 Elo 1390 分。数据每周自动更新。"
-    },
-    {
       "id": "muse glimmer",
       "name": "Muse glimmer",
       "provider": "Meta",
@@ -2283,12 +2292,21 @@
       "desc": "来自 OpenAI 的模型，竞技场 Elo 1389 分。数据每周自动更新。"
     },
     {
+      "id": "gpt-6 luna",
+      "name": "GPT 6 luna",
+      "provider": "OpenAI",
+      "region": "overseas",
+      "open": false,
+      "elo": 1388,
+      "desc": "来自 OpenAI 的模型，竞技场 Elo 1390 分。数据每周自动更新。"
+    },
+    {
       "id": "solar pro 4",
       "name": "Solar pro 4",
       "provider": "Upstage",
       "region": "overseas",
       "open": false,
-      "elo": 1389,
+      "elo": 1388,
       "desc": "来自 Upstage 的模型，竞技场 Elo 1388 分。数据每周自动更新。"
     },
     {
@@ -2486,7 +2504,7 @@
       "provider": "xAI",
       "region": "overseas",
       "open": false,
-      "elo": 1369,
+      "elo": 1370,
       "desc": "来自 xAI 的模型，竞技场 Elo 1370 分。数据每周自动更新。"
     },
     {
@@ -2760,6 +2778,15 @@
       "desc": "来自 Mistral AI 的模型，竞技场 Elo 1339 分。数据每周自动更新。"
     },
     {
+      "id": "gpt-4.1 mini",
+      "name": "GPT 4.1 mini",
+      "provider": "OpenAI",
+      "region": "overseas",
+      "open": false,
+      "elo": 1341,
+      "desc": "来自 OpenAI 的模型，竞技场 Elo 1341 分。数据每周自动更新。"
+    },
+    {
       "id": "minimax-m2",
       "name": "MiniMax M2",
       "provider": "MiniMax",
@@ -2776,15 +2803,6 @@
       "open": true,
       "elo": 1340,
       "desc": "来自 阿里云 的模型，竞技场 Elo 1340 分。数据每周自动更新。"
-    },
-    {
-      "id": "gpt-4.1 mini",
-      "name": "GPT 4.1 mini",
-      "provider": "OpenAI",
-      "region": "overseas",
-      "open": false,
-      "elo": 1340,
-      "desc": "来自 OpenAI 的模型，竞技场 Elo 1341 分。数据每周自动更新。"
     },
     {
       "id": "nvidia-llama-3.3-nemotron-super-49b-v1.5",
@@ -2949,15 +2967,6 @@
       "desc": "来自 Cohere 的模型，竞技场 Elo 1331 分。数据每周自动更新。"
     },
     {
-      "id": "nvidia-nemotron-3.5-lightning-30b-a3b",
-      "name": "NVIDIA Nemotron 3.5 Lightning 30b A3b",
-      "provider": "NVIDIA",
-      "region": "overseas",
-      "open": true,
-      "elo": 1331,
-      "desc": "来自 NVIDIA 的模型，竞技场 Elo 1331 分。数据每周自动更新。"
-    },
-    {
       "id": "gemini 2.0 flash-lite preview",
       "name": "Gemini 2.0 flash Lite preview",
       "provider": "Google",
@@ -2965,6 +2974,15 @@
       "open": false,
       "elo": 1330,
       "desc": "来自 Google 的模型，竞技场 Elo 1330 分。数据每周自动更新。"
+    },
+    {
+      "id": "nvidia-nemotron-3.5-lightning-30b-a3b",
+      "name": "NVIDIA Nemotron 3.5 Lightning 30b A3b",
+      "provider": "NVIDIA",
+      "region": "overseas",
+      "open": true,
+      "elo": 1329,
+      "desc": "来自 NVIDIA 的模型，竞技场 Elo 1331 分。数据每周自动更新。"
     },
     {
       "id": "qwq-32b",
@@ -3404,7 +3422,7 @@
       "provider": "OpenAI",
       "region": "overseas",
       "open": true,
-      "elo": 1287,
+      "elo": 1288,
       "desc": "来自 OpenAI 的模型，竞技场 Elo 1288 分。数据每周自动更新。"
     },
     {
@@ -3945,7 +3963,7 @@
       "provider": "Ibm",
       "region": "overseas",
       "open": true,
-      "elo": 1241,
+      "elo": 1242,
       "desc": "来自 Ibm 的模型，竞技场 Elo 1242 分。数据每周自动更新。"
     },
     {
@@ -4845,7 +4863,7 @@
       "provider": "Microsoft",
       "region": "overseas",
       "open": true,
-      "elo": 1119,
+      "elo": 1120,
       "desc": "来自 Microsoft 的模型，竞技场 Elo 1120 分。数据每周自动更新。"
     },
     {
@@ -5097,7 +5115,7 @@
       "provider": "其他",
       "region": "overseas",
       "open": true,
-      "elo": 1092,
+      "elo": 1093,
       "desc": "来自 其他 的模型，竞技场 Elo 1093 分。数据每周自动更新。"
     },
     {
@@ -5538,7 +5556,7 @@
       "provider": "Mistral AI",
       "region": "overseas",
       "open": true,
-      "elo": 1023,
+      "elo": 1024,
       "desc": "来自 Mistral AI 的模型，竞技场 Elo 1024 分。数据每周自动更新。"
     },
     {
@@ -5808,7 +5826,7 @@
       "provider": "Meta",
       "region": "overseas",
       "open": true,
-      "elo": 833,
+      "elo": 834,
       "desc": "来自 Meta 的模型，竞技场 Elo 834 分。数据每周自动更新。"
     }
   ]

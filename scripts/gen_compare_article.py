@@ -84,12 +84,12 @@ def radar_svg(groups):
     # 数值点与多边形
     for gid, name, color, vals in groups:
         pts = " ".join(
-            f"{pt(i, R * (vals[dim] / 100.0))[0]:.1f},{pt(i, R * (vals[dim] / 100.0))[1]:.1f}"
+            f"{pt(i, R * ((vals.get(dim) or 0) / 100.0))[0]:.1f},{pt(i, R * ((vals.get(dim) or 0) / 100.0))[1]:.1f}"
             for i, (dim, _) in enumerate(DIMS)
         )
         parts.append(f'<polygon points="{pts}" fill="{color}" fill-opacity="0.13" stroke="{color}" stroke-width="2"/>')
         for i, (dim, _) in enumerate(DIMS):
-            x, y = pt(i, R * (vals[dim] / 100.0))
+            x, y = pt(i, R * ((vals.get(dim) or 0) / 100.0))
             parts.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="2.6" fill="{color}"/>')
     # 图例（顶部）
     lg_x = W / 2 - (len(groups) * 88) / 2
@@ -153,9 +153,17 @@ def elo_trend_svg(series):
 # ---------------------------------------------------------------- 正文
 def build_sections(models, by_id, history):
     groups = []
+    missing_dims = []
     for tid in TARGETS:
         m = by_id[tid]
-        groups.append((tid, LABELS[tid], COLORS[tid], m["dims"]))
+        dims = m.get("dims") or {}
+        absent = [label for key, label in DIMS if dims.get(key) is None]
+        if absent:
+            missing_dims.append(f"{LABELS[tid]}（{'、'.join(absent)}）")
+        groups.append((tid, LABELS[tid], COLORS[tid], dims))
+    if missing_dims:
+        # 数据源换了测评口径时不要整篇崩掉：缺维度按「—」展示，雷达图按 0 处理
+        print(f"[warn] 部分模型缺少维度数据：{'；'.join(missing_dims)}", file=sys.stderr)
     radar = radar_svg(groups)
 
     # 一、引言
@@ -179,13 +187,18 @@ def build_sections(models, by_id, history):
     # 六维逐项拆解表
     rows = []
     for dim, label in DIMS:
-        vals = {tid: by_id[tid]["dims"][dim] for tid in TARGETS}
-        best = max(vals.values())
+        vals = {tid: (by_id[tid].get("dims") or {}).get(dim) for tid in TARGETS}
+        present = [v for v in vals.values() if v is not None]
+        best = max(present) if present else None
         cells = ""
         for tid in TARGETS:
             v = vals[tid]
-            mark = ' class="cv-best"' if v == best else ""
-            cells += f"<td{mark}><b>{v:.1f}</b>{' ★' if v == best else ''}</td>"
+            if v is None:
+                cells += "<td>—</td>"
+                continue
+            is_best = best is not None and v == best
+            mark = ' class="cv-best"' if is_best else ""
+            cells += f"<td{mark}><b>{v:.1f}</b>{' ★' if is_best else ''}</td>"
         rows.append(f"<tr><td>{label}</td>{cells}</tr>")
     sec_table = (
         "<h3>逐维度拆解</h3>"
@@ -209,7 +222,7 @@ def build_sections(models, by_id, history):
         if elo:
             series.append({"date": s["date"], "elo": elo})
     cur_rows = "".join(
-        f"<tr><td>{LABELS[t]}</td><td><b>{by_id[t]['elo']}</b></td>"
+        f"<tr><td>{LABELS[t]}</td><td><b>{by_id[t].get('elo') if by_id[t].get('elo') is not None else '—'}</b></td>"
         f"<td>{'开源' if by_id[t].get('open') else '闭源'}</td>"
         f"<td>{(by_id[t].get('context') or 0) // 1000}k</td>"
         f"<td>{fmt_val(by_id[t].get('superclue'), 1)}</td></tr>"

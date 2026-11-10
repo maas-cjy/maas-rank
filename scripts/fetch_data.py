@@ -31,6 +31,7 @@ import argparse
 import json
 import os
 import re
+import statistics
 import sys
 import urllib.parse
 import urllib.request
@@ -47,13 +48,16 @@ TIMEOUT = 25
 HISTORY_FIELDS = ("id", "name", "elo", "superclue", "bench", "priceIn", "priceOut")
 
 # SuperCLUE 总排行榜中的六维子分列名（用于计算「综合能力分」= 可用子分均值）
+# 每项可给多个候选表头：SuperCLUE 会改口径（2026-11 把「数学推理」改成「数理推理」、
+# 去掉「科学推理/任务规划」、新增「超长上下文」），只认一个名字会导致维度缺失。
 DIM_KEYS = [
-    ("math", "数学推理"),
-    ("hallu", "幻觉控制"),
-    ("science", "科学推理"),
-    ("ifollow", "精确指令遵循"),
-    ("coding", "智能体编程"),
-    ("plan", "智能体任务规划"),
+    ("math", ("数学推理", "数理推理")),
+    ("hallu", ("幻觉控制",)),
+    ("science", ("科学推理",)),
+    ("ifollow", ("精确指令遵循", "指令遵循")),
+    ("coding", ("智能体编程", "编程")),
+    ("plan", ("智能体任务规划", "任务规划")),
+    ("longctx", ("超长上下文",)),  # 2026-11 新增维度，前端暂不展示，仅参与综合分
 ]
 
 # ---------------------------------------------------------------------------
@@ -357,7 +361,14 @@ def fetch_superclue() -> tuple[dict[str, dict], dict[str, dict], str]:
             return -1
 
         i_name, i_total = col("模型名称"), col("总分")
-        i_dims = {k: col(kw) for k, kw in DIM_KEYS}
+        # 每个维度可能有多个候选表头（口径变更时兼容旧名）
+        i_dims = {}
+        for key, keywords in DIM_KEYS:
+            for kw in keywords:
+                idx = col(kw)
+                if idx >= 0:
+                    i_dims[key] = idx
+                    break
         for r in rows[1:]:
             if i_name < 0 or len(r) <= i_name or not r[i_name]:
                 continue
@@ -508,15 +519,43 @@ def match_model(src_name: str, mid: str) -> bool:
     """判断数据源模型名是否对应 models.json 中的 id。"""
     n = src_name.lower()
     for alias in MODEL_ALIASES.get(mid, []):
-        if alias.lower() in n:
-            return True
+        a = alias.lower()
+        pos = n.find(a)
+        while pos != -1:
+            end = pos + len(a)
+            nxt = n[end:end + 1]
+            # 版本号边界：kimi-k3 不应匹配 Kimi-K3.1-Pro，minimax-m3 不应匹配 M3.1
+            if not (a[-1:].isdigit() and (nxt == "." or nxt.isdigit())):
+                return True
+            pos = n.find(a, pos + 1)
     return False
 
 
-def apply_updates(models, elo_map, families, scores, prices) -> tuple[list[str], set[str]]:
+def apply_updates(models, elo_map, families, scores, prices,
+                  sc_date: str = "") -> tuple[list[str], set[str], bool]:
     changed: list[str] = []
     covered: set[str] = set()  # 已被现有模型消费的家族键（避免重复新增）
+    missing_dims: set[str] = set()  # 本月 SuperCLUE 未提供的维度（口径变更留痕）
     n_elo = n_sc = n_price = 0
+
+    # —— SuperCLUE 口径突变检测 ——
+    # SuperCLUE 换测评口径时会同时改维度列名和分数分布（2026-11：数学推理→数理推理、
+    # 去掉科学推理/任务规划、同模型总分从 72 掉到 43）。新旧尺度混排会让「中文能力」
+    # 榜失去可比性，所以差异过大时整期不合并，只保留 LMArena 更新。
+    shifts = []
+    for src_name, e in scores.items():
+        total = e.get("total")
+        if total is None:
+            continue
+        for m in models:
+            if m.get("superclue") is not None and match_model(src_name, m["id"]):
+                shifts.append(total - m["superclue"])
+                break
+    skip_sc = bool(shifts) and abs(statistics.median(shifts)) > 15
+    if skip_sc:
+        log(f"  ⚠ SuperCLUE {sc_date or '本期'} 疑似更换评分口径"
+            f"（同模型分差中位 {statistics.median(shifts):+.1f}），"
+            f"本期中文能力与六维数据不合并，沿用上期值")
     for m in models:
         mid = m["id"]
         # Elo
@@ -549,7 +588,7 @@ def apply_updates(models, elo_map, families, scores, prices) -> tuple[list[str],
 
         # SuperCLUE 智能指数 + 六维子分 + 综合能力分
         hit_sc = False
-        for src_name, e in scores.items():
+        for src_name, e in ([] if skip_sc else scores.items()):
             if match_model(src_name, mid):
                 total = e.get("total")
                 if total is not None:
@@ -561,9 +600,16 @@ def apply_updates(models, elo_map, families, scores, prices) -> tuple[list[str],
                     m.get("est", {}).pop("superclue", None)
                 dims = e.get("dims") or {}
                 if dims:
-                    m["dims"] = {k: round(v, 2) for k, v in dims.items()}
+                    # 合并而非覆盖：SuperCLUE 某些月份只给出部分维度（如 2026-11
+                    # 去掉了科学推理/任务规划），直接覆盖会让已有维度凭空丢失，
+                    # 下游雷达图/对比文章会因为缺 key 直接崩。
+                    merged = dict(m.get("dims") or {})
+                    merged.update({k: round(v, 2) for k, v in dims.items()})
+                    if merged != m.get("dims"):
+                        m["dims"] = merged
+                    missing_dims.update(k for k, _ in DIM_KEYS if k not in dims)
                     m.get("est", {}).pop("dims", None)
-                    vals = [v for v in dims.values() if v is not None]
+                    vals = [v for v in merged.values() if v is not None]
                     if vals:
                         b = round(sum(vals) / len(vals), 2)
                         old = m.get("bench")
@@ -598,13 +644,17 @@ def apply_updates(models, elo_map, families, scores, prices) -> tuple[list[str],
             m.pop("est", None)
 
     log(f"  ✓ 匹配更新：Elo {n_elo} 个模型，中文能力 {n_sc} 个模型，价格 {n_price} 个模型")
+    if missing_dims:
+        labels = {k: (ks[-1] if isinstance(ks, tuple) else ks) for k, ks in DIM_KEYS}
+        names = "、".join(labels.get(k, k) for k in sorted(missing_dims))
+        log(f"  ⚠ SuperCLUE 本月未提供维度：{names}（沿用上期值，综合分按现有维度计算）")
     if changed:
         log("  变更明细：")
         for c in changed:
             log(f"    - {c}")
     else:
         log("  数据无变化")
-    return changed, covered
+    return changed, covered, skip_sc
 
 
 def sync_new_models(models: list[dict], families: dict[str, dict], covered: set[str]) -> int:
@@ -672,7 +722,14 @@ def main() -> int:
             for m in data["models"]
         ],
     }
-    changes, covered = apply_updates(data["models"], elo_map, families, sc_scores, sc_prices)
+    changes, covered, sc_skipped = apply_updates(
+        data["models"], elo_map, families, sc_scores, sc_prices, sc_date=used_date)
+    if sc_skipped:
+        # 抓到了新一期但口径不可比，明确标记「未采用」，避免元数据误报成已更新
+        diff["sources"]["superclue"]["applied"] = False
+        diff["sources"]["superclue"]["note"] = "评分口径变更，本期未合并（沿用上期值）"
+    else:
+        diff["sources"]["superclue"]["applied"] = bool(sc_scores)
     n_added = sync_new_models(data["models"], families, covered)
     if n_added:
         changes.append(f"+新增 {n_added} 个模型（家族归并后 LMArena 全量同步）")

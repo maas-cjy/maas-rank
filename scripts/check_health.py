@@ -72,6 +72,10 @@ def build_source(name: str, cur: dict, prev: dict, today: date) -> dict:
         "last_success": (today.isoformat() if ok
                          else (prev.get(name) or {}).get("last_success")),
     }
+    if cur.get("applied") is False:
+        # 抓到了新一期，但因口径变更未合并（沿用上期值）
+        item["applied"] = False
+        item["note"] = cur.get("note", "")
     if name == "superclue":
         item["period"] = cur.get("date", "")
         item["period_months_old"] = superclue_period_months_old(cur.get("date", ""), today)
