@@ -3,7 +3,25 @@
   "sources": {
     "lmarena": {
       "ok": false,
-      "count": 0
+      "count": 0,
+      "diag": [
+        {
+          "url": "https://huggingface.co/api/datasets/lmarena-ai/leaderboard-dataset/parquet/text/latest/0.parquet",
+          "result": "HTTP 400 | {\"error\":\"Job has been terminated due to a temporary spike in resource usage and may be restarted later.\"}"
+        },
+        {
+          "url": "https://hf-mirror.com/api/datasets/lmarena-ai/leaderboard-dataset/parquet/text/latest/0.parquet",
+          "result": "HTTP 400 | {\"error\":\"Job has been terminated due to a temporary spike in resource usage and may be restarted later.\"}"
+        },
+        {
+          "url": "https://huggingface.co/datasets/lmarena-ai/leaderboard-dataset/resolve/refs%2Fconvert%2Fparquet/text/latest/0000.parquet",
+          "result": "HTTP 404 | Entry not found"
+        },
+        {
+          "url": "https://hf-mirror.com/datasets/lmarena-ai/leaderboard-dataset/resolve/refs%2Fconvert%2Fparquet/text/latest/0000.parquet",
+          "result": "HTTP 404 | Entry not found"
+        }
+      ]
     },
     "superclue": {
       "ok": true,
