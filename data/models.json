@@ -29,6 +29,24 @@
         "date": "2026-11-10",
         "kind": "实测"
       },
+      "context": {
+        "label": "上下文窗口",
+        "source": "厂商公开资料（人工整理）",
+        "date": "随官方发布更新",
+        "kind": "官方"
+      },
+      "speed": {
+        "label": "输出速度",
+        "source": "公开评测汇总（部分估算）",
+        "date": "2026-11-10",
+        "kind": "估算"
+      },
+      "price": {
+        "label": "API 价格",
+        "source": "SuperCLUE 价格库（$1≈¥7.2 换算）",
+        "date": "2026年11月",
+        "kind": "官方"
+      },
       "superclue": {
         "label": "中文能力（SuperCLUE 智能指数）",
         "source": "SuperCLUE 公开测评",
@@ -42,24 +60,6 @@
         "date": "2026年7月",
         "kind": "实测",
         "note": "本期未合并，沿用上次数据"
-      },
-      "price": {
-        "label": "API 价格",
-        "source": "SuperCLUE 价格库（$1≈¥7.2 换算）",
-        "date": "2026年11月",
-        "kind": "官方"
-      },
-      "context": {
-        "label": "上下文窗口",
-        "source": "厂商公开资料（人工整理）",
-        "date": "随官方发布更新",
-        "kind": "官方"
-      },
-      "speed": {
-        "label": "输出速度",
-        "source": "公开评测汇总（部分估算）",
-        "date": "2026-11-10",
-        "kind": "估算"
       }
     }
   },
@@ -227,15 +227,6 @@
       ]
     },
     {
-      "id": "claude-opus-4-7",
-      "name": "Claude Opus 4.7",
-      "provider": "Anthropic",
-      "region": "overseas",
-      "open": false,
-      "elo": 1490,
-      "desc": "来自 Anthropic 的模型，竞技场 Elo 1490 分。数据每周自动更新。"
-    },
-    {
       "id": "muse-spark-1.3",
       "name": "Muse Spark 1.3",
       "provider": "Meta",
@@ -247,6 +238,15 @@
         "muse spark 1.3",
         "Muse spark 1.3"
       ]
+    },
+    {
+      "id": "claude-opus-4-7",
+      "name": "Claude Opus 4.7",
+      "provider": "Anthropic",
+      "region": "overseas",
+      "open": false,
+      "elo": 1490,
+      "desc": "来自 Anthropic 的模型，竞技场 Elo 1490 分。数据每周自动更新。"
     },
     {
       "id": "claude opus 4.7",
@@ -1055,6 +1055,19 @@
       "desc": "来自 Thinky 的模型，竞技场 Elo 1441 分。数据每周自动更新。"
     },
     {
+      "id": "ernie-5.0",
+      "name": "ERNIE 5.0",
+      "provider": "百度",
+      "region": "china",
+      "open": false,
+      "elo": 1444,
+      "desc": "来自 百度 的模型，竞技场 Elo 1445 分。数据每周自动更新。",
+      "aliases": [
+        "ernie 5.0",
+        "Ernie 5.0"
+      ]
+    },
+    {
       "id": "step 5 preview",
       "name": "Step 5 preview",
       "provider": "阶跃星辰",
@@ -1082,19 +1095,6 @@
       "desc": "来自 xAI 的模型，竞技场 Elo 1410 分。数据每周自动更新。",
       "aliases": [
         "grok 4"
-      ]
-    },
-    {
-      "id": "ernie-5.0",
-      "name": "ERNIE 5.0",
-      "provider": "百度",
-      "region": "china",
-      "open": false,
-      "elo": 1444,
-      "desc": "来自 百度 的模型，竞技场 Elo 1445 分。数据每周自动更新。",
-      "aliases": [
-        "ernie 5.0",
-        "Ernie 5.0"
       ]
     },
     {
@@ -1853,6 +1853,19 @@
       "desc": "来自 Google 的模型，竞技场 Elo 1406 分。数据每周自动更新。"
     },
     {
+      "id": "grok-4-fast",
+      "name": "Grok 4 Fast",
+      "provider": "xAI",
+      "region": "overseas",
+      "open": false,
+      "elo": 1407,
+      "desc": "来自 xAI 的模型，竞技场 Elo 1398 分。数据每周自动更新。",
+      "aliases": [
+        "grok 4 fast",
+        "Grok 4 fast"
+      ]
+    },
+    {
       "id": "gpt-5",
       "name": "GPT 5",
       "provider": "OpenAI",
@@ -1939,19 +1952,6 @@
       "open": true,
       "elo": 1401,
       "desc": "来自 阿里云 的模型，竞技场 Elo 1401 分。数据每周自动更新。"
-    },
-    {
-      "id": "grok-4-fast",
-      "name": "Grok 4 Fast",
-      "provider": "xAI",
-      "region": "overseas",
-      "open": false,
-      "elo": 1407,
-      "desc": "来自 xAI 的模型，竞技场 Elo 1398 分。数据每周自动更新。",
-      "aliases": [
-        "grok 4 fast",
-        "Grok 4 fast"
-      ]
     },
     {
       "id": "claude haiku 5.5",
@@ -2419,6 +2419,19 @@
       "desc": "来自 其他 的模型，竞技场 Elo 1356 分。数据每周自动更新。"
     },
     {
+      "id": "gemini-2.0-flash",
+      "name": "Gemini 2.0 Flash",
+      "provider": "Google",
+      "region": "overseas",
+      "open": false,
+      "elo": 1354,
+      "desc": "来自 Google 的模型，竞技场 Elo 1330 分。数据每周自动更新。",
+      "aliases": [
+        "gemini 2.0 flash",
+        "Gemini 2.0 flash"
+      ]
+    },
+    {
       "id": "o4-mini",
       "name": "O4 Mini",
       "provider": "OpenAI",
@@ -2639,19 +2652,6 @@
       "aliases": [
         "gpt-5 nano",
         "GPT 5 nano"
-      ]
-    },
-    {
-      "id": "gemini-2.0-flash",
-      "name": "Gemini 2.0 Flash",
-      "provider": "Google",
-      "region": "overseas",
-      "open": false,
-      "elo": 1354,
-      "desc": "来自 Google 的模型，竞技场 Elo 1330 分。数据每周自动更新。",
-      "aliases": [
-        "gemini 2.0 flash",
-        "Gemini 2.0 flash"
       ]
     },
     {
@@ -3168,6 +3168,19 @@
       ]
     },
     {
+      "id": "llama-3.1-405b-instruct",
+      "name": "Llama 3.1 405b Instruct",
+      "provider": "Meta",
+      "region": "overseas",
+      "open": true,
+      "elo": 1284,
+      "desc": "来自 Meta 的模型，竞技场 Elo 1266 分。数据每周自动更新。",
+      "aliases": [
+        "llama 3.1 405b instruct",
+        "Llama 3.1 405b instruct"
+      ]
+    },
+    {
       "id": "mercury",
       "name": "Mercury",
       "provider": "Inception-Ai",
@@ -3343,19 +3356,6 @@
       "aliases": [
         "llama 3.1 70b instruct",
         "Llama 3.1 70b instruct"
-      ]
-    },
-    {
-      "id": "llama-3.1-405b-instruct",
-      "name": "Llama 3.1 405b Instruct",
-      "provider": "Meta",
-      "region": "overseas",
-      "open": true,
-      "elo": 1284,
-      "desc": "来自 Meta 的模型，竞技场 Elo 1266 分。数据每周自动更新。",
-      "aliases": [
-        "llama 3.1 405b instruct",
-        "Llama 3.1 405b instruct"
       ]
     },
     {
@@ -3889,6 +3889,19 @@
       "desc": "来自 DeepSeek 的模型，竞技场 Elo 1191 分。数据每周自动更新。"
     },
     {
+      "id": "command-r",
+      "name": "Command R",
+      "provider": "Cohere",
+      "region": "overseas",
+      "open": true,
+      "elo": 1187,
+      "desc": "来自 Cohere 的模型，竞技场 Elo 1163 分。数据每周自动更新。",
+      "aliases": [
+        "command r",
+        "Command r"
+      ]
+    },
+    {
       "id": "aya expanse 8b",
       "name": "Aya expanse 8b",
       "provider": "Cohere",
@@ -3952,19 +3965,6 @@
       "aliases": [
         "reka flash 21b",
         "Reka flash 21b"
-      ]
-    },
-    {
-      "id": "command-r",
-      "name": "Command R",
-      "provider": "Cohere",
-      "region": "overseas",
-      "open": true,
-      "elo": 1187,
-      "desc": "来自 Cohere 的模型，竞技场 Elo 1163 分。数据每周自动更新。",
-      "aliases": [
-        "command r",
-        "Command r"
       ]
     },
     {
@@ -4065,6 +4065,19 @@
       ]
     },
     {
+      "id": "gemini-pro",
+      "name": "Gemini Pro",
+      "provider": "Google",
+      "region": "overseas",
+      "open": false,
+      "elo": 1149,
+      "desc": "来自 Google 的模型，竞技场 Elo 1131 分。数据每周自动更新。",
+      "aliases": [
+        "gemini pro",
+        "Gemini pro"
+      ]
+    },
+    {
       "id": "phi-3-instruct",
       "name": "Phi 3 Instruct",
       "provider": "Microsoft",
@@ -4093,19 +4106,6 @@
       "aliases": [
         "mixtral 8x7b instruct v0.1",
         "Mixtral 8x7b instruct v0.1"
-      ]
-    },
-    {
-      "id": "gemini-pro",
-      "name": "Gemini Pro",
-      "provider": "Google",
-      "region": "overseas",
-      "open": false,
-      "elo": 1149,
-      "desc": "来自 Google 的模型，竞技场 Elo 1131 分。数据每周自动更新。",
-      "aliases": [
-        "gemini pro",
-        "Gemini pro"
       ]
     },
     {
