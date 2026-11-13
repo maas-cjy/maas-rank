@@ -511,43 +511,66 @@ def fetch_superclue() -> tuple[dict[str, dict], dict[str, dict], str]:
                 scores[key] = entry
         wb.close()
 
-        # —— 价格：latency_and_price 用 `<月份>_2.xlsx`（前端约定），退化为 _1 / 裸名 ——
+        used_date = d
+        break
+    else:
+        log("  ✗ SuperCLUE 智能指数所有候选月份均抓取失败（保留旧值）")
+
+    # 价格表必须独立回溯：它并非按月稳定发布（2026-08 起 latency_and_price/ 下
+    # 就没有新文件，最新可用仍是 2026年7月）。若跟着智能指数的月份走，
+    # 会把 7 月的价格标成「2026年11月」—— 标注与实际来源不符。
+    prices, price_date = fetch_sc_prices(sc_candidate_dates())
+    log(f"  ✓ SuperCLUE 价格：{price_date or '无可用表'}（{len(prices)} 个模型）")
+    return scores, prices, used_date, price_date
+
+
+def fetch_sc_prices(candidates: list[str]) -> tuple[dict[str, dict], str]:
+    """抓 SuperCLUE 价格表，返回 ({模型名: {priceIn, priceOut}}, 实际月份)。
+
+    候选月份按「当月 → 往前」排列，返回第一个能打开的表的月份；
+    一个都没有则返回 ({}, "")。
+    """
+    for d in candidates:
         for suffix in ("_2", "_1", ""):
             lp_url = f"{SC_BASE}/latency_and_price/{urllib.parse.quote(d + suffix)}.xlsx"
             wb2 = sc_load_xlsx(lp_url)
             if wb2 is None:
                 continue
-            sheet2 = wb2[wb2.sheetnames[0]]
-            rows2 = sheet_to_rows(sheet2)
-            headers = [str(h).lower() if h else "" for h in rows2[0]]
-            def col(keyword: str) -> int:
-                for i, h in enumerate(headers):
-                    if keyword in h:
-                        return i
-                return -1
-            i_in, i_out = col("input"), col("output")
-            for r in rows2[1:]:
-                name = r[0] if r else None
-                if not name:
+            prices: dict[str, dict] = {}
+            try:
+                sheet2 = wb2[wb2.sheetnames[0]]
+                rows2 = sheet_to_rows(sheet2)
+                if not rows2:
                     continue
-                key = str(name).strip().lower()
-                entry = prices.setdefault(key, {})
-                if i_in >= 0 and len(r) > i_in:
-                    v = to_num(r[i_in])
-                    if v is not None:
-                        entry["priceIn"] = v
-                if i_out >= 0 and len(r) > i_out:
-                    v = to_num(r[i_out])
-                    if v is not None:
-                        entry["priceOut"] = v
-            wb2.close()
-            break  # 该月份价格文件命中一次即可
-        used_date = d
-        log(f"  ✓ SuperCLUE 数据月份：{d}（智能指数 {len(scores)} 个，价格 {len(prices)} 个）")
-        break
-    else:
-        log("  ✗ SuperCLUE 所有候选月份均抓取失败（保留旧值）")
-    return scores, prices, used_date
+                headers = [str(h).lower() if h else "" for h in rows2[0]]
+
+                def col2(keyword: str) -> int:
+                    for i, h in enumerate(headers):
+                        if keyword in h:
+                            return i
+                    return -1
+
+                i_in, i_out = col2("input"), col2("output")
+                if i_in < 0 and i_out < 0:
+                    continue
+                for r in rows2[1:]:
+                    name = r[0] if r else None
+                    if not name:
+                        continue
+                    entry = prices.setdefault(str(name).strip().lower(), {})
+                    if i_in >= 0 and len(r) > i_in:
+                        v = to_num(r[i_in])
+                        if v is not None:
+                            entry["priceIn"] = v
+                    if i_out >= 0 and len(r) > i_out:
+                        v = to_num(r[i_out])
+                        if v is not None:
+                            entry["priceOut"] = v
+            finally:
+                wb2.close()
+            if prices:
+                return prices, d
+    return {}, ""
 
 
 # ---------------------------------------------------------------------------
@@ -858,11 +881,13 @@ def main() -> int:
     families = merge_families(lm_rows)
 
     # 2/3) SuperCLUE
-    sc_scores, sc_prices, used_date = fetch_superclue()
+    sc_scores, sc_prices, used_date, price_date = fetch_superclue()
     diff["sources"]["superclue"] = {
         "ok": bool(sc_scores),
         "count": len(sc_scores),
         "date": used_date,
+        "price_count": len(sc_prices),
+        "price_date": price_date,
     }
 
     # 合并（注意：apply_updates 会原地修改 models，因此先保留更新前快照用于历史归档）
@@ -923,24 +948,25 @@ def main() -> int:
                            "date": used_date, "kind": "实测"}
         fi["dims"] = {"label": "六维子分 / 综合能力分", "source": "SuperCLUE 分项测评",
                       "date": used_date, "kind": "实测"}
-        fi["price"] = {"label": "API 价格", "source": "SuperCLUE 价格库（$1≈¥7.2 换算）",
-                       "date": used_date, "kind": "官方"}
     else:
-        # 口径变更未合并或未抓到：沿用上次标注，并注明（价格不受口径突变影响，
-        # 只要抓到了价格表就按本期标注）
-        if sc_scores:
-            fi["price"] = {"label": "API 价格", "source": "SuperCLUE 价格库（$1≈¥7.2 换算）",
-                           "date": used_date, "kind": "官方"}
-        else:
-            old = prev_fi.get("price")
-            if old:
-                fi["price"] = dict(old)
-                fi["price"]["note"] = "本期未抓取，沿用上次数据"
+        # 口径变更未合并：沿用上次标注并注明
         for k in ("superclue", "dims"):
             old = prev_fi.get(k)
             if old:
                 fi[k] = dict(old)
                 fi[k]["note"] = "本期未合并，沿用上次数据"
+    # 价格标注与智能指数解耦：只按「实际抓到的是哪个月的表」标注。
+    # 价格表 2026-08 起停更，若跟着智能指数标成当期，属于错误标注。
+    if sc_prices and price_date:
+        fi["price"] = {"label": "API 价格", "source": "SuperCLUE 价格库（$1≈¥7.2 换算）",
+                       "date": price_date, "kind": "官方"}
+        if used_date and price_date != used_date:
+            fi["price"]["note"] = f"价格表自 {price_date} 后未再发布，沿用该月数据"
+    else:
+        old = prev_fi.get("price")
+        if old:
+            fi["price"] = dict(old)
+            fi["price"]["note"] = "本期未抓取，沿用上次数据"
     meta["fieldInfo"] = fi
 
     if args.dry_run:
