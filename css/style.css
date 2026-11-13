@@ -2,7 +2,7 @@
   --bg: #f5f6fa;
   --card: #ffffff;
   --ink: #191c23;
-  --muted: #6a7180;
+  --muted: #5d6472;
   --line: #e6e8ee;
   --brand: #4f46e5;
   --brand-weak: #eef0ff;
@@ -564,3 +564,62 @@ footer a { color: var(--muted); }
 .data-alert-body b { font-size: 13px; font-weight: 700; color: #92400e; }
 .data-alert-body a { color: #92400e; text-decoration: underline; text-underline-offset: 2px; }
 .data-alert-body a:hover { color: #78350f; }
+
+/* 字段级数据日期与来源标注（排行榜页「数据说明」内） */
+.field-info { margin: 14px 0 4px; }
+.field-info h3 { font-size: 14px; font-weight: 700; margin: 0 0 10px; color: var(--ink); }
+.fi-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.fi-table th, .fi-table td { padding: 7px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+.fi-table thead th { font-size: 12px; color: var(--muted); font-weight: 600; border-bottom: 2px solid var(--line); }
+.fi-table tbody th { font-weight: 600; color: var(--ink); white-space: nowrap; }
+.fi-table .num { white-space: nowrap; }
+.fi-kind { display: inline-block; font-size: 11px; font-weight: 600; padding: 1px 8px; border-radius: 999px; white-space: nowrap; }
+.fi-kind.kind-measured { color: #1d4ed8; background: #dbeafe; }
+.fi-kind.kind-official { color: #047857; background: #d1fae5; }
+.fi-kind.kind-est { color: #92400e; background: #fef3c7; }
+.fi-note { display: block; font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+/* ===== 成本计算器 ===== */
+.calc-form { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
+.calc-form label { font-size: 12.5px; color: var(--muted); margin-top: 8px; }
+.calc-form input {
+  width: 100%; max-width: 260px; padding: 8px 12px; border: 1px solid var(--line);
+  border-radius: 9px; font-size: 14px; font-family: inherit; outline: none;
+}
+.calc-form input:focus { border-color: var(--brand); }
+#shareBtn { margin: 8px 0 4px; width: 100%; }
+
+/* ===== 无障碍 ===== */
+/* 键盘焦点环：键盘导航时所有可交互元素都有清晰可见的焦点位置 */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* 正文/说明区的链接加下划线，不单靠颜色区分（WCAG 1.4.1）；
+   导航与表格内链接保持简洁，但 hover/focus 时有下划线反馈 */
+.disclaimer a,
+.dim-note a,
+.dim-link,
+.hint a,
+.field-info a,
+.src-desc a,
+.sub a,
+.card > p a,
+footer a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+.disclaimer a:hover, .dim-note a:hover, .dim-link:hover,
+.src-desc a:hover, footer a:hover { color: var(--brand-ink); }
+.mname a:hover, .mname a:focus-visible,
+.cost-table a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+/* 表格行悬停辅助：配合键盘浏览 */
+#rankTable tbody tr:hover, #costTable tbody tr:hover { background: #fafbfe; }

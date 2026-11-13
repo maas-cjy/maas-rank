@@ -37,6 +37,7 @@
     else if (selected.length < MAX) { selected.push(id); }
     renderPicker();
     renderAll();
+    syncUrl();
   }
 
   function renderAll() {
@@ -127,7 +128,7 @@
       { label: '上下文', key: 'context', cell: function (m) { return R.fmtCtx(m.context); }, best: 'max' },
       { label: '输出速度', key: 'speed', cell: function (m) { return R.fmtSpeed(m.speed) + R.estMark(m, 'speed'); }, best: 'max' }
     ];
-    var head = '<tr><th></th>' + models.map(function (m) { return '<th>' + R.esc(m.name) + '</th>'; }).join('') + '</tr>';
+    var head = '<tr><th scope="col" aria-label="指标"></th>' + models.map(function (m) { return '<th scope="col">' + R.esc(m.name) + '</th>'; }).join('') + '</tr>';
     var body = rows.map(function (row) {
       var bestIdx = -1;
       if (row.key) {
@@ -141,9 +142,37 @@
       var tds = models.map(function (m, i) {
         return '<td' + (i === bestIdx ? ' class="best"' : '') + '>' + row.cell(m) + '</td>';
       }).join('');
-      return '<tr><td>' + row.label + '</td>' + tds + '</tr>';
+      return '<tr><th scope="row">' + row.label + '</th>' + tds + '</tr>';
     }).join('');
     tbody.innerHTML = head + body;
+  }
+
+  function syncUrl() {
+    /* 选中变化时同步 URL，方便直接复制地址栏分享（不产生历史记录） */
+    var btn = document.getElementById('shareBtn');
+    if (btn) btn.hidden = !selected.length;
+    if (!window.history || !window.history.replaceState) return;
+    var url = window.location.pathname
+      + (selected.length ? '?models=' + selected.map(encodeURIComponent).join(',') : '');
+    window.history.replaceState(null, '', url);
+  }
+
+  function shareLink() {
+    if (!selected.length) return;
+    var url = window.location.origin + window.location.pathname
+      + '?models=' + selected.map(encodeURIComponent).join(',');
+    var done = function () {
+      var btn = document.getElementById('shareBtn');
+      if (!btn) return;
+      var old = btn.textContent;
+      btn.textContent = '已复制 ✓';
+      setTimeout(function () { btn.textContent = old; }, 1500);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(done).catch(function () { window.prompt('复制以下链接：', url); });
+    } else {
+      window.prompt('复制以下链接：', url);
+    }
   }
 
   function init() {
@@ -151,6 +180,8 @@
       if (e.target.type === 'checkbox') toggle(e.target.value);
     });
     document.getElementById('search').addEventListener('input', renderPicker);
+    var shareBtn = document.getElementById('shareBtn');
+    if (shareBtn) shareBtn.addEventListener('click', shareLink);
     window.addEventListener('resize', function () {
       if (radar) radar.resize();
       if (priceChart) priceChart.resize();
@@ -160,10 +191,12 @@
   R.loadData().then(function () {
     document.getElementById('footDate').textContent = R.getMeta().updated;
     init();
-    var pre = (R.qs('m') || '').split(',').filter(Boolean);
+    /* 兼容两种参数名：?models=a,b,c（分享规范）与 ?m=a,b,c（历史链接） */
+    var pre = (R.qs('models') || R.qs('m') || '').split(',').filter(Boolean);
     pre.forEach(function (id) { if (R.getModel(id) && selected.length < MAX) selected.push(id); });
     renderPicker();
     renderAll();
+    syncUrl();
   }).catch(function (err) {
     document.getElementById('pickerList').innerHTML = '<p class="empty">数据加载失败：' + R.esc(err.message) + '</p>';
   });

@@ -27,6 +27,7 @@ MAIN_PAGES = [
     ("rank.html",   "weekly",  "0.9"),
     ("articles.html", "weekly", "0.8"),
     ("compare.html", "weekly", "0.8"),
+    ("cost.html",    "monthly", "0.6"),
     ("model.html",  "weekly",  "0.7"),
     ("report.html", "weekly",  "0.7"),
     ("about.html",  "monthly", "0.6"),

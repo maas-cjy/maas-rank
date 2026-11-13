@@ -40,6 +40,7 @@
       <a href="index.html">首页</a>
       <a href="rank.html" class="active">排行榜</a>
       <a href="compare.html">模型对比</a>
+      <a href="cost.html">成本计算</a>
       <a href="report.html">榜单周报</a>
       <a href="articles.html">榜单解读</a>
       <a href="about.html">数据说明</a>
@@ -102,18 +103,18 @@
       </div>
       <div class="table-wrap">
         <table id="rankTable">
-          <thead>
+          <th scope="col"ead>
             <tr>
-              <th>排名</th>
-              <th>模型</th>
-              <th data-key="elo">Elo <span class="arr"></span></th>
-              <th data-key="bench">综合能力</th>
-              <th data-key="superclue">SuperCLUE</th>
-              <th data-key="priceIn">输入价</th>
-              <th data-key="priceOut">输出价</th>
-              <th data-key="context">上下文</th>
-              <th data-key="speed">输出速度</th>
-              <th></th>
+              <th scope="col">排名</th>
+              <th scope="col">模型</th>
+              <th scope="col" data-key="elo">Elo <span class="arr"></span></th>
+              <th scope="col" data-key="bench">综合能力</th>
+              <th scope="col" data-key="superclue">SuperCLUE</th>
+              <th scope="col" data-key="priceIn">输入价</th>
+              <th scope="col" data-key="priceOut">输出价</th>
+              <th scope="col" data-key="context">上下文</th>
+              <th scope="col" data-key="speed">输出速度</th>
+              <th scope="col"></th>
             </tr>
           </thead>
           <tbody id="rankBody"></tbody>
@@ -132,9 +133,10 @@
   <section class="card data-card" id="data">
     <h2>数据说明 <a class="dim-link" href="about.html">查看完整说明 →</a></h2>
     <ul id="sources"></ul>
+    <div id="fieldInfo" class="field-info" hidden></div>
     <p class="disclaimer">
-      <b>免责声明：</b>本榜单为第三方聚合展示，非官方发布。Elo 数据来自 LMArena 公开快照（2026-08-19），
-      SuperCLUE 数据来自其 2026 年 7/8 月公开测评（海外模型为参考值），价格来自各厂商公开定价页。
+      <b>免责声明：</b>本榜单为第三方聚合展示，非官方发布。Elo 数据来自 LMArena 公开快照，
+      SuperCLUE 数据来自其公开测评（海外模型为参考值），价格来自各厂商公开定价页。
       标注 <span class="est-mark">*</span> 的字段为合理估算值。所有数据仅供选型参考，正式决策请以官方发布为准。
       数据每周自动更新，详细口径见<a href="about.html">数据说明</a>。
     </p>

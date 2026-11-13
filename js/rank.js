@@ -356,6 +356,30 @@
       return '<li><span class="src-name">' + R.esc(s.name) + '</span>'
         + '<span class="src-desc">' + R.esc(s.desc) + (s.url ? ' · <a href="' + R.esc(s.url) + '" target="_blank" rel="noopener">访问官网</a>' : '') + '</span></li>';
     }).join('');
+
+    /* 字段级数据日期与来源标注（meta.fieldInfo 由 fetch_data.py 生成） */
+    var fiBox = document.getElementById('fieldInfo');
+    var fi = meta.fieldInfo;
+    if (fiBox && fi && Object.keys(fi).length) {
+      var KIND_LABEL = { '实测': 'kind-measured', '官方': 'kind-official', '估算': 'kind-est' };
+      var order = ['elo', 'superclue', 'dims', 'price', 'context', 'speed'];
+      var rowsHtml = order.filter(function (k) { return fi[k]; }).map(function (k) {
+        var f = fi[k];
+        return '<tr>'
+          + '<th scope="row">' + R.esc(f.label) + '</th>'
+          + '<td>' + R.esc(f.source) + '</td>'
+          + '<td class="num">' + R.esc(f.date || '—') + '</td>'
+          + '<td><span class="fi-kind ' + (KIND_LABEL[f.kind] || '') + '">' + R.esc(f.kind) + '</span>'
+          + (f.note ? '<span class="fi-note">' + R.esc(f.note) + '</span>' : '') + '</td>'
+          + '</tr>';
+      }).join('');
+      fiBox.innerHTML = '<h3>各字段数据日期与口径</h3>'
+        + '<div class="table-wrap"><table class="fi-table">'
+        + '<thead><tr><th scope="col">字段</th><th scope="col">来源</th><th scope="col">数据期</th><th scope="col">口径</th></tr></thead>'
+        + '<tbody>' + rowsHtml + '</tbody></table></div>';
+      fiBox.hidden = false;
+    }
+
     init();
     renderTable();
     renderChart();

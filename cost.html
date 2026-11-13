@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="大模型 API 成本计算器：输入月 token 用量、缓存命中率与请求量，自动对比多个模型的月度调用成本。">
+<meta name="keywords" content="大模型API成本,API价格计算,token费用,LLM成本估算,大模型报价">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://maasrank.com/cost.html">
+<meta name="theme-color" content="#1E1B4B">
+<link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+<title>MaaS Rank - API 成本计算器 · 大模型调用费用估算</title>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MaaS Rank">
+<meta property="og:title" content="MaaS Rank - API 成本计算器">
+<meta property="og:description" content="输入月 token 用量与缓存命中率，自动对比多个大模型的月度调用成本。">
+<meta property="og:url" content="https://maasrank.com/cost.html">
+<meta property="og:locale" content="zh_CN">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="index.html"><svg class="brand-mark" viewBox="0 0 64 64" width="22" height="22" aria-hidden="true" focusable="false"><rect width="64" height="64" rx="16" fill="#1E1B4B"/><text x="19.5" y="44.5" font-size="34" fill="#FFFFFF" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">M</text><rect x="33" y="39" width="4.5" height="11.5" rx="2.2" fill="#8B5CF6"/><rect x="40" y="32" width="4.5" height="18.5" rx="2.2" fill="#8B5CF6"/><rect x="47" y="25" width="4.5" height="25" rx="2.2" fill="#8B5CF6"/></svg>MaaS Rank</a>
+    <button class="nav-toggle" aria-label="打开导航" aria-expanded="false">☰</button>
+    <nav>
+      <a href="index.html">首页</a>
+      <a href="rank.html">排行榜</a>
+      <a href="compare.html">模型对比</a>
+      <a href="cost.html" class="active">成本计算</a>
+      <a href="report.html">榜单周报</a>
+      <a href="articles.html">榜单解读</a>
+      <a href="about.html">数据说明</a>
+    </nav>
+    <div class="nav-extra">
+      <a href="https://github.com/maas-cjy/maas-rank" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>API 成本计算器</h1>
+    <p>输入你的月度 token 用量与缓存命中率，自动计算并对比最多 4 个模型的月度调用成本。价格为快照数据，缓存读价折扣按行业常见口径默认 50%，实际以厂商计费为准。</p>
+    <div class="hero-meta">
+      <span class="chip">价格快照 <b id="dataDate">–</b></span>
+      <span class="chip">汇率 <b>$1 ≈ ¥7.2</b></span>
+    </div>
+  </section>
+
+  <section class="grid2">
+    <div class="card">
+      <h2>1 · 选择模型（最多 4 个）</h2>
+      <input id="search" class="search" type="text" placeholder="搜索模型或厂商…" autocomplete="off" spellcheck="false">
+      <div id="pickerList" class="picker-list" role="group" aria-label="模型选择列表"></div>
+    </div>
+
+    <div class="card">
+      <h2>2 · 用量假设</h2>
+      <div class="calc-form">
+        <label for="inTok">每月输入 tokens（百万）</label>
+        <input id="inTok" type="number" min="0" step="0.1" value="10">
+        <label for="outTok">每月输出 tokens（百万）</label>
+        <input id="outTok" type="number" min="0" step="0.1" value="2">
+        <label for="cacheHit">上下文缓存命中率（%）</label>
+        <input id="cacheHit" type="number" min="0" max="95" step="1" value="30">
+        <label for="cacheOff">缓存读价折扣（%）</label>
+        <input id="cacheOff" type="number" min="0" max="95" step="1" value="50">
+        <label for="reqs">月请求量（万次，选填）</label>
+        <input id="reqs" type="number" min="0" step="0.1" placeholder="填写后显示单次成本">
+        <p class="dim-note">计算口径：月成本 = 未命中输入 × 输入价 + 命中输入 × 输入价 × (1−缓存折扣) + 输出 × 输出价。未填价格的模型不参与对比。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>月度成本对比</h2>
+    <p class="sub" id="calcSummary"></p>
+    <div id="costChart" style="height:320px;"></div>
+    <div class="table-wrap">
+      <table id="costTable">
+        <th scope="col"ead>
+          <tr>
+            <th scope="col">模型</th>
+            <th scope="col">输入价 ¥/M</th>
+            <th scope="col">输出价 ¥/M</th>
+            <th scope="col">月成本（¥）</th>
+            <th scope="col">单次成本（¥）</th>
+          </tr>
+        </thead>
+        <tbody id="costBody"></tbody>
+      </table>
+    </div>
+    <p class="dim-note" id="footNoteWrap">价格数据快照：<span id="footDate">–</span> · 数据来源见<a href="about.html">数据说明</a>。本工具为粗略估算，正式决策请以厂商计费为准。</p>
+  </section>
+</main>
+
+<footer>
+  <div>MaaS Rank · 大模型排行榜 · 数据快照 <span id="footDate2">–</span> · 开源数据，标注来源引用</div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<script src="js/site.js"></script>
+<script src="js/common.js"></script>
+<script src="js/cost.js"></script>
+<script src="js/analytics.js"></script>
+</body>
+</html>
