@@ -21,7 +21,7 @@
         "desc": "OpenAI / Anthropic / Google / DeepSeek / 阿里云 / 智谱 / 月之暗面 / 字节 等官方 API 定价"
       }
     ],
-    "lastAutoUpdate": "2026-11-13 08:04:40",
+    "lastAutoUpdate": "2026-11-13 08:32:08",
     "fieldInfo": {
       "elo": {
         "label": "竞技场 Elo",
@@ -41,12 +41,6 @@
         "date": "2026-11-10",
         "kind": "估算"
       },
-      "price": {
-        "label": "API 价格",
-        "source": "SuperCLUE 价格库（$1≈¥7.2 换算）",
-        "date": "2026年11月",
-        "kind": "官方"
-      },
       "superclue": {
         "label": "中文能力（SuperCLUE 智能指数）",
         "source": "SuperCLUE 公开测评",
@@ -60,6 +54,13 @@
         "date": "2026年7月",
         "kind": "实测",
         "note": "本期未合并，沿用上次数据"
+      },
+      "price": {
+        "label": "API 价格",
+        "source": "SuperCLUE 价格库（$1≈¥7.2 换算）",
+        "date": "2026年7月",
+        "kind": "官方",
+        "note": "价格表自 2026年7月 后未再发布，沿用该月数据"
       }
     }
   },
@@ -300,7 +301,9 @@
       "region": "china",
       "open": true,
       "elo": 1485,
-      "desc": "来自 阿里云 的模型，竞技场 Elo 1282 分。数据每周自动更新。"
+      "desc": "来自 阿里云 的模型，竞技场 Elo 1282 分。数据每周自动更新。",
+      "priceIn": 12.0,
+      "priceOut": 36.0
     },
     {
       "id": "muse-spark-1.2",
@@ -650,7 +653,9 @@
       "region": "china",
       "open": true,
       "elo": 1464,
-      "desc": "来自 小米 的模型，竞技场 Elo 1428 分。数据每周自动更新。"
+      "desc": "来自 小米 的模型，竞技场 Elo 1428 分。数据每周自动更新。",
+      "priceIn": 3.0,
+      "priceOut": 6.0
     },
     {
       "id": "glm-5.1",
@@ -1091,7 +1096,9 @@
       "region": "china",
       "open": true,
       "elo": 1439,
-      "desc": "来自 腾讯 的模型，竞技场 Elo 1442 分。数据每周自动更新。"
+      "desc": "来自 腾讯 的模型，竞技场 Elo 1442 分。数据每周自动更新。",
+      "priceIn": 1.0,
+      "priceOut": 4.0
     },
     {
       "id": "qwen3",
