@@ -20,6 +20,10 @@
         {
           "url": "https://hf-mirror.com/datasets/lmarena-ai/leaderboard-dataset/resolve/refs%2Fconvert%2Fparquet/text/latest/0000.parquet",
           "result": "HTTP 404 | Entry not found"
+        },
+        {
+          "url": "https://huggingface.co/api/datasets/lmarena-ai/leaderboard-dataset/tree/main?recursive=1",
+          "result": "48 个文件: .gitattributes(2504B), README.md(22920B), agent/full-00000-of-00001.parquet(120481B), agent/latest-00000-of-00001.parquet(10534B), agent_bash_recovery_steps/full-00000-of-00001.parquet(66228B), agent_bash_recovery_steps/latest-00000-of-00001.parquet(7712B), agent_bash_reliability/full-00000-of-00001.parquet(36453B), agent_bash_reliability/latest-00000-of-00001.parquet(8610B), agent_praise_complaint/full-00000-of-00001.parquet(98912B), agent_praise_complaint/latest-00000-of-00001.parquet(8596B), agent_steerability/full-00000-of-00001.parquet(100391B), agent_steerability/latest-00000-of-00001.parquet(8634B)"
         }
       ]
     },
