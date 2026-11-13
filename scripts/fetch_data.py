@@ -212,6 +212,61 @@ def probe_lm_repo_files() -> None:
         LM_DIAG.append({"url": url, "result": f"ERR {type(e).__name__} | {str(e)[:120]}"})
 
 
+def download_lm_repo_table(split: str):
+    """直读 HF 仓库里的原始 parquet 文件（走 CDN，不依赖 datasets-server 转换任务）。
+
+    仓库内实际存有 text/latest-00000-of-00001.parquet 等文件；而
+    /api/datasets/.../parquet 是按需转换的产物。2026-11-13 该转换任务因
+    「temporary spike in resource usage」被终止，接口直接返回 HTTP 400，
+    但仓库原始文件依然可下载 —— 这条路径才是稳定的。
+    """
+    import io
+
+    import pyarrow as pa
+    import pyarrow.parquet as pq
+
+    prefix = "latest-" if split == "latest" else "full-"
+    list_url = f"https://huggingface.co/api/datasets/{LM_DS}/tree/main/text"
+    try:
+        items = json.loads(http_get(list_url, retries=0))
+    except Exception as e:  # noqa: BLE001
+        LM_DIAG.append({"url": list_url, "result": f"ERR {type(e).__name__} | {str(e)[:120]}"})
+        return None
+
+    files = sorted(
+        it["path"] for it in items
+        if it.get("type") == "file"
+        and it["path"].rsplit("/", 1)[-1].startswith(prefix)
+        and it["path"].endswith(".parquet")
+    )
+    if not files:
+        LM_DIAG.append({"url": list_url,
+                        "result": f"未找到 {prefix}*.parquet（目录内 {len(items)} 项）"})
+        return None
+
+    tables = []
+    for p in files:
+        for host in LM_PARQUET_HOSTS:
+            url = f"{host}/datasets/{LM_DS}/resolve/main/{p}"
+            try:
+                b = http_get(url, retries=0)
+                if b[:4] != b"PAR1":
+                    LM_DIAG.append({"url": url, "result": f"非 parquet {b[:24]!r}"})
+                    continue
+                LM_DIAG.append({"url": url, "result": f"OK {len(b)}B"})
+                tables.append(pq.read_table(io.BytesIO(b)))
+                break
+            except Exception as e:  # noqa: BLE001
+                detail = http_probe(url)
+                LM_DIAG.append({"url": url, "result": detail})
+                log(f"  ⚠ {url} 下载失败：{e}｜探测：{detail}")
+    if not tables:
+        return None
+    if len(tables) == 1:
+        return tables[0]
+    return pa.concat_tables(tables)
+
+
 def fetch_lmarena_parquet(split: str, as_of: str = "") -> list[dict]:
     """下载 parquet 并解析为 [{name, org, license, rating}]；as_of 非空时取 ≤as_of 的最近一期。"""
     import io
@@ -222,17 +277,22 @@ def fetch_lmarena_parquet(split: str, as_of: str = "") -> list[dict]:
         log("  ✗ 缺少 pyarrow，无法解析 parquet（pip install pyarrow）")
         return []
 
-    # datasets-server 的 /parquet 是「按需转换」入口，HF 后台重跑转换时会短暂 5xx；
-    # /resolve/refs%2Fconvert%2Fparquet 指向转换产物的实际文件，两条路径互为备份。
+    # 下载顺序（从最稳到最脆）：
+    #   1. 仓库原始 parquet：text/<split>-*.parquet，走 CDN，不经过转换任务；
+    #   2. datasets-server 的 /parquet 「按需转换」接口；
+    #   3. 转换产物分支 refs/convert/parquet。
     paths = [
         f"/api/datasets/{LM_DS}/parquet/text/{split}/0.parquet",
         f"/datasets/{LM_DS}/resolve/refs%2Fconvert%2Fparquet/text/{split}/0000.parquet",
     ]
+    table = None
     raw = None
     if as_of and os.path.exists(LM_FULL_CACHE):
         log(f"  使用缓存 full parquet：{LM_FULL_CACHE}")
         raw = open(LM_FULL_CACHE, "rb").read()
     if raw is None:
+        table = download_lm_repo_table(split)
+    if raw is None and table is None:
         for path in paths:
             for host in LM_PARQUET_HOSTS:
                 url = host + path
@@ -260,12 +320,18 @@ def fetch_lmarena_parquet(split: str, as_of: str = "") -> list[dict]:
             if raw is not None:
                 break
 
-    if raw is None:
+    if raw is None and table is None:
         probe_lm_repo_files()
         return []
 
+    if table is None:
+        try:
+            table = pq.read_table(io.BytesIO(raw))
+        except Exception as e:  # noqa: BLE001
+            log(f"  ✗ parquet 解析失败：{e}")
+            return []
+
     try:
-        table = pq.read_table(io.BytesIO(raw))
         cols = {c: table.column(c).to_pylist()
                 for c in ("model_name", "organization", "license", "rating",
                           "category", "leaderboard_publish_date")
