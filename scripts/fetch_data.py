@@ -200,6 +200,18 @@ LM_FULL_CACHE = "/tmp/lmarena_text_full.parquet"
 LM_DIAG: list[dict] = []
 
 
+def probe_lm_repo_files() -> None:
+    """全部下载路径失败时，列出 HF 仓库原始文件，供人工判断能否直读绕开转换任务。"""
+    url = f"https://huggingface.co/api/datasets/{LM_DS}/tree/main?recursive=1"
+    try:
+        items = json.loads(http_get(url, retries=0))
+        files = [f"{it.get('path')}({it.get('size')}B)"
+                 for it in items if it.get("type") == "file"]
+        LM_DIAG.append({"url": url, "result": f"{len(files)} 个文件: " + ", ".join(files[:12])})
+    except Exception as e:  # noqa: BLE001
+        LM_DIAG.append({"url": url, "result": f"ERR {type(e).__name__} | {str(e)[:120]}"})
+
+
 def fetch_lmarena_parquet(split: str, as_of: str = "") -> list[dict]:
     """下载 parquet 并解析为 [{name, org, license, rating}]；as_of 非空时取 ≤as_of 的最近一期。"""
     import io
@@ -249,6 +261,7 @@ def fetch_lmarena_parquet(split: str, as_of: str = "") -> list[dict]:
                 break
 
     if raw is None:
+        probe_lm_repo_files()
         return []
 
     try:
