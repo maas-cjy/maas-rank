@@ -33,6 +33,7 @@ import os
 import re
 import statistics
 import sys
+import urllib.error
 import urllib.parse
 import urllib.request
 from datetime import date, datetime
@@ -126,6 +127,31 @@ def http_get(url: str, retries: int = 2) -> bytes:
     raise RuntimeError(f"GET {url} 失败: {last_err}")
 
 
+def http_probe(url: str) -> str:
+    """诊断用：请求一次并返回「HTTP 状态 + 响应体片段」，永不抛异常。
+
+    http_get 的异常只带一句 "HTTP Error 503"，看不出到底是源站挂了、
+    镜像限流、还是路径改了。把状态码和响应体前 160 字留下来，
+    下次再停更时直接看 data/.last_update.json 就能定位。
+    """
+    try:
+        req = urllib.request.Request(
+            url, headers={"User-Agent": "Mozilla/5.0 (MaaS-Rank updater)"})
+        with urllib.request.urlopen(req, timeout=TIMEOUT) as resp:
+            head = resp.read(64)
+            return f"HTTP {resp.getcode()} | body前4字节={head[:4]!r}"
+    except urllib.error.HTTPError as e:
+        try:
+            body = e.read(400).decode("utf-8", "replace")
+        except Exception:  # noqa: BLE001
+            body = ""
+        body = re.sub(r"\s+", " ", body).strip()[:160]
+        return f"HTTP {e.code} | {body}"
+    except Exception as e:  # noqa: BLE001
+        return f"ERR {type(e).__name__} | {str(e)[:160]}"
+
+
+
 def to_num(v) -> float | None:
     """把 Excel / JSON 里的值转成 float；'-'、None、空串返回 None。"""
     if v is None:
@@ -169,6 +195,10 @@ LM_DS = "lmarena-ai/leaderboard-dataset"
 LM_PARQUET_HOSTS = ["https://huggingface.co", "https://hf-mirror.com"]
 LM_FULL_CACHE = "/tmp/lmarena_text_full.parquet"
 
+# 本次运行中每条下载尝试的结果（成功/状态码/响应体片段）。
+# 失败原因会写进 data/.last_update.json，CI 提交后可在仓库里直接追溯。
+LM_DIAG: list[dict] = []
+
 
 def fetch_lmarena_parquet(split: str, as_of: str = "") -> list[dict]:
     """下载 parquet 并解析为 [{name, org, license, rating}]；as_of 非空时取 ≤as_of 的最近一期。"""
@@ -180,30 +210,44 @@ def fetch_lmarena_parquet(split: str, as_of: str = "") -> list[dict]:
         log("  ✗ 缺少 pyarrow，无法解析 parquet（pip install pyarrow）")
         return []
 
-    path = f"/api/datasets/{LM_DS}/parquet/text/{split}/0.parquet"
+    # datasets-server 的 /parquet 是「按需转换」入口，HF 后台重跑转换时会短暂 5xx；
+    # /resolve/refs%2Fconvert%2Fparquet 指向转换产物的实际文件，两条路径互为备份。
+    paths = [
+        f"/api/datasets/{LM_DS}/parquet/text/{split}/0.parquet",
+        f"/datasets/{LM_DS}/resolve/refs%2Fconvert%2Fparquet/text/{split}/0000.parquet",
+    ]
     raw = None
     if as_of and os.path.exists(LM_FULL_CACHE):
         log(f"  使用缓存 full parquet：{LM_FULL_CACHE}")
         raw = open(LM_FULL_CACHE, "rb").read()
     if raw is None:
-        for host in LM_PARQUET_HOSTS:
-            url = host + path
-            try:
-                raw = http_get(url, retries=1)
-                if raw[:4] != b"PAR1":
-                    log(f"  ⚠ {url} 返回非 parquet 内容，跳过")
+        for path in paths:
+            for host in LM_PARQUET_HOSTS:
+                url = host + path
+                try:
+                    raw = http_get(url, retries=0)
+                    if raw[:4] != b"PAR1":
+                        LM_DIAG.append({"url": url, "result": f"非 parquet 内容 {raw[:24]!r}"})
+                        log(f"  ⚠ {url} 返回非 parquet 内容，跳过")
+                        raw = None
+                        continue
+                    LM_DIAG.append({"url": url, "result": f"OK {len(raw)}B"})
+                    if as_of:
+                        try:
+                            with open(LM_FULL_CACHE, "wb") as f:
+                                f.write(raw)
+                        except OSError:
+                            pass  # 缓存写失败不影响主流程
+                    break
+                except Exception as e:  # noqa: BLE001
+                    # 二次探测拿状态码与响应体，失败原因随 .last_update.json 落盘
+                    detail = http_probe(url)
+                    LM_DIAG.append({"url": url, "result": detail})
+                    log(f"  ⚠ {url} 下载失败：{e}｜探测：{detail}")
                     raw = None
-                    continue
-                if as_of:
-                    try:
-                        with open(LM_FULL_CACHE, "wb") as f:
-                            f.write(raw)
-                    except OSError:
-                        pass  # 缓存写失败不影响主流程
+            if raw is not None:
                 break
-            except Exception as e:  # noqa: BLE001
-                log(f"  ⚠ {url} 下载失败：{e}")
-                raw = None
+
     if raw is None:
         return []
 
@@ -729,6 +773,9 @@ def main() -> int:
     # 1) LMArena
     elo_map, lm_rows = fetch_lmarena(as_of=args.as_of)
     diff["sources"]["lmarena"] = {"ok": bool(elo_map), "count": len(elo_map)}
+    if not elo_map and LM_DIAG:
+        # 只在失败时留痕：正常更新不必让摘要文件变吵
+        diff["sources"]["lmarena"]["diag"] = LM_DIAG[-6:]
     families = merge_families(lm_rows)
 
     # 2/3) SuperCLUE
