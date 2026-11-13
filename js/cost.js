@@ -71,7 +71,11 @@
     } else if (!priced.length) {
       sumEl.textContent = '所选模型暂无价格数据。';
     } else {
-      sumEl.textContent = '按每月输入 ' + inTok + 'M / 输出 ' + outTok + 'M tokens、缓存命中 ' + Math.round(hit * 100) + '% 估算。';
+      var missing = selected.length - priced.length;
+      sumEl.textContent = '按每月输入 ' + inTok + 'M / 输出 ' + outTok + 'M tokens、缓存命中 '
+        + Math.round(hit * 100) + '%、缓存读价折扣 ' + Math.round(off * 100) + '% 估算，汇率 $1≈¥'
+        + R.USD_CNY + '。'
+        + (missing > 0 ? '另有 ' + missing + ' 个所选模型缺少价格数据，未参与对比。' : '');
     }
 
     /* 表格 */
@@ -136,8 +140,12 @@
 
   R.loadData().then(function () {
     var meta = R.getMeta();
+    /* 价格日期单独取：页面快照日 ≠ 价格核验日（价格表可能已停更数月） */
+    var priceDate = (meta.fieldInfo && meta.fieldInfo.price && meta.fieldInfo.price.date) || meta.updated;
     document.getElementById('dataDate').textContent = meta.updated;
-    document.getElementById('footDate').textContent = meta.updated;
+    var pd = document.getElementById('priceDate');
+    if (pd) pd.textContent = priceDate;
+    document.getElementById('footDate').textContent = priceDate;
     document.getElementById('footDate2').textContent = meta.updated;
     init();
     /* 支持预选：cost.html?models=id1,id2 */

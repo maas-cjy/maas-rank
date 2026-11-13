@@ -69,6 +69,8 @@
     <div class="hero-links">
       <a href="report.html">本周榜单变化 →</a>
     </div>
+    <!-- 快照日与各指标数据日分开显示：快照更新 ≠ 每项数据都更新 -->
+    <p class="data-freshness" id="dataFreshness" hidden></p>
   </section>
 
   <!-- 1) 本周竞技场 Top 3（大卡片高视觉重量） -->
@@ -121,10 +123,10 @@
     <h2>数据说明 <a class="dim-link" href="about.html">查看完整说明 →</a></h2>
     <ul id="sources"></ul>
     <p class="disclaimer">
-      <b>免责声明：</b>本榜单为第三方聚合展示，非官方发布。Elo 数据来自 LMArena 公开快照（2026-08-19），
-      SuperCLUE 数据来自其 2026 年 7/8 月公开测评（海外模型为参考值），价格来自各厂商公开定价页。
+      <b>免责声明：</b>本榜单为第三方聚合展示，非官方发布，与 LMArena、SuperCLUE 及各模型厂商无隶属关系。
+      <span id="disclaimerDates">各指标的数据期见上方「数据时效」。</span>
       标注 <span class="est-mark">*</span> 的字段为合理估算值。所有数据仅供选型参考，正式决策请以官方发布为准。
-      数据每周自动更新，详细口径见<a href="about.html">数据说明</a>。
+      详细口径见<a href="about.html">数据说明</a>。
     </p>
   </section>
 </main>

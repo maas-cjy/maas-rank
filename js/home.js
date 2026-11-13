@@ -221,11 +221,51 @@
       .catch(function () { renderWeekly(null); });
   }
 
+  /* 数据时效：把「快照日」和「各指标数据日」拆开显示。
+     快照日只代表页面生成时间；Elo / 中文测评 / 价格各有自己的数据期，
+     混成一个日期会让人误以为页面上的每个数字都是当天更新的。 */
+  function renderFreshness(meta) {
+    var fi = meta.fieldInfo || {};
+    var items = [{ label: '快照', date: meta.updated }];
+    function add(label, field) {
+      if (!field || !field.date) return;
+      items.push({ label: label, date: field.date, stale: !!field.note, note: field.note });
+    }
+    add('Elo 数据期', fi.elo);
+    add('中文测评', fi.superclue);
+    add('价格核验', fi.price);
+
+    var box = document.getElementById('dataFreshness');
+    if (!box) return;
+    var hasStale = items.some(function (it) { return it.stale; });
+    box.innerHTML = '<span class="df-label">数据时效</span>' + items.map(function (it) {
+      return '<span class="df-item' + (it.stale ? ' df-stale' : '') + '"'
+        + (it.note ? ' title="' + R.esc(it.note) + '"' : '') + '>'
+        + R.esc(it.label) + ' <b>' + R.esc(it.date) + '</b>'
+        + (it.stale ? '<span class="df-mark" aria-hidden="true">※</span>' : '')
+        + '</span>';
+    }).join('<span class="df-sep" aria-hidden="true"> · </span>')
+      + (hasStale ? '<span class="df-foot">注：带 ※ 的指标本期未更新，沿用最近一次可用数据</span>' : '');
+    box.hidden = false;
+
+    /* 免责声明同步成真实数据期（原来写死 2026-08-19，与实际数据不符） */
+    var dd = document.getElementById('disclaimerDates');
+    if (!dd) return;
+    var elo = (fi.elo && fi.elo.date) || meta.updated;
+    var sc = fi.superclue && fi.superclue.date;
+    var pr = fi.price && fi.price.date;
+    dd.textContent = 'Elo 来自 LMArena 公开快照（数据期 ' + elo + '）'
+      + (sc ? '，中文能力来自 SuperCLUE ' + sc + '测评' : '')
+      + (pr ? '，API 价格核验于 ' + pr : '')
+      + '，上下文窗口取自厂商公开资料，输出速度为公开评测汇总并标注为估算值。';
+  }
+
   R.loadData().then(function () {
     var meta = R.getMeta();
     document.getElementById('dataDate').textContent = meta.updated;
     document.getElementById('modelCount').textContent = R.getModels().length;
     document.getElementById('footDate').textContent = meta.updated;
+    renderFreshness(meta);
     var ul = document.getElementById('sources');
     ul.innerHTML = meta.sources.map(function (s) {
       return '<li><span class="src-name">' + R.esc(s.name) + '</span>'

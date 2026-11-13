@@ -915,21 +915,29 @@ def main() -> int:
         key=lambda m: m.get("elo") if m.get("elo") is not None else -1, reverse=True)
     diff["changes"] = changes
 
+    # Elo 的实际数据期（parquet 行内 leaderboard_publish_date，不是抓取日期）
+    lm_pub = max((str(r.get("pub") or "") for r in lm_rows), default="")
+
     # meta 更新（仅当确有数据变化时，避免空跑产生无意义提交）
     if changes:
         meta["updated"] = today
         meta["lastAutoUpdate"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        # 摘要文案必须逐项写实际数据期：快照日 ≠ 各指标的数据日，
+        # 混为一谈会让人误以为「2026-11 快照」就等于「11 月的数据」。
         sources_note = []
         if elo_map:
-            sources_note.append("Elo 来自 LMArena（HuggingFace 数据集，自动抓取）")
-        if sc_scores:
-            sources_note.append(f"中文能力/价格来自 SuperCLUE（{used_date} 测评，自动抓取）")
+            sources_note.append(f"Elo 来自 LMArena（数据期 {lm_pub or today}）")
+        if sc_scores and not sc_skipped:
+            sources_note.append(f"中文能力来自 SuperCLUE（{used_date}）")
+        elif sc_scores:
+            sources_note.append(f"中文能力沿用上期（SuperCLUE {used_date} 换口径未合并）")
+        if sc_prices and price_date:
+            sources_note.append(f"价格核验于 {price_date}")
         if sources_note:
             meta["note"] = "榜单数据自动更新：" + "；".join(sources_note) + "；未抓取到的字段保留上次快照。"
 
     # 字段级数据日期与来源标注（前端「数据说明」逐字段展示，读者可知每个
     # 指标用的是哪一期数据、是实测还是官方口径）
-    lm_pub = max((str(r.get("pub") or "") for r in lm_rows), default="")
     prev_fi = meta.get("fieldInfo") or {}
     fi = {
         "elo": {"label": "竞技场 Elo", "source": "LMArena 全球盲测投票",

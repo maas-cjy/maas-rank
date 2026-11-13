@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="大模型排行榜数据说明：数据来源为 LMArena、SuperCLUE 与各厂商公开定价页，每周一自动更新。了解 Elo、智能指数、API 价格、上下文与输出速度的指标口径，以及估算值与免责声明。">
+<meta name="description" content="大模型排行榜数据说明：数据来源为 LMArena、SuperCLUE 与各厂商公开定价页，每日检查、有变化才更新。了解 Elo、智能指数、API 价格、上下文与输出速度的指标口径，以及估算值与免责声明。">
 <meta name="keywords" content="大模型排行榜,数据来源,LMArena,SuperCLUE,Elo,大模型API价格,数据说明,更新机制">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://maasrank.com/about.html">
@@ -15,7 +15,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="MaaS Rank">
 <meta property="og:title" content="数据说明 · MaaS Rank 大模型排行榜">
-<meta property="og:description" content="数据来源（LMArena / SuperCLUE / 厂商定价）、每周自动更新机制、各指标口径与免责声明。">
+<meta property="og:description" content="数据来源（LMArena / SuperCLUE / 厂商定价）、每日检查与自动更新机制、各指标口径与免责声明。">
 <meta property="og:image" content="https://maasrank.com/assets/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -24,7 +24,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="数据说明 · MaaS Rank 大模型排行榜">
-<meta name="twitter:description" content="数据来源、每周自动更新机制、各指标口径与免责声明。">
+<meta name="twitter:description" content="数据来源、每日检查与自动更新机制、各指标口径与免责声明。">
 <meta name="twitter:image" content="https://maasrank.com/assets/og-image.png">
 <meta name="twitter:image:alt" content="MaaS Rank · 大模型 API 排行榜">
 
@@ -63,7 +63,7 @@
     <div class="hero-meta">
       <span class="chip">数据快照 <b id="dataDate">–</b></span>
       <span class="chip">收录模型 <b id="modelCount">–</b></span>
-      <span class="chip">更新频率 <b>每周一自动</b></span>
+      <span class="chip">更新频率 <b>每日检查</b></span>
       <span class="chip">价格按 <b>$1 ≈ ¥7.2</b> 换算</span>
     </div>
   </section>
@@ -77,11 +77,16 @@
   <section class="card data-card">
     <h2>更新机制</h2>
     <ul class="flow-list">
-      <li><span class="flow-step">1</span><div><b>每周一 09:30（北京时间）自动更新</b><p>榜单数据按固定周期自动刷新：LMArena Elo 来自其公开数据集快照，中文能力与价格来自 SuperCLUE 官方公开测评，其余字段保留上次快照。</p></div></li>
-      <li><span class="flow-step">2</span><div><b>有变化才更新</b><p>系统对抓取结果与现有数据做逐字段比对（含数值精度归一化），仅在榜单数据实际变化时生成新快照，避免无效更新。</p></div></li>
+      <li><span class="flow-step">1</span><div><b>每天 09:30（北京时间）检查一次</b><p>榜单按周更新，但系统每天都会检查：LMArena Elo 来自其公开数据集，中文能力与价格来自 SuperCLUE 公开测评。若某天数据源异常，第二天会自动补上，不会整周停更。</p></div></li>
+      <li><span class="flow-step">2</span><div><b>有变化才更新</b><p>系统对抓取结果与现有数据做逐字段比对（含数值精度归一化），仅在榜单数据实际变化时生成新快照，避免无效更新；没有变化的日子不会产生新快照，也不会重复生成文章。</p></div></li>
       <li><span class="flow-step">3</span><div><b>校验后自动发布</b><p>新快照生成后自动发布上线，通常几分钟内生效。</p></div></li>
-      <li><span class="flow-step">4</span><div><b>数据源故障时保留旧值</b><p>任一数据源暂时不可用，系统会跳过该源并保留上次抓取值，榜单不出现空白，故障会在下次更新时自动恢复。</p></div></li>
+      <li><span class="flow-step">4</span><div><b>数据源故障时保留旧值</b><p>任一数据源不可用时，系统会跳过该源并保留上次抓取值，榜单不出现空白；该源恢复后会自动补上。连续失败时，站内会显示更新延迟提示。</p></div></li>
     </ul>
+  </section>
+
+  <section class="card data-card">
+    <h2>各指标的数据期并不相同</h2>
+    <p class="text-block">页面顶部标注的「数据快照」是本次生成快照的时间，<b>不等于每项数据的时间</b>。各字段有各自的日期：Elo 取 LMArena 最新一期榜单的发布时间；中文能力与六维子分取 SuperCLUE 当期测评；API 价格取最近一份可用的价格表。当某个来源停更或更换评分口径时，对应字段会沿用上一期，并在榜单页「各字段数据日期与口径」中注明。首页的「数据时效」一行会同时列出这几项日期，带 ※ 的表示该指标本期未更新。</p>
   </section>
 
   <section class="card data-card">
@@ -89,7 +94,7 @@
     <ul class="flow-list">
       <li><span class="flow-step elo">Elo</span><div><b>竞技场 Elo 分</b><p>来自 LMArena（原 Chatbot Arena）全球匿名盲测投票，采用 Bradley-Terry 模型计算。分数反映真实用户对模型输出的偏好强度，分数越高代表综合体验越好，与"考试分数"无直接换算关系。</p></div></li>
       <li><span class="flow-step cn">CN</span><div><b>SuperCLUE 智能指数</b><p>来自 SuperCLUE 中文通用大模型综合测评，覆盖数学推理、科学推理、智能体编程、指令遵循、幻觉控制、任务规划等维度。海外模型若未参加当期测评，展示为参考估算值。</p></div></li>
-      <li><span class="flow-step bench">综合</span><div><b>综合能力分</b><p>对 SuperCLUE（2026 年 7 月）公开的六项子维度得分取平均：数学推理、幻觉控制、科学推理、精确指令遵循、智能体编程、智能体任务规划。仅统计当期公布子分的模型；未公布子分或未参加当期测评的模型不参与该列排序，避免以估算值误导选型。</p></div></li>
+      <li><span class="flow-step bench">综合</span><div><b>综合能力分</b><p>对 SuperCLUE（<span id="scPeriod">最近一期</span>）公开的六项子维度得分取平均：数学推理、幻觉控制、科学推理、精确指令遵循、智能体编程、智能体任务规划。仅统计当期公布子分的模型；未公布子分或未参加当期测评的模型不参与该列排序，避免以估算值误导选型。</p></div></li>
       <li><span class="flow-step price">¥</span><div><b>API 价格</b><p>按每百万 tokens 计价，取自各厂商官方定价页。统一以 <code>$1 ≈ ¥7.2</code> 汇率换算为人民币展示（美元原价同时保留）。实际计费请以开通时官方价格为准。</p></div></li>
       <li><span class="flow-step ctx">CTX</span><div><b>上下文窗口</b><p>模型支持的最大输入上下文长度（tokens），以官方技术文档为准；部分模型按同系列/同代产品合理推算并标注 <span class="est-mark">*</span>。</p></div></li>
       <li><span class="flow-step spd">SPD</span><div><b>输出速度</b><p>输出吞吐量（tokens/s），取公开测评或厂商公布值的合理估算，不同测试环境下差异较大，仅作横向量级参考。</p></div></li>
@@ -138,6 +143,12 @@
         + '</span></li>';
     });
     list.innerHTML = html;
+    // 口径说明里的测评期随数据走，避免代码里写死某个年月后长期不更新
+    var fi = meta.fieldInfo || {};
+    var scEl = document.getElementById('scPeriod');
+    if (scEl) {
+      scEl.textContent = (fi.superclue && fi.superclue.date) ? fi.superclue.date : '最近一期';
+    }
   }).catch(function () {
     document.getElementById('dataDate').textContent = '加载失败';
   });

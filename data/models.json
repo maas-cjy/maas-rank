@@ -2,7 +2,7 @@
   "meta": {
     "name": "MaaS Rank · 数据快照",
     "updated": "2026-11-13",
-    "note": "榜单数据自动更新：Elo 来自 LMArena（HuggingFace 数据集，自动抓取）；中文能力/价格来自 SuperCLUE（2026年11月 测评，自动抓取）；未抓取到的字段保留上次快照。",
+    "note": "榜单数据自动更新：Elo 来自 LMArena（数据期 2026-11-11）；中文能力沿用上期（SuperCLUE 2026年11月 换口径未合并）；价格核验于 2026年7月；未抓取到的字段保留上次快照。",
     "exchangeRate": 7.2,
     "sources": [
       {

@@ -44,7 +44,8 @@
     <h1>API 成本计算器</h1>
     <p>输入你的月度 token 用量与缓存命中率，自动计算并对比最多 4 个模型的月度调用成本。价格为快照数据，缓存读价折扣按行业常见口径默认 50%，实际以厂商计费为准。</p>
     <div class="hero-meta">
-      <span class="chip">价格快照 <b id="dataDate">–</b></span>
+      <span class="chip">数据快照 <b id="dataDate">–</b></span>
+      <span class="chip">价格核验 <b id="priceDate">–</b></span>
       <span class="chip">汇率 <b>$1 ≈ ¥7.2</b></span>
     </div>
   </section>
@@ -80,7 +81,7 @@
     <div id="costChart" style="height:320px;"></div>
     <div class="table-wrap">
       <table id="costTable">
-        <th scope="col"ead>
+        <thead>
           <tr>
             <th scope="col">模型</th>
             <th scope="col">输入价 ¥/M</th>
@@ -92,7 +93,7 @@
         <tbody id="costBody"></tbody>
       </table>
     </div>
-    <p class="dim-note" id="footNoteWrap">价格数据快照：<span id="footDate">–</span> · 数据来源见<a href="about.html">数据说明</a>。本工具为粗略估算，正式决策请以厂商计费为准。</p>
+    <p class="dim-note" id="footNoteWrap">价格核验于 <span id="footDate">–</span>（该月后 SuperCLUE 价格表未再发布，沿用该期数据）· 汇率 $1≈¥7.2 · 数据来源见<a href="about.html">数据说明</a>。本工具为<b>粗略估算</b>，未计入批处理折扣、阶梯价与最低消费，正式决策请以厂商计费为准。</p>
   </section>
 </main>
 

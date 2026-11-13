@@ -89,6 +89,24 @@ main { max-width: 1180px; margin: 0 auto; padding: 32px 24px 64px; }
 }
 .chip b { color: var(--ink); font-weight: 600; }
 
+/* 数据时效条：快照日与各指标数据期分列，避免「页面是今天生成」被读成
+   「所有数字都是今天的数据」。用 .hero 前缀压过 .hero p 的默认样式。 */
+.hero .data-freshness {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px;
+  margin-top: 14px; padding: 9px 14px; max-width: none;
+  background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+  font-size: 12.5px; color: var(--muted);
+}
+.data-freshness .df-label { color: var(--ink); font-weight: 600; margin-right: 4px; }
+.data-freshness .df-item b {
+  color: var(--ink); font-weight: 600;
+  font-family: var(--mono); font-size: 12px;
+}
+.data-freshness .df-stale b { color: var(--amber); }
+.data-freshness .df-mark { color: var(--amber); margin-left: 1px; }
+.data-freshness .df-sep { color: var(--muted); }
+.data-freshness .df-foot { flex-basis: 100%; font-size: 11.5px; color: var(--muted); }
+
 .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
 .tab {
   border: 1px solid var(--line); background: var(--card); color: var(--muted);
@@ -359,9 +377,12 @@ footer a { color: var(--muted); }
   font-family: var(--mono); font-size: 22px; font-weight: 700;
   background: var(--bg); color: var(--ink);
 }
-.top3-item.r1 .top3-medal { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #fff; }
-.top3-item.r2 .top3-medal { background: linear-gradient(135deg, #cbd5e1, #94a3b8); color: #fff; }
-.top3-item.r3 .top3-medal { background: linear-gradient(135deg, #fb923c, #ea580c); color: #fff; }
+/* 奖牌用浅色渐变底 + 深色字：白字在金银铜底上对比度只有 1.5–2.1，
+   远低于 WCAG 阈值（Lighthouse 无障碍扣分即由此而来）。
+   改深色后最差 4.2:1（22px 粗体属大字号，阈值 3:1）。 */
+.top3-item.r1 .top3-medal { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #78350f; }
+.top3-item.r2 .top3-medal { background: linear-gradient(135deg, #cbd5e1, #94a3b8); color: #1e293b; }
+.top3-item.r3 .top3-medal { background: linear-gradient(135deg, #fb923c, #ea580c); color: #431407; }
 .top3-info { flex: 1; min-width: 0; }
 .top3-rank { font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: 1px; }
 .top3-name {
