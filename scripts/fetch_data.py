@@ -238,6 +238,7 @@ def fetch_lmarena_parquet(split: str, as_of: str = "") -> list[dict]:
                     "org": str(cols["organization"][i] or "").strip(),
                     "license": str(cols["license"][i] or "").strip(),
                     "rating": rating,
+                    "pub": pub or latest_seen,
                 })
         if as_of:
             log(f"  ✓ LMArena 历史快照选用：{latest_seen}（≤ {as_of} 的最近一期）")
@@ -469,8 +470,14 @@ STRIP_RE = [
 
 
 def normalize_family(name: str) -> str:
-    """把 LMArena 模型名归并到「家族主干」：循环剥离档位/状态/日期快照后缀。"""
+    """把 LMArena 模型名归并到「家族主干」：循环剥离档位/状态/日期快照后缀。
+
+    空白/下划线统一折叠为连字符——LMArena 会在 "Kimi K3" / "Kimi-K3" 两种
+    写法之间切换，不归一的话同一次改名就会生成一条重复条目（2026-11 实测
+    产生 173 个重复，需要 scripts/dedupe_models.py 一次性迁移清理）。
+    """
     key = str(name).lower().strip()
+    key = re.sub(r"[\s_]+", "-", key)
     for _ in range(6):
         new = key
         for rx in STRIP_RE:
@@ -480,6 +487,11 @@ def normalize_family(name: str) -> str:
             break
         key = new
     return key
+
+
+def canon_id(s: str) -> str:
+    """宽松规范化：忽略大小写与分隔符，用于模型名匹配。"""
+    return re.sub(r"[^a-z0-9.\u4e00-\u9fff]", "", str(s).lower())
 
 
 def pretty_name(key: str) -> str:
@@ -516,10 +528,16 @@ def merge_families(rows: list[dict]) -> dict[str, dict]:
 
 
 def match_model(src_name: str, mid: str) -> bool:
-    """判断数据源模型名是否对应 models.json 中的 id。"""
-    n = src_name.lower()
+    """判断数据源模型名是否对应 models.json 中的 id。
+
+    忽略分隔符差异（"Kimi K3" ≡ "Kimi-K3"），避免 LMArena 改名称风格时
+    同一个模型匹配失败、被当作新模型重复收录。
+    """
+    n = canon_id(src_name)
     for alias in MODEL_ALIASES.get(mid, []):
-        a = alias.lower()
+        a = canon_id(alias)
+        if not a:
+            continue
         pos = n.find(a)
         while pos != -1:
             end = pos + len(a)
@@ -528,6 +546,13 @@ def match_model(src_name: str, mid: str) -> bool:
             if not (a[-1:].isdigit() and (nxt == "." or nxt.isdigit())):
                 return True
             pos = n.find(a, pos + 1)
+    # 兜底：id 本身的规范形
+    a = canon_id(mid)
+    if a and a in n:
+        end = n.find(a) + len(a)
+        nxt = n[end:end + 1]
+        if not (a[-1:].isdigit() and (nxt == "." or nxt.isdigit())):
+            return True
     return False
 
 
@@ -659,10 +684,10 @@ def apply_updates(models, elo_map, families, scores, prices,
 
 def sync_new_models(models: list[dict], families: dict[str, dict], covered: set[str]) -> int:
     """把 LMArena 上有、但 models.json 未收录的模型家族追加为条目。返回新增数。"""
-    existing = {m["id"] for m in models}
+    existing = {canon_id(m["id"]) for m in models}
     added = 0
     for key, fam in families.items():
-        if key in covered or key in existing:
+        if key in covered or canon_id(key) in existing:
             continue
         org = fam["org"]
         provider = ORG_NAMES.get(org) or (org.title() if org else "其他")
@@ -750,6 +775,47 @@ def main() -> int:
             sources_note.append(f"中文能力/价格来自 SuperCLUE（{used_date} 测评，自动抓取）")
         if sources_note:
             meta["note"] = "榜单数据自动更新：" + "；".join(sources_note) + "；未抓取到的字段保留上次快照。"
+
+    # 字段级数据日期与来源标注（前端「数据说明」逐字段展示，读者可知每个
+    # 指标用的是哪一期数据、是实测还是官方口径）
+    lm_pub = max((str(r.get("pub") or "") for r in lm_rows), default="")
+    prev_fi = meta.get("fieldInfo") or {}
+    fi = {
+        "elo": {"label": "竞技场 Elo", "source": "LMArena 全球盲测投票",
+                "date": lm_pub or (prev_fi.get("elo", {}).get("date") or today),
+                "kind": "实测"},
+        "context": {"label": "上下文窗口", "source": "厂商公开资料（人工整理）",
+                    "date": prev_fi.get("context", {}).get("date") or "随官方发布更新",
+                    "kind": "官方"},
+        "speed": {"label": "输出速度", "source": "公开评测汇总（部分估算）",
+                  "date": prev_fi.get("speed", {}).get("date") or today,
+                  "kind": "估算"},
+    }
+    if not sc_skipped and sc_scores:
+        fi["superclue"] = {"label": "中文能力（SuperCLUE 智能指数）",
+                           "source": "SuperCLUE 公开测评",
+                           "date": used_date, "kind": "实测"}
+        fi["dims"] = {"label": "六维子分 / 综合能力分", "source": "SuperCLUE 分项测评",
+                      "date": used_date, "kind": "实测"}
+        fi["price"] = {"label": "API 价格", "source": "SuperCLUE 价格库（$1≈¥7.2 换算）",
+                       "date": used_date, "kind": "官方"}
+    else:
+        # 口径变更未合并或未抓到：沿用上次标注，并注明（价格不受口径突变影响，
+        # 只要抓到了价格表就按本期标注）
+        if sc_scores:
+            fi["price"] = {"label": "API 价格", "source": "SuperCLUE 价格库（$1≈¥7.2 换算）",
+                           "date": used_date, "kind": "官方"}
+        else:
+            old = prev_fi.get("price")
+            if old:
+                fi["price"] = dict(old)
+                fi["price"]["note"] = "本期未抓取，沿用上次数据"
+        for k in ("superclue", "dims"):
+            old = prev_fi.get(k)
+            if old:
+                fi[k] = dict(old)
+                fi[k]["note"] = "本期未合并，沿用上次数据"
+    meta["fieldInfo"] = fi
 
     if args.dry_run:
         log(f"（dry-run）共 {len(changes)} 处变更，未写文件。")

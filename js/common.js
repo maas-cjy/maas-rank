@@ -18,7 +18,24 @@
 
   function getModels() { return MODELS; }
   function getMeta() { return META; }
-  function getModel(id) { return MODELS.find(function (m) { return m.id === id; }); }
+
+  /* 宽松规范化 id：忽略大小写与分隔符（"Kimi K3" ≡ "kimi-k3"） */
+  function canonId(s) {
+    return String(s || '').toLowerCase().replace(/[^a-z0-9.\u4e00-\u9fff]/g, '');
+  }
+
+  /* 按 id 取模型：精确匹配 → aliases 匹配 → 规范形匹配（旧链接自动兼容） */
+  function getModel(id) {
+    if (!id) return undefined;
+    let m = MODELS.find(function (x) { return x.id === id; });
+    if (m) return m;
+    m = MODELS.find(function (x) {
+      return Array.isArray(x.aliases) && x.aliases.indexOf(id) !== -1;
+    });
+    if (m) return m;
+    const q = canonId(id);
+    return MODELS.find(function (x) { return canonId(x.id) === q; });
+  }
 
   function esc(s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
