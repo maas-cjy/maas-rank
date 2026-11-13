@@ -1,10 +1,10 @@
 {
-  "date": "2026-11-04",
+  "date": "2026-11-10",
   "models": [
     {
-      "id": "gemini-4-carbon",
+      "id": "gemini 4 carbon",
       "name": "Gemini 4 carbon",
-      "elo": 1540,
+      "elo": 1538,
       "superclue": null,
       "bench": null,
       "priceIn": null,
@@ -29,15 +29,6 @@
       "priceOut": null
     },
     {
-      "id": "claude-opus-5",
-      "name": "Claude Opus 5",
-      "elo": 1516,
-      "superclue": 75.0,
-      "bench": null,
-      "priceIn": 5.0,
-      "priceOut": 25.0
-    },
-    {
       "id": "claude-fable-5.1",
       "name": "Claude Fable 5.1",
       "elo": 1514,
@@ -45,6 +36,15 @@
       "bench": null,
       "priceIn": null,
       "priceOut": null
+    },
+    {
+      "id": "claude-opus-5",
+      "name": "Claude Opus 5",
+      "elo": 1506,
+      "superclue": 75.0,
+      "bench": null,
+      "priceIn": 5.0,
+      "priceOut": 25.0
     },
     {
       "id": "claude-opus-4-6",
@@ -65,7 +65,7 @@
       "priceOut": null
     },
     {
-      "id": "claude-opus-4.6",
+      "id": "claude opus 4.6",
       "name": "Claude opus 4.6",
       "elo": 1502,
       "superclue": null,
@@ -76,7 +76,7 @@
     {
       "id": "gemini-3.8-flash",
       "name": "Gemini 3.8 Flash",
-      "elo": 1499,
+      "elo": 1500,
       "superclue": null,
       "bench": null,
       "priceIn": null,
@@ -103,7 +103,7 @@
     {
       "id": "mimo-v2.6-pro",
       "name": "MiMo V2.6 Pro",
-      "elo": 1491,
+      "elo": 1492,
       "superclue": null,
       "bench": null,
       "priceIn": null,
@@ -120,7 +120,7 @@
     },
     {
       "id": "muse-spark-1.3",
-      "name": "Muse spark 1.3",
+      "name": "Muse Spark 1.3",
       "elo": 1491,
       "superclue": null,
       "bench": null,
@@ -137,7 +137,7 @@
       "priceOut": null
     },
     {
-      "id": "claude-opus-4.7",
+      "id": "claude opus 4.7",
       "name": "Claude opus 4.7",
       "elo": 1490,
       "superclue": null,
@@ -157,7 +157,7 @@
     {
       "id": "qwen3.8-max",
       "name": "Qwen3.8-Max",
-      "elo": 1483,
+      "elo": 1485,
       "superclue": 72.62,
       "bench": 73.92,
       "priceIn": 12.0,
@@ -175,7 +175,7 @@
     {
       "id": "gemini-3.5-flash",
       "name": "Gemini 3.5 Flash",
-      "elo": 1482,
+      "elo": 1483,
       "superclue": 71.5,
       "bench": null,
       "priceIn": 1.5,
@@ -209,7 +209,7 @@
       "priceOut": 12.0
     },
     {
-      "id": "gemini-3.1-pro-preview",
+      "id": "gemini 3.1 pro preview",
       "name": "Gemini 3.1 pro preview",
       "elo": 1480,
       "superclue": null,
@@ -227,8 +227,8 @@
       "priceOut": null
     },
     {
-      "id": "kimi-k3",
-      "name": "Kimi k3",
+      "id": "glm-5.3",
+      "name": "GLM 5.3",
       "elo": 1476,
       "superclue": null,
       "bench": null,
@@ -245,31 +245,13 @@
       "priceOut": 3.75
     },
     {
-      "id": "glm-5.3",
-      "name": "GLM 5.3",
+      "id": "kimi-k3",
+      "name": "Kimi K3",
       "elo": 1474,
-      "superclue": null,
-      "bench": null,
-      "priceIn": null,
-      "priceOut": null
-    },
-    {
-      "id": "claude-sonnet-5.5",
-      "name": "Claude sonnet 5.5",
-      "elo": 1473,
-      "superclue": null,
-      "bench": null,
-      "priceIn": null,
-      "priceOut": null
-    },
-    {
-      "id": "glm-5.3-flash",
-      "name": "GLM 5.3 Flash",
-      "elo": 1473,
-      "superclue": null,
-      "bench": null,
-      "priceIn": null,
-      "priceOut": null
+      "superclue": 70.68,
+      "bench": 71.18,
+      "priceIn": 20.0,
+      "priceOut": 100.0
     },
     {
       "id": "gemini-3-flash",
@@ -281,9 +263,18 @@
       "priceOut": null
     },
     {
+      "id": "glm-5.3-flash",
+      "name": "GLM 5.3 Flash",
+      "elo": 1471,
+      "superclue": null,
+      "bench": null,
+      "priceIn": null,
+      "priceOut": null
+    },
+    {
       "id": "gpt-5.5",
       "name": "GPT-5.5",
-      "elo": 1472,
+      "elo": 1471,
       "superclue": 74.3,
       "bench": null,
       "priceIn": 5.0,
@@ -308,9 +299,18 @@
       "priceOut": null
     },
     {
+      "id": "claude-sonnet-5.5",
+      "name": "Claude Sonnet 5.5",
+      "elo": 1471,
+      "superclue": null,
+      "bench": null,
+      "priceIn": null,
+      "priceOut": null
+    },
+    {
       "id": "qwen3.5",
       "name": "Qwen3.5",
-      "elo": 1470,
+      "elo": 1471,
       "superclue": null,
       "bench": null,
       "priceIn": null,
@@ -319,7 +319,7 @@
     {
       "id": "glm-5.2",
       "name": "GLM-5.2",
-      "elo": 1470,
+      "elo": 1469,
       "superclue": 63.27,
       "bench": 63.19,
       "priceIn": 8.0,
@@ -362,15 +362,6 @@
       "priceOut": null
     },
     {
-      "id": "deepseek-v4.1-flash",
-      "name": "DeepSeek V4.1 Flash",
-      "elo": 1465,
-      "superclue": null,
-      "bench": null,
-      "priceIn": null,
-      "priceOut": null
-    },
-    {
       "id": "mimo-v2.5-pro",
       "name": "MiMo V2.5 Pro",
       "elo": 1464,
@@ -378,6 +369,15 @@
       "bench": 53.37,
       "priceIn": 3.0,
       "priceOut": 6.0
+    },
+    {
+      "id": "deepseek-v4.1-flash",
+      "name": "DeepSeek V4.1 Flash",
+      "elo": 1463,
+      "superclue": null,
+      "bench": null,
+      "priceIn": null,
+      "priceOut": null
     },
     {
       "id": "glm-5.1",
@@ -452,9 +452,18 @@
       "priceOut": null
     },
     {
+      "id": "kimi k3.1 pro",
+      "name": "Kimi k3.1 pro",
+      "elo": 1457,
+      "superclue": null,
+      "bench": null,
+      "priceIn": null,
+      "priceOut": null
+    },
+    {
       "id": "qwen3.7-plus",
       "name": "Qwen3.7 Plus",
-      "elo": 1455,
+      "elo": 1454,
       "superclue": null,
       "bench": null,
       "priceIn": null,
@@ -470,16 +479,7 @@
       "priceOut": null
     },
     {
-      "id": "mimo-v2.6-flash",
-      "name": "MiMo V2.6 Flash",
-      "elo": 1451,
-      "superclue": null,
-      "bench": null,
-      "priceIn": null,
-      "priceOut": null
-    },
-    {
-      "id": "claude-opus-4.5",
+      "id": "claude opus 4.5",
       "name": "Claude opus 4.5",
       "elo": 1451,
       "superclue": null,
@@ -488,7 +488,7 @@
       "priceOut": null
     },
     {
-      "id": "grok-4.20-beta",
+      "id": "grok 4.20 beta",
       "name": "Grok 4.20 beta",
       "elo": 1451,
       "superclue": null,
@@ -497,7 +497,7 @@
       "priceOut": null
     },
     {
-      "id": "grok-4.20-multi-agent-beta",
+      "id": "grok 4.20 multi-agent beta",
       "name": "Grok 4.20 multi Agent beta",
       "elo": 1451,
       "superclue": null,
@@ -522,6 +522,15 @@
       "bench": 71.72,
       "priceIn": 3.0,
       "priceOut": 6.0
+    },
+    {
+      "id": "mimo-v2.6-flash",
+      "name": "MiMo V2.6 Flash",
+      "elo": 1450,
+      "superclue": null,
+      "bench": null,
+      "priceIn": null,
+      "priceOut": null
     },
     {
       "id": "kimi-k2.5",
@@ -551,15 +560,6 @@
       "priceOut": null
     },
     {
-      "id": "grok-4.5",
-      "name": "Grok 4.5",
-      "elo": 1448,
-      "superclue": null,
-      "bench": null,
-      "priceIn": null,
-      "priceOut": null
-    },
-    {
       "id": "gpt-6.1-sol",
       "name": "GPT 6.1 Sol",
       "elo": 1448,
@@ -569,9 +569,18 @@
       "priceOut": null
     },
     {
+      "id": "grok-4.5",
+      "name": "Grok 4.5",
+      "elo": 1448,
+      "superclue": 68.0,
+      "bench": null,
+      "priceIn": 2.0,
+      "priceOut": 6.0
+    },
+    {
       "id": "qwen3.6",
       "name": "Qwen3.6",
-      "elo": 1447,
+      "elo": 1446,
       "superclue": null,
       "bench": null,
       "priceIn": null,
@@ -614,7 +623,7 @@
       "priceOut": null
     },
     {
-      "id": "deepseek-v4-pro-preview",
+      "id": "deepseek-v4-pro preview",
       "name": "DeepSeek V4 Pro preview",
       "elo": 1445,
       "superclue": null,
@@ -632,18 +641,9 @@
       "priceOut": null
     },
     {
-      "id": "ernie-5.0",
-      "name": "Ernie 5.0",
-      "elo": 1445,
-      "superclue": null,
-      "bench": null,
-      "priceIn": null,
-      "priceOut": null
-    },
-    {
-      "id": "grok-4.20-beta-1",
+      "id": "grok 4.20 beta 1",
       "name": "Grok 4.20 beta 1",
-      "elo": 1444,
+      "elo": 1445,
       "superclue": null,
       "bench": null,
       "priceIn": null,
@@ -668,7 +668,25 @@
       "priceOut": null
     },
     {
-      "id": "step-5-preview",
+      "id": "inkling",
+      "name": "Inkling",
+      "elo": 1444,
+      "superclue": null,
+      "bench": null,
+      "priceIn": null,
+      "priceOut": null
+    },
+    {
+      "id": "ernie-5.0",
+      "name": "ERNIE 5.0",
+      "elo": 1444,
+      "superclue": null,
+      "bench": null,
+      "priceIn": null,
+      "priceOut": null
+    },
+    {
+      "id": "step 5 preview",
       "name": "Step 5 preview",
       "elo": 1443,
       "superclue": null,
@@ -679,15 +697,6 @@
     {
       "id": "gpt-5.1",
       "name": "GPT 5.1",
-      "elo": 1443,
-      "superclue": null,
-      "bench": null,
-      "priceIn": null,
-      "priceOut": null
-    },
-    {
-      "id": "inkling",
-      "name": "Inkling",
       "elo": 1443,
       "superclue": null,
       "bench": null,
@@ -749,7 +758,7 @@
       "priceOut": null
     },
     {
-      "id": "claude-sonnet-4.5",
+      "id": "claude sonnet 4.5",
       "name": "Claude sonnet 4.5",
       "elo": 1439,
       "superclue": null,
@@ -785,15 +794,6 @@
       "priceOut": null
     },
     {
-      "id": "qwen3.8-27b",
-      "name": "Qwen3.8 27b",
-      "elo": 1438,
-      "superclue": null,
-      "bench": null,
-      "priceIn": null,
-      "priceOut": null
-    },
-    {
       "id": "claude-opus-4-1",
       "name": "Claude Opus 4.1",
       "elo": 1437,
@@ -803,8 +803,17 @@
       "priceOut": null
     },
     {
-      "id": "qwen3.6-plus",
-      "name": "Qwen3.6 Plus",
+      "id": "mimo-v2-pro",
+      "name": "MiMo V2 Pro",
+      "elo": 1437,
+      "superclue": null,
+      "bench": null,
+      "priceIn": null,
+      "priceOut": null
+    },
+    {
+      "id": "qwen3.8-27b",
+      "name": "Qwen3.8 27b",
       "elo": 1436,
       "superclue": null,
       "bench": null,
@@ -812,8 +821,8 @@
       "priceOut": null
     },
     {
-      "id": "mimo-v2-pro",
-      "name": "MiMo V2 Pro",
+      "id": "qwen3.6-plus",
+      "name": "Qwen3.6 Plus",
       "elo": 1436,
       "superclue": null,
       "bench": null,
@@ -875,26 +884,8 @@
       "priceOut": null
     },
     {
-      "id": "minimax-m3",
-      "name": "MiniMax M3",
-      "elo": 1431,
-      "superclue": 56.9,
-      "bench": 59.13,
-      "priceIn": 2.1,
-      "priceOut": 8.4
-    },
-    {
       "id": "glm-4.5",
       "name": "GLM 4.5",
-      "elo": 1430,
-      "superclue": null,
-      "bench": null,
-      "priceIn": null,
-      "priceOut": null
-    },
-    {
-      "id": "mistral-large-4",
-      "name": "Mistral large 4",
       "elo": 1430,
       "superclue": null,
       "bench": null,
@@ -920,6 +911,24 @@
       "priceOut": null
     },
     {
+      "id": "mistral-large-4",
+      "name": "Mistral Large 4",
+      "elo": 1430,
+      "superclue": null,
+      "bench": null,
+      "priceIn": null,
+      "priceOut": null
+    },
+    {
+      "id": "minimax-m3",
+      "name": "MiniMax M3",
+      "elo": 1428,
+      "superclue": 56.9,
+      "bench": 59.13,
+      "priceIn": 2.1,
+      "priceOut": 8.4
+    },
+    {
       "id": "deepseek-r1",
       "name": "DeepSeek R1",
       "elo": 1428,
@@ -938,7 +947,7 @@
       "priceOut": null
     },
     {
-      "id": "chatgpt-4o-latest",
+      "id": "chatgpt-4o latest",
       "name": "ChatGPT 4o latest",
       "elo": 1428,
       "superclue": null,
@@ -956,9 +965,9 @@
       "priceOut": null
     },
     {
-      "id": "longcat-flash-chat-exp",
+      "id": "longcat-flash-chat exp",
       "name": "LongCat Flash Chat exp",
-      "elo": 1427,
+      "elo": 1426,
       "superclue": null,
       "bench": null,
       "priceIn": null,
@@ -967,6 +976,15 @@
     {
       "id": "grok-4.3",
       "name": "Grok 4.3",
+      "elo": 1426,
+      "superclue": null,
+      "bench": null,
+      "priceIn": null,
+      "priceOut": null
+    },
+    {
+      "id": "grok 3 preview",
+      "name": "Grok 3 preview",
       "elo": 1426,
       "superclue": null,
       "bench": null,
@@ -983,16 +1001,7 @@
       "priceOut": null
     },
     {
-      "id": "grok-3-preview",
-      "name": "Grok 3 preview",
-      "elo": 1425,
-      "superclue": null,
-      "bench": null,
-      "priceIn": null,
-      "priceOut": null
-    },
-    {
-      "id": "beam-1.0-501b-a23b",
+      "id": "beam 1.0 501b a23b",
       "name": "Beam 1.0 501b a23b",
       "elo": 1425,
       "superclue": null,
@@ -1010,27 +1019,18 @@
       "priceOut": null
     },
     {
-      "id": "deepseek-v4-flash-preview",
+      "id": "deepseek-v4-flash preview",
       "name": "DeepSeek V4 Flash preview",
-      "elo": 1424,
+      "elo": 1425,
       "superclue": null,
       "bench": null,
       "priceIn": null,
       "priceOut": null
     },
     {
-      "id": "mistral-medium-3.1",
+      "id": "mistral medium 3.1",
       "name": "Mistral medium 3.1",
-      "elo": 1424,
-      "superclue": null,
-      "bench": null,
-      "priceIn": null,
-      "priceOut": null
-    },
-    {
-      "id": "longcat-flash-chat",
-      "name": "LongCat Flash Chat",
-      "elo": 1423,
+      "elo": 1425,
       "superclue": null,
       "bench": null,
       "priceIn": null,
@@ -1040,6 +1040,15 @@
       "id": "mimo-v2-omni",
       "name": "MiMo V2 Omni",
       "elo": 1423,
+      "superclue": null,
+      "bench": null,
+      "priceIn": null,
+      "priceOut": null
+    },
+    {
+      "id": "longcat-flash-chat",
+      "name": "LongCat Flash Chat",
+      "elo": 1422,
       "superclue": null,
       "bench": null,
       "priceIn": null,
@@ -1064,7 +1073,7 @@
       "priceOut": null
     },
     {
-      "id": "mistral-medium-3.5",
+      "id": "mistral medium 3.5",
       "name": "Mistral medium 3.5",
       "elo": 1421,
       "superclue": null,
@@ -1118,18 +1127,9 @@
       "priceOut": null
     },
     {
-      "id": "claude-opus-4.1",
+      "id": "claude opus 4.1",
       "name": "Claude opus 4.1",
       "elo": 1419,
-      "superclue": null,
-      "bench": null,
-      "priceIn": null,
-      "priceOut": null
-    },
-    {
-      "id": "qwen3.5-122b-a10b",
-      "name": "Qwen3.5 122b A10b",
-      "elo": 1418,
       "superclue": null,
       "bench": null,
       "priceIn": null,
@@ -1145,6 +1145,15 @@
       "priceOut": null
     },
     {
+      "id": "qwen3.5-122b-a10b",
+      "name": "Qwen3.5 122b A10b",
+      "elo": 1417,
+      "superclue": null,
+      "bench": null,
+      "priceIn": null,
+      "priceOut": null
+    },
+    {
       "id": "qwen3-next-80b-a3b-instruct",
       "name": "Qwen3 Next 80b A3b Instruct",
       "elo": 1417,
@@ -1154,7 +1163,7 @@
       "priceOut": null
     },
     {
-      "id": "gpt-4.5-preview",
+      "id": "gpt-4.5 preview",
       "name": "GPT 4.5 preview",
       "elo": 1417,
       "superclue": null,
@@ -1181,7 +1190,7 @@
       "priceOut": null
     },
     {
-      "id": "gemini-3.1-flash-lite-preview",
+      "id": "gemini 3.1 flash-lite preview",
       "name": "Gemini 3.1 flash Lite preview",
       "elo": 1416,
       "superclue": null,
@@ -1192,7 +1201,7 @@
     {
       "id": "qwen3-235b-a22b",
       "name": "Qwen3 235b A22b",
-      "elo": 1415,
+      "elo": 1416,
       "superclue": null,
       "bench": null,
       "priceIn": null,
@@ -1208,8 +1217,8 @@
       "priceOut": null
     },
     {
-      "id": "inkling-small",
-      "name": "Inkling small",
+      "id": "kimi k2 thinking turbo",
+      "name": "Kimi k2 thinking turbo",
       "elo": 1414,
       "superclue": null,
       "bench": null,
@@ -1217,8 +1226,8 @@
       "priceOut": null
     },
     {
-      "id": "kimi-k2-thinking-turbo",
-      "name": "Kimi k2 thinking turbo",
+      "id": "inkling-small",
+      "name": "Inkling Small",
       "elo": 1414,
       "superclue": null,
       "bench": null,
@@ -1298,8 +1307,17 @@
       "priceOut": null
     },
     {
-      "id": "grok-4.1-fast",
+      "id": "grok 4.1 fast",
       "name": "Grok 4.1 fast",
+      "elo": 1408,
+      "superclue": null,
+      "bench": null,
+      "priceIn": null,
+      "priceOut": null
+    },
+    {
+      "id": "nvidia-nemotron-3.5-super-vl-120b-a12b",
+      "name": "NVIDIA Nemotron 3.5 Super Vl 120b A12b",
       "elo": 1408,
       "superclue": null,
       "bench": null,
@@ -1325,8 +1343,17 @@
       "priceOut": null
     },
     {
+      "id": "gemini 2.5 flash preview",
+      "name": "Gemini 2.5 flash preview",
+      "elo": 1407,
+      "superclue": null,
+      "bench": null,
+      "priceIn": null,
+      "priceOut": null
+    },
+    {
       "id": "grok-4-fast",
-      "name": "Grok 4 fast",
+      "name": "Grok 4 Fast",
       "elo": 1407,
       "superclue": null,
       "bench": null,
@@ -1343,27 +1370,9 @@
       "priceOut": null
     },
     {
-      "id": "gemini-2.5-flash-preview",
-      "name": "Gemini 2.5 flash preview",
-      "elo": 1406,
-      "superclue": null,
-      "bench": null,
-      "priceIn": null,
-      "priceOut": null
-    },
-    {
-      "id": "hunyuan-vision-1.5-thinking",
+      "id": "hunyuan vision 1.5 thinking",
       "name": "Hunyuan vision 1.5 thinking",
       "elo": 1406,
-      "superclue": null,
-      "bench": null,
-      "priceIn": null,
-      "priceOut": null
-    },
-    {
-      "id": "nvidia-nemotron-3.5-super-vl-120b-a12b",
-      "name": "NVIDIA Nemotron 3.5 Super Vl 120b A12b",
-      "elo": 1405,
       "superclue": null,
       "bench": null,
       "priceIn": null,
@@ -1388,6 +1397,15 @@
       "priceOut": null
     },
     {
+      "id": "inkling 2 small",
+      "name": "Inkling 2 small",
+      "elo": 1403,
+      "superclue": null,
+      "bench": null,
+      "priceIn": null,
+      "priceOut": null
+    },
+    {
       "id": "hunyuan-t1",
       "name": "混元 T1",
       "elo": 1402,
@@ -1397,17 +1415,8 @@
       "priceOut": null
     },
     {
-      "id": "hy3-preview",
+      "id": "hy3 preview",
       "name": "Hy3 preview",
-      "elo": 1401,
-      "superclue": null,
-      "bench": null,
-      "priceIn": null,
-      "priceOut": null
-    },
-    {
-      "id": "claude-haiku-5.5",
-      "name": "Claude haiku 5.5",
       "elo": 1401,
       "superclue": null,
       "bench": null,
@@ -1426,7 +1435,16 @@
     {
       "id": "qwen3-vl-235b-a22b",
       "name": "Qwen3 Vl 235b A22b",
-      "elo": 1400,
+      "elo": 1401,
+      "superclue": null,
+      "bench": null,
+      "priceIn": null,
+      "priceOut": null
+    },
+    {
+      "id": "claude haiku 5.5",
+      "name": "Claude haiku 5.5",
+      "elo": 1399,
       "superclue": null,
       "bench": null,
       "priceIn": null,
@@ -1469,7 +1487,7 @@
       "priceOut": null
     },
     {
-      "id": "claude-haiku-4.5",
+      "id": "claude haiku 4.5",
       "name": "Claude haiku 4.5",
       "elo": 1397,
       "superclue": null,
@@ -1523,7 +1541,7 @@
       "priceOut": null
     },
     {
-      "id": "minimax-m2.1-preview",
+      "id": "minimax-m2.1 preview",
       "name": "MiniMax M2.1 preview",
       "elo": 1392,
       "superclue": null,
@@ -1532,9 +1550,9 @@
       "priceOut": null
     },
     {
-      "id": "solar-pro-4",
+      "id": "solar pro 4",
       "name": "Solar pro 4",
-      "elo": 1389,
+      "elo": 1388,
       "superclue": null,
       "bench": null,
       "priceIn": null,
@@ -1604,7 +1622,7 @@
       "priceOut": null
     },
     {
-      "id": "kimi-k2-preview",
+      "id": "kimi k2 preview",
       "name": "Kimi k2 preview",
       "elo": 1380,
       "superclue": null,
@@ -1622,7 +1640,7 @@
       "priceOut": null
     },
     {
-      "id": "gemini-2.5-flash-lite-preview",
+      "id": "gemini 2.5 flash-lite preview",
       "name": "Gemini 2.5 flash Lite preview",
       "elo": 1379,
       "superclue": null,
@@ -1676,7 +1694,7 @@
       "priceOut": null
     },
     {
-      "id": "mistral-medium-3",
+      "id": "mistral medium 3",
       "name": "Mistral medium 3",
       "elo": 1370,
       "superclue": null,
@@ -1748,7 +1766,7 @@
       "priceOut": null
     },
     {
-      "id": "grok-3-mini-beta",
+      "id": "grok 3 mini beta",
       "name": "Grok 3 mini beta",
       "elo": 1364,
       "superclue": null,
@@ -1775,7 +1793,7 @@
       "priceOut": null
     },
     {
-      "id": "amazon-nova-2-lite",
+      "id": "amazon nova 2 lite",
       "name": "Amazon nova 2 lite",
       "elo": 1362,
       "superclue": null,
@@ -1848,7 +1866,7 @@
     },
     {
       "id": "gemini-2.0-flash",
-      "name": "Gemini 2.0 flash",
+      "name": "Gemini 2.0 Flash",
       "elo": 1354,
       "superclue": null,
       "bench": null,
@@ -1955,7 +1973,7 @@
       "priceOut": null
     },
     {
-      "id": "trinity-large-thinking",
+      "id": "trinity large thinking",
       "name": "Trinity large thinking",
       "elo": 1340,
       "superclue": null,
@@ -1973,7 +1991,7 @@
       "priceOut": null
     },
     {
-      "id": "trinity-large-preview",
+      "id": "trinity large preview",
       "name": "Trinity large preview",
       "elo": 1339,
       "superclue": null,
@@ -1991,7 +2009,7 @@
       "priceOut": null
     },
     {
-      "id": "mistral-small-3.2",
+      "id": "mistral small 3.2",
       "name": "Mistral small 3.2",
       "elo": 1338,
       "superclue": null,
@@ -2000,7 +2018,7 @@
       "priceOut": null
     },
     {
-      "id": "llama-3.3-nemotron-super-49b-v1.5",
+      "id": "llama 3.3 nemotron super 49b v1.5",
       "name": "Llama 3.3 nemotron super 49b v1.5",
       "elo": 1338,
       "superclue": null,
@@ -2018,7 +2036,7 @@
       "priceOut": null
     },
     {
-      "id": "step-1o-turbo",
+      "id": "step-1o turbo",
       "name": "Step 1o turbo",
       "elo": 1336,
       "superclue": null,
@@ -2081,7 +2099,7 @@
       "priceOut": null
     },
     {
-      "id": "command-a",
+      "id": "command a",
       "name": "Command a",
       "elo": 1331,
       "superclue": null,
@@ -2090,18 +2108,18 @@
       "priceOut": null
     },
     {
-      "id": "nvidia-nemotron-3.5-lightning-30b-a3b",
-      "name": "NVIDIA Nemotron 3.5 Lightning 30b A3b",
-      "elo": 1331,
+      "id": "gemini 2.0 flash-lite preview",
+      "name": "Gemini 2.0 flash Lite preview",
+      "elo": 1330,
       "superclue": null,
       "bench": null,
       "priceIn": null,
       "priceOut": null
     },
     {
-      "id": "gemini-2.0-flash-lite-preview",
-      "name": "Gemini 2.0 flash Lite preview",
-      "elo": 1330,
+      "id": "nvidia-nemotron-3.5-lightning-30b-a3b",
+      "name": "NVIDIA Nemotron 3.5 Lightning 30b A3b",
+      "elo": 1329,
       "superclue": null,
       "bench": null,
       "priceIn": null,
@@ -2153,7 +2171,7 @@
       "priceOut": null
     },
     {
-      "id": "step-2-16k-exp",
+      "id": "step-2 16k exp",
       "name": "Step 2 16k exp",
       "elo": 1321,
       "superclue": null,
@@ -2180,7 +2198,7 @@
       "priceOut": null
     },
     {
-      "id": "gemini-1.5-pro",
+      "id": "gemini 1.5 pro",
       "name": "Gemini 1.5 pro",
       "elo": 1319,
       "superclue": null,
@@ -2225,7 +2243,7 @@
       "priceOut": null
     },
     {
-      "id": "claude-3.7-sonnet",
+      "id": "claude 3.7 sonnet",
       "name": "Claude 3.7 sonnet",
       "elo": 1314,
       "superclue": null,
@@ -2261,7 +2279,7 @@
       "priceOut": null
     },
     {
-      "id": "llama-3.3-nemotron-super-49b-v1",
+      "id": "llama 3.3 nemotron super 49b v1",
       "name": "Llama 3.3 nemotron super 49b v1",
       "elo": 1308,
       "superclue": null,
@@ -2324,7 +2342,7 @@
       "priceOut": null
     },
     {
-      "id": "claude-3.5-sonnet",
+      "id": "claude 3.5 sonnet",
       "name": "Claude 3.5 sonnet",
       "elo": 1298,
       "superclue": null,
@@ -2416,7 +2434,7 @@
     {
       "id": "gpt-oss-20b",
       "name": "GPT Oss 20b",
-      "elo": 1287,
+      "elo": 1288,
       "superclue": null,
       "bench": null,
       "priceIn": null,
@@ -2441,7 +2459,7 @@
       "priceOut": null
     },
     {
-      "id": "llama-4-maverick-17b-128e-instruct",
+      "id": "llama 4 maverick 17b 128e instruct",
       "name": "Llama 4 maverick 17b 128e instruct",
       "elo": 1287,
       "superclue": null,
@@ -2450,7 +2468,7 @@
       "priceOut": null
     },
     {
-      "id": "gemini-1.5-flash",
+      "id": "gemini 1.5 flash",
       "name": "Gemini 1.5 flash",
       "elo": 1287,
       "superclue": null,
@@ -2496,7 +2514,7 @@
     },
     {
       "id": "llama-3.1-405b-instruct",
-      "name": "Llama 3.1 405b instruct",
+      "name": "Llama 3.1 405b Instruct",
       "elo": 1284,
       "superclue": null,
       "bench": null,
@@ -2639,7 +2657,7 @@
       "priceOut": null
     },
     {
-      "id": "mistral-large-2",
+      "id": "mistral large 2",
       "name": "Mistral large 2",
       "elo": 1266,
       "superclue": null,
@@ -2675,7 +2693,7 @@
       "priceOut": null
     },
     {
-      "id": "gpt-4-turbo-preview",
+      "id": "gpt-4 turbo preview",
       "name": "GPT 4 turbo preview",
       "elo": 1263,
       "superclue": null,
@@ -2693,7 +2711,7 @@
       "priceOut": null
     },
     {
-      "id": "amazon-nova-pro-1.0",
+      "id": "amazon nova pro 1.0",
       "name": "Amazon nova pro 1.0",
       "elo": 1259,
       "superclue": null,
@@ -2711,7 +2729,7 @@
       "priceOut": null
     },
     {
-      "id": "claude-3.5-haiku",
+      "id": "claude 3.5 haiku",
       "name": "Claude 3.5 haiku",
       "elo": 1255,
       "superclue": null,
@@ -2720,7 +2738,7 @@
       "priceOut": null
     },
     {
-      "id": "magistral-medium",
+      "id": "magistral medium",
       "name": "Magistral medium",
       "elo": 1255,
       "superclue": null,
@@ -2767,7 +2785,7 @@
     {
       "id": "granite-4.0-h-small",
       "name": "Granite 4.0 H Small",
-      "elo": 1241,
+      "elo": 1242,
       "superclue": null,
       "bench": null,
       "priceIn": null,
@@ -2873,7 +2891,7 @@
       "priceOut": null
     },
     {
-      "id": "command-r+",
+      "id": "command r+",
       "name": "Command r+",
       "elo": 1229,
       "superclue": null,
@@ -2882,7 +2900,7 @@
       "priceOut": null
     },
     {
-      "id": "amazon-nova-lite-1.0",
+      "id": "amazon nova lite 1.0",
       "name": "Amazon nova lite 1.0",
       "elo": 1228,
       "superclue": null,
@@ -2927,7 +2945,7 @@
       "priceOut": null
     },
     {
-      "id": "gemini-1.5-flash-8b",
+      "id": "gemini 1.5 flash-8b",
       "name": "Gemini 1.5 flash 8b",
       "elo": 1226,
       "superclue": null,
@@ -2945,7 +2963,7 @@
       "priceOut": null
     },
     {
-      "id": "aya-expanse-32b",
+      "id": "aya expanse 32b",
       "name": "Aya expanse 32b",
       "elo": 1224,
       "superclue": null,
@@ -2990,7 +3008,7 @@
       "priceOut": null
     },
     {
-      "id": "amazon-nova-micro-1.0",
+      "id": "amazon nova micro 1.0",
       "name": "Amazon nova micro 1.0",
       "elo": 1208,
       "superclue": null,
@@ -3035,7 +3053,7 @@
       "priceOut": null
     },
     {
-      "id": "hunyuan-standard-256k",
+      "id": "hunyuan standard 256k",
       "name": "Hunyuan standard 256k",
       "elo": 1202,
       "superclue": null,
@@ -3099,7 +3117,7 @@
     },
     {
       "id": "command-r",
-      "name": "Command r",
+      "name": "Command R",
       "elo": 1187,
       "superclue": null,
       "bench": null,
@@ -3107,7 +3125,7 @@
       "priceOut": null
     },
     {
-      "id": "aya-expanse-8b",
+      "id": "aya expanse 8b",
       "name": "Aya expanse 8b",
       "elo": 1185,
       "superclue": null,
@@ -3161,7 +3179,7 @@
       "priceOut": null
     },
     {
-      "id": "internlm2-5-20b-chat",
+      "id": "internlm2_5-20b-chat",
       "name": "Internlm2_5 20b Chat",
       "elo": 1170,
       "superclue": null,
@@ -3197,7 +3215,7 @@
       "priceOut": null
     },
     {
-      "id": "mistral-medium",
+      "id": "mistral medium",
       "name": "Mistral medium",
       "elo": 1165,
       "superclue": null,
@@ -3215,7 +3233,7 @@
       "priceOut": null
     },
     {
-      "id": "internlm2.5-20b-chat",
+      "id": "internlm2.5 20b chat",
       "name": "Internlm2.5 20b chat",
       "elo": 1158,
       "superclue": null,
@@ -3243,7 +3261,7 @@
     },
     {
       "id": "gemini-pro",
-      "name": "Gemini pro",
+      "name": "Gemini Pro",
       "elo": 1149,
       "superclue": null,
       "bench": null,
@@ -3278,7 +3296,7 @@
       "priceOut": null
     },
     {
-      "id": "phi-3-medium-4k-instruct",
+      "id": "phi-3 medium 4k instruct",
       "name": "Phi 3 medium 4k instruct",
       "elo": 1138,
       "superclue": null,
@@ -3323,7 +3341,7 @@
       "priceOut": null
     },
     {
-      "id": "starling-lm-7b-beta",
+      "id": "starling lm 7b beta",
       "name": "Starling lm 7b beta",
       "elo": 1132,
       "superclue": null,
@@ -3404,7 +3422,7 @@
       "priceOut": null
     },
     {
-      "id": "dbrx-instruct-preview",
+      "id": "dbrx instruct preview",
       "name": "Dbrx instruct preview",
       "elo": 1119,
       "superclue": null,
@@ -3467,7 +3485,7 @@
       "priceOut": null
     },
     {
-      "id": "phi-3-small-8k-instruct",
+      "id": "phi-3 small 8k instruct",
       "name": "Phi 3 small 8k instruct",
       "elo": 1110,
       "superclue": null,
@@ -3512,7 +3530,7 @@
       "priceOut": null
     },
     {
-      "id": "llama-2-70b-steerlm-chat",
+      "id": "llama 2 70b steerlm chat",
       "name": "Llama 2 70b steerlm chat",
       "elo": 1098,
       "superclue": null,
@@ -3602,7 +3620,7 @@
       "priceOut": null
     },
     {
-      "id": "phi-3-mini-4k-instruct",
+      "id": "phi-3 mini 4k instruct",
       "name": "Phi 3 mini 4k instruct",
       "elo": 1080,
       "superclue": null,
@@ -3656,7 +3674,7 @@
       "priceOut": null
     },
     {
-      "id": "zephyr-7b-beta",
+      "id": "zephyr 7b beta",
       "name": "Zephyr 7b beta",
       "elo": 1069,
       "superclue": null,
@@ -3692,7 +3710,7 @@
       "priceOut": null
     },
     {
-      "id": "code-llama-34b-instruct",
+      "id": "code llama 34b instruct",
       "name": "Code llama 34b instruct",
       "elo": 1065,
       "superclue": null,
@@ -3737,7 +3755,7 @@
       "priceOut": null
     },
     {
-      "id": "code-llama-70b-instruct",
+      "id": "code llama 70b instruct",
       "name": "Code llama 70b instruct",
       "elo": 1057,
       "superclue": null,
@@ -3755,7 +3773,7 @@
       "priceOut": null
     },
     {
-      "id": "phi-3-mini-128k-instruct",
+      "id": "phi-3 mini 128k instruct",
       "name": "Phi 3 mini 128k instruct",
       "elo": 1050,
       "superclue": null,
@@ -3908,7 +3926,7 @@
       "priceOut": null
     },
     {
-      "id": "openassistant-pythia-12b",
+      "id": "openassistant pythia 12b",
       "name": "Openassistant pythia 12b",
       "elo": 916,
       "superclue": null,
@@ -3953,7 +3971,7 @@
       "priceOut": null
     },
     {
-      "id": "dolly-2.0-12b",
+      "id": "dolly 2.0 12b",
       "name": "Dolly 2.0 12b",
       "elo": 851,
       "superclue": null,
