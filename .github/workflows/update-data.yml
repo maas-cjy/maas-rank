@@ -2,8 +2,11 @@ name: 自动更新榜单数据并部署
 
 on:
   schedule:
-    # 每周一 09:30（北京时间）自动运行
-    - cron: '30 1 * * 1'
+    # 每天 09:30（北京时间）检查一次。
+    # 榜单本身按周更新，每天跑是为了「补偿」：某天数据源抽风（如 2026-11-13
+    # HuggingFace 转换任务被终止），第二天还能自动补上，不至于整周停更。
+    # 无变化时不会提交、也不会生成文章（幂等），正常周仍只有一次提交。
+    - cron: '30 1 * * *'
   workflow_dispatch: # 支持在 GitHub Actions 页面手动触发
   push: # 代码改动推送到 main 时自动重新部署（数据目录除外，避免重复触发）
     branches: [main]
@@ -57,23 +60,38 @@ jobs:
         # 生成 data/health.json：连续抓取失败或数据长期无变化时，站点顶部会显示提示条
         run: python scripts/check_health.py
 
+      - name: 判断本期是否有实质更新
+        id: diff
+        # changed：确有数据变化 → 生成文章、提交、部署
+        # unhealthy：数据源异常 → 也要提交，让健康度与告警条能反映出来
+        run: |
+          CHANGED=$(python3 -c "import json;d=json.load(open('data/.last_update.json'));print('true' if d.get('changes') else 'false')")
+          UNHEALTHY=$(python3 -c "import json;d=json.load(open('data/health.json'));print('true' if d.get('status')!='ok' else 'false')")
+          echo "changed=$CHANGED" >> "$GITHUB_OUTPUT"
+          echo "unhealthy=$UNHEALTHY" >> "$GITHUB_OUTPUT"
+          echo "数据变化=$CHANGED 健康异常=$UNHEALTHY"
+
       - name: 生成本周榜单解读文章
+        if: steps.diff.outputs.changed == 'true'
         run: python scripts/gen_weekly_article.py
 
       # 常青文章属于「锦上添花」：单个生成器出 bug 时不应拖累整条更新链，
       # 否则数据抓取成功、却因为一篇文章崩掉导致站点整周不更新（2026-11-09 就是这样）。
       - name: 刷新选型指南
         id: guide
+        if: steps.diff.outputs.changed == 'true'
         continue-on-error: true
         run: python scripts/gen_guide_article.py
 
       - name: 刷新厂商盘点
         id: provider
+        if: steps.diff.outputs.changed == 'true'
         continue-on-error: true
         run: python scripts/gen_provider_article.py
 
       - name: 刷新模型对比实测
         id: compare
+        if: steps.diff.outputs.changed == 'true'
         continue-on-error: true
         run: python scripts/gen_compare_article.py
 
@@ -93,8 +111,11 @@ jobs:
             echo "全部常青文章生成成功"
           fi
 
-      - name: 提交并推送（数据有变化才提交）
+      - name: 提交并推送（有更新或健康异常才提交）
         id: commit
+        # 每天都会运行，但只在「确有新数据」或「数据源异常」时提交，
+        # 避免无意义的每日空提交把 git 历史刷满。
+        if: steps.diff.outputs.changed == 'true' || steps.diff.outputs.unhealthy == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
