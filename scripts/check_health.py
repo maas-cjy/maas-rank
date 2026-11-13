@@ -63,14 +63,25 @@ def superclue_period_months_old(period: str, today: date) -> int | None:
 
 def build_source(name: str, cur: dict, prev: dict, today: date) -> dict:
     ok = bool(cur.get("ok"))
-    prev_fails = int((prev.get(name) or {}).get("consecutive_failures") or 0)
-    fails = 0 if ok else prev_fails + 1
+    prev_item = prev.get(name) or {}
+    prev_fails = int(prev_item.get("consecutive_failures") or 0)
+    # 防双重计数：同一天内 health.json 已由 fetch 后的检查更新过时，
+    # prev 的连续失败数已经包含本次结果（如 CI 的 health-gate 再次跑
+    # --check-only），直接沿用，不能再 +1。
+    # _checked 由 main() 注入到每个 source 的 prev 项（health.json 顶层 checked）。
+    prev_checked = str(prev_item.get("_checked") or "")
+    if ok:
+        fails = 0
+    elif prev_checked == today.isoformat():
+        fails = max(prev_fails, 1)
+    else:
+        fails = prev_fails + 1
     item = {
         "ok": ok,
         "count": cur.get("count", 0),
         "consecutive_failures": fails,
         "last_success": (today.isoformat() if ok
-                         else (prev.get(name) or {}).get("last_success")),
+                         else prev_item.get("last_success")),
     }
     if cur.get("applied") is False:
         # 抓到了新一期，但因口径变更未合并（沿用上期值）
@@ -102,6 +113,9 @@ def main() -> int:
 
     cur_sources = last_update.get("sources") or {}
     prev_sources = prev_health.get("sources") or {}
+    # 把顶层 checked 注入每个 source 的 prev，供 build_source 防同日双重计数
+    prev_checked = str(prev_health.get("checked") or "")
+    prev_sources = {k: dict(v or {}, _checked=prev_checked) for k, v in prev_sources.items()}
 
     sources = {
         name: build_source(name, cur_sources.get(name) or {}, prev_sources, today)
