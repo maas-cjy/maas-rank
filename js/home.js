@@ -35,6 +35,10 @@
           if (!best) return m;
           var mv = useConverted ? R.priceToCny(m, key) : m[key];
           var bv = useConverted ? R.priceToCny(best, key) : best[key];
+          if (mv === bv) {
+            /* 同分/同价时选资料更完整的一条，避免把自动生成的同名列到首页 */
+            return Object.keys(m).length > Object.keys(best).length ? m : best;
+          }
           return dir > 0 ? (mv < bv ? m : best) : (mv > bv ? m : best);
         }, null);
     };
@@ -48,7 +52,8 @@
       { label: '竞技场 Elo 第一',   pick: pickBy('elo', -1),       val: function (m) { return m.elo; },       unit: 'Elo',     tab: 'elo' },
       { label: '综合能力第一',       pick: pickBy('bench', -1),    val: function (m) { return R.fmtBench(m.bench); }, unit: '分', tab: 'bench' },
       { label: '中文能力第一',        pick: pickBy('superclue', -1), val: function (m) { return m.superclue; }, unit: '分',      tab: 'superclue' },
-      { label: '输入价最低',         pick: pickBy('priceIn', 1, true), val: function (m) { return fmtPrice(m, 'priceIn'); }, unit: '/ 百万tok', tab: 'priceIn' },
+      { label: '输入价最低',         pick: pickBy('priceIn', 1, true), val: function (m) { return fmtPrice(m, 'priceIn'); }, unit: '/ 百万输入 tok', tab: 'priceIn',
+        foot: '输入价，不含输出与缓存 · 截至 ' + R.priceDateText() + ' · 仅 ' + R.priceCoverage().priced + ' 款有公开定价' },
       { label: '上下文最长',         pick: pickBy('context', -1),  val: function (m) { return fmtCtx(m.context); }, unit: 'tokens', tab: 'context' }
     ];
     var grid = document.getElementById('kpiSection');
@@ -61,8 +66,18 @@
         + '<div class="kpi-num">' + (typeof v === 'number' ? v : R.esc(String(v))) + '<span class="kpi-unit"> ' + c.unit + '</span></div>'
         + '<div class="kpi-name">' + R.esc(m.name) + '</div>'
         + '<div class="kpi-sub">' + R.esc(m.provider || '–') + ' · ' + R.esc(R.regionName(m.region)) + '</div>'
+        + (c.foot ? '<div class="kpi-foot">' + R.esc(c.foot) + '</div>' : '')
         + '</a></div>';
     }).join('');
+    /* 各「第一」的候选池并不相同：不写清楚会让人以为是 444 款里的第一 */
+    var caveat = document.getElementById('kpiCaveat');
+    if (caveat) {
+      var n = function (key) { return models.filter(function (m) { return m[key] != null; }).length; };
+      caveat.textContent = '各项「第一」仅在有对应数据的模型中比较：竞技场 Elo '
+        + n('elo') + ' 款、综合能力 ' + n('bench') + ' 款、中文能力 ' + n('superclue')
+        + ' 款、价格 ' + n('priceIn') + ' 款、上下文 ' + n('context') + ' 款。'
+        + '收录模型共 ' + models.length + ' 款，未收录指标不代表该模型能力为零。';
+    }
     /* KPI 卡片点击：跳转完整榜单对应排序 tab */
     grid.querySelectorAll('[data-tab]').forEach(function (el) {
       el.addEventListener('click', function (e) {
@@ -79,8 +94,10 @@
     var subEl = document.getElementById('weeklySub');
     var rangeEl = document.getElementById('weeklyRange');
     if (!prev || !prev.models || !prev.date) {
-      grid.innerHTML = '<div class="weekly-empty" style="grid-column: 1 / -1;">本周首次同步 LMArena 全量榜单，<b>下周一开始记录周对比</b>。</div>';
-      if (subEl) subEl.textContent = '本次扩容覆盖全量 LMArena 模型，未有历史周对比数据。';
+      if (rangeEl) rangeEl.textContent = '暂无对比数据';
+      grid.innerHTML = '<div class="weekly-empty" style="grid-column: 1 / -1;">本次未能读取上期快照（data/prev.json），暂时无法计算周变化。'
+        + '这通常是数据尚未加载完成或网络请求被拦截，<b>刷新页面</b>即可重试。</div>';
+      if (subEl) subEl.textContent = '周对比依赖上一期快照；加载失败时不会用「无变化」代替，以免误导。';
       return;
     }
     var cur = R.getModels();
@@ -182,7 +199,17 @@
     var topBench = cur.filter(function (m) { return m.bench != null; })
       .sort(function (a, b) { return b.bench - a.bench; });
     var lowPrice = cur.filter(function (m) { return m.priceIn != null; })
-      .sort(function (a, b) { return (R.priceToCny(a, 'priceIn') || 0) - (R.priceToCny(b, 'priceIn') || 0); });
+      .sort(function (a, b) {
+        var d = (R.priceToCny(a, 'priceIn') || 0) - (R.priceToCny(b, 'priceIn') || 0);
+        /* 同价时资料更全的排前面，后面按「厂商+价格+Elo」去重，避免同模型两个名字占两行 */
+        return d || (Object.keys(b).length - Object.keys(a).length);
+      })
+      .filter(function (m, i, arr) {
+        var key = [m.provider, m.priceIn, m.priceOut, m.elo].join('|');
+        return arr.findIndex(function (x) {
+          return [x.provider, x.priceIn, x.priceOut, x.elo].join('|') === key;
+        }) === i;
+      });
     grid.innerHTML = '<div class="weekly-stable-note">'
       + '<b>本期榜单保持稳定</b> · 与上周快照相比，竞技场 Elo、综合能力分与 API 价格均无变化。'
       + 'LMArena 官方数据更新较慢时，这种情况会偶尔出现。'
@@ -200,7 +227,13 @@
       .then(function (r) { return r.ok ? r.json() : []; })
       .then(function (arts) {
         var list = (arts || []).filter(function (a) { return !a.draft; }).slice(0, 3);
-        if (!list.length) { section.style.display = 'none'; return; }
+        var dateEl = document.getElementById('latestDate');
+        if (!list.length) {
+          if (dateEl) dateEl.textContent = '暂无已发布内容';
+          document.getElementById('latestGrid').innerHTML =
+            '<p class="dim-note">解读文章尚未生成，下次数据更新后会自动出现。</p>';
+          return;
+        }
         var grid = document.getElementById('latestGrid');
         grid.innerHTML = list.map(function (a) {
           var tags = (a.tags || []).map(function (t) {
@@ -213,10 +246,14 @@
             + (tags ? '<div class="art-tags">' + tags + '</div>' : '')
             + '</a>';
         }).join('');
-        var dateEl = document.getElementById('latestDate');
         if (dateEl) dateEl.textContent = '最近更新 ' + list[0].date;
       })
-      .catch(function () { section.style.display = 'none'; });
+      .catch(function () {
+        var dateEl = document.getElementById('latestDate');
+        if (dateEl) dateEl.textContent = '加载失败';
+        document.getElementById('latestGrid').innerHTML =
+          '<p class="dim-note">解读内容暂时无法加载，请刷新页面重试；<a href="articles.html">前往文章中心</a>。</p>';
+      });
   }
 
   function init() {
@@ -246,7 +283,11 @@
     }
     add('Elo 数据期', fi.elo);
     add('中文测评', fi.superclue);
-    add('价格核验', fi.price);
+    add('价格数据截至', fi.price);
+    var priceAge = R.priceAgeMonths();
+    items.forEach(function (it) {
+      if (it.label === '价格数据截至') it.age = priceAge;
+    });
 
     var box = document.getElementById('dataFreshness');
     if (!box) return;
@@ -255,6 +296,7 @@
       return '<span class="df-item' + (it.stale ? ' df-stale' : '') + '"'
         + (it.note ? ' title="' + R.esc(it.note) + '"' : '') + '>'
         + R.esc(it.label) + ' <b>' + R.esc(it.date) + '</b>'
+        + (it.age != null ? '<span class="df-age">约 ' + it.age + ' 个月前</span>' : '')
         + (it.stale ? '<span class="df-mark" aria-hidden="true">※</span>' : '')
         + '</span>';
     }).join('<span class="df-sep" aria-hidden="true"> · </span>')

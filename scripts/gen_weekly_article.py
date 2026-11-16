@@ -75,7 +75,21 @@ def analyze(models, prev, hist):
     elo_top = top_n(models, "elo", 10)
     sc_top = top_n(models, "superclue", 5)
     bench_top = top_n(models, "bench", 3)
-    cheap_top = top_n(models, "priceIn", 5, reverse=False)
+    # 价格必须按折算后的人民币排序：直接比 priceIn 会把 $1.9 排在 ¥12 前面。
+    # 同一厂商同价同 Elo 的条目多为数据集里的同模型不同写法，展示时合并一条。
+    cheap, seen = [], {}
+    for m in sorted([x for x in models if x.get("priceIn") is not None],
+                    key=lambda x: price_cny(x, "priceIn")):
+        key = (m.get("provider"), price_cny(m, "priceIn"), price_cny(m, "priceOut"), m.get("elo"))
+        if key in seen:
+            # 同一模型的不同写法：保留字段更全的那条（通常有上下文/速度/介绍）
+            if len(m) > len(seen[key]):
+                cheap[cheap.index(seen[key])] = m
+                seen[key] = m
+            continue
+        seen[key] = m
+        cheap.append(m)
+    cheap_top = cheap[:5]
     ctx_top = top_n(models, "context", 5)
 
     # Elo 变化
@@ -118,7 +132,7 @@ def analyze(models, prev, hist):
     }
 
 
-def build_sections(d, date, basis=None):
+def build_sections(d, date, basis=None, meta=None):
     """生成文章正文 HTML 各节。basis 为 meta.basisChange（口径切换提示用）。"""
     models_total = d["total"]
     e1 = d["elo_top"][0] if d["elo_top"] else None
@@ -248,8 +262,21 @@ def build_sections(d, date, basis=None):
     if d["price_changes"]:
         parts.append("<p>本周有价格调整，详见上文变化部分。</p>")
     else:
-        parts.append("<p>本周各厂商定价无变化。整体来看，头部模型的价格战已阶段性趋缓，"
-                     "「降价换量」的窗口期在收窄，按当前价格做年度成本测算风险不大。</p>")
+        parts.append("<p>与上期快照相比，价格库未记录到变化（价格表本身自 2026 年 7 月后未更新）。</p>")
+    if meta:
+        pmeta = (meta.get("fieldInfo") or {}).get("price") or {}
+        pdate = pmeta.get("date") or "最近一期"
+        cov = pmeta.get("coverage") or {}
+        if cov.get("priced") and cov.get("total"):
+            parts.append(
+                f"<p>价格核验于 <b>{esc(pdate)}</b>，仅覆盖 {cov['priced']} / {cov['total']} 款模型；"
+                "未收录不代表免费。价格表在该月之后未再发布，厂商调价可能尚未反映，"
+                "按此做年度预算请以官网现价为准。</p>"
+            )
+        else:
+            parts.append(f"<p>价格核验于 <b>{esc(pdate)}</b>；该日期之后的调价可能未反映，预算请以官网现价为准。</p>")
+    else:
+        parts.append("<p>价格数据存在滞后，预算测算请以厂商官网现价为准。</p>")
     sec_price = "".join(parts)
 
     # ---------- 五、趋势 ----------
@@ -436,7 +463,8 @@ def main():
     summary = summary.replace("{issue}", str(issue))
     tags = ["周榜解读", "Elo", "选型建议"]
 
-    lead, sections = build_sections(d, date, basis=data.get("meta", {}).get("basisChange"))
+    lead, sections = build_sections(d, date, basis=data.get("meta", {}).get("basisChange"),
+                                    meta=data.get("meta", {}))
     body_html = lead + "\n".join(sections)
 
     os.makedirs(os.path.join(ROOT, "articles"), exist_ok=True)

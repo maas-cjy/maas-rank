@@ -75,8 +75,8 @@
       return '<tr><td>' + (i + 1) + '</td><td>' + modelCell(m) + '</td>'
         + '<td>' + R.fmtNum(m.elo) + '</td>'
         + '<td>' + (m.superclue == null ? '—' : R.fmtNum(m.superclue)) + '</td>'
-        + '<td>' + (m.priceIn == null ? '—' : R.fmtPrice(m, 'priceIn')) + '</td>'
-        + '<td>' + (m.priceOut == null ? '—' : R.fmtPrice(m, 'priceOut')) + '</td></tr>';
+        + '<td>' + R.priceCell(m, 'priceIn') + '</td>'
+        + '<td>' + R.priceCell(m, 'priceOut') + '</td></tr>';
     }).join('');
 
     document.getElementById('rBody').innerHTML = tableCard(
@@ -205,8 +205,8 @@
           return '<tr><td>' + modelCell(m) + '</td>'
             + '<td>' + R.fmtNum(m.elo) + '</td>'
             + '<td>' + (m.superclue == null ? '—' : R.fmtNum(m.superclue)) + '</td>'
-            + '<td>' + (m.priceIn == null ? '—' : R.fmtPrice(m, 'priceIn')) + '</td>'
-            + '<td>' + (m.priceOut == null ? '—' : R.fmtPrice(m, 'priceOut')) + '</td></tr>';
+            + '<td>' + R.priceCell(m, 'priceIn') + '</td>'
+            + '<td>' + R.priceCell(m, 'priceOut') + '</td></tr>';
         }).join(''));
     }
 
@@ -236,7 +236,7 @@
         + '<td>' + R.fmtNum(m.elo) + '</td>'
         + '<td>' + (m.bench == null ? '—' : R.fmtBench(m.bench)) + '</td>'
         + '<td>' + (m.superclue == null ? '—' : R.fmtNum(m.superclue)) + '</td>'
-        + '<td>' + (m.priceIn == null ? '—' : R.fmtPrice(m, 'priceIn')) + '</td></tr>';
+        + '<td>' + R.priceCell(m, 'priceIn') + '</td></tr>';
     }).join('');
 
     var html = '<section class="card r-section">'

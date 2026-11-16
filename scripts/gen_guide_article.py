@@ -91,7 +91,20 @@ def dim_val(m, dim):
     return "—" if v is None else f"{v:.1f}"
 
 
-def build_sections(models):
+def price_caveat(meta):
+    """价格数据期与覆盖率提示：价格表 2026-07 后停更，不能写成「实时」。"""
+    pm = ((meta or {}).get("fieldInfo") or {}).get("price") or {}
+    cov = pm.get("coverage") or {}
+    parts = []
+    if pm.get("date"):
+        parts.append(f"价格核验于 {pm['date']}")
+    if cov.get("priced") and cov.get("total"):
+        parts.append(f"仅覆盖 {cov['priced']} / {cov['total']} 款模型，未收录不代表免费")
+    parts.append("该日期后的调价可能未反映，预算请以官网现价为准")
+    return "；".join(parts) + "。"
+
+
+def build_sections(models, meta=None):
     """六大场景 + 总览，返回 HTML 段落列表。"""
     elo_top = top_by(models, "elo", 6)
     ov_rows = "".join(
@@ -222,11 +235,13 @@ def build_sections(models):
         "<ul>"
         "<li><b>按场景定位</b>：先确认你的核心场景（代码 / 数学 / 中文 / Agent），看对应榜单；</li>"
         "<li><b>再看成本</b>：同场景内用性价比榜单二次筛选；</li>"
-        "<li><b>数据在更新</b>：本指南随榜单数据每周自动刷新，模型价格与排名变动会同步体现；</li>"
+        "<li><b>数据在更新</b>：排名与测评随榜单每周刷新；价格库更新较慢，具体核验日见价格旁的「xx月」角标；</li>"
         "<li><b>上线前实测</b>：正式项目请用自己的业务数据做小规模 A/B 测试。</li>"
         "</ul>"
         "<blockquote>数据口径：Elo 来自 LMArena 竞技场，六维评分与 SuperCLUE 来自 SuperCLUE 测评；"
-        "价格为公开 API 报价：国产模型为官方人民币报价，海外按 $1≈¥7.2 换算。榜单实时快照见<a href=\"../rank.html\">排行榜</a>。</blockquote>"
+        "价格为公开 API 报价：国产模型为官方人民币报价，海外按 $1≈¥7.2 换算；"
+        + price_caveat(meta)
+        + "榜单实时快照见<a href=\"../rank.html\">排行榜</a>。</blockquote>"
     )
 
     return [sec_overview, sec_code, sec_math, sec_cn, sec_agent, sec_value, sec_open, sec_close]
@@ -354,7 +369,7 @@ def main():
                f"基于 {len(models)} 个模型的实时榜单数据给出 Top 推荐清单，随数据每周自动更新。")
     tags = ["选型指南", "模型推荐", "大模型评测"]
 
-    body_html = "\n".join(build_sections(models))
+    body_html = "\n".join(build_sections(models, data.get("meta")))
 
     articles = load("data/articles.json", [])
     os.makedirs(os.path.join(ROOT, "articles"), exist_ok=True)

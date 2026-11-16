@@ -6,7 +6,7 @@
 
   // 全维度筛选状态：state.filters. providers / regions / opens 都是字符串数组（多选）
   var state = {
-    key: 'elo', dir: -1, showAll: false, query: '',
+    key: 'elo', dir: -1, showAll: false, query: '', onlyPriced: false,
     filters: { providers: [], regions: [], opens: [] }
   };
   var PAGE = 50;
@@ -29,9 +29,9 @@
       fmt: function (m) { return R.fmtBench(m.bench) + R.estMark(m, 'bench'); }
     },
     priceIn: {
-      label: '输入价格', unit: '¥/M', dir: 1, note: '每百万输入 tokens 价格：国产模型为官方人民币报价，海外按 $1≈¥7.2 换算',
-      title: '输入价格排名（由低到高）', desc: '每百万输入 tokens 价格 · 越低越便宜',
-      fmt: function (m) { return R.fmtPrice(m, 'priceIn') + R.estMark(m, 'priceIn'); }
+      label: '输入价格', unit: '¥/M', dir: 1, note: '每百万输入 tokens 价格：国产模型为官方人民币报价，海外按 $1≈¥7.2 换算；价格核验日见单元格角标',
+      title: '输入价格排名（由低到高）', desc: '每百万输入 tokens 价格 · 越低越便宜 · 价格数据期见下方说明',
+      fmt: function (m) { return R.priceCell(m, 'priceIn') + R.estMark(m, 'priceIn'); }
     },
     context: {
       label: '上下文', unit: 'tokens', dir: -1, note: '最大输入上下文窗口',
@@ -81,6 +81,9 @@
   /* 按筛选 chip 与搜索词过滤（chip 优先，再叠加搜索词） */
   function filtered() {
     var list = applyFilters(ranked());
+    if (state.onlyPriced) {
+      list = list.filter(function (m) { return m.priceIn != null || m.priceOut != null; });
+    }
     var q = state.query.trim().toLowerCase();
     if (!q) return list;
     return list.filter(function (m) {
@@ -121,8 +124,8 @@
         + '<td class="num">' + t.fmt(m) + '</td>'
         + '<td class="num">' + R.fmtNum(m.superclue) + R.estMark(m, 'superclue') + '</td>'
         + '<td class="num">' + R.fmtBench(m.bench) + R.estMark(m, 'bench') + '</td>'
-        + '<td class="num">' + R.fmtPrice(m, 'priceIn') + R.estMark(m, 'priceIn') + '</td>'
-        + '<td class="num">' + R.fmtPrice(m, 'priceOut') + R.estMark(m, 'priceOut') + '</td>'
+        + '<td class="num">' + R.priceCell(m, 'priceIn') + R.estMark(m, 'priceIn') + '</td>'
+        + '<td class="num">' + R.priceCell(m, 'priceOut') + R.estMark(m, 'priceOut') + '</td>'
         + '<td class="num">' + R.fmtCtx(m.context) + '</td>'
         + '<td class="num">' + R.fmtSpeed(m.speed) + R.estMark(m, 'speed') + '</td>'
         + '<td>' + R.badgeOpen(m) + ' ' + R.badgeRegion(m) + '</td>'
@@ -258,6 +261,8 @@
   }
 
   function applyFiltersUI() {
+    var only = document.getElementById('onlyPriced');
+    if (only) only.checked = state.onlyPriced;
     var chips = document.querySelectorAll('.filter-chip');
     chips.forEach(function (c) {
       var t = c.dataset.type, v = c.dataset.val;
@@ -274,7 +279,8 @@
         : '已筛选为 ' + matched + ' / ' + total + ' 个';
     }
     if (clearBtn) clearBtn.hidden = (state.filters.providers.length === 0
-      && state.filters.regions.length === 0 && state.filters.opens.length === 0);
+      && state.filters.regions.length === 0 && state.filters.opens.length === 0
+      && !state.onlyPriced);
   }
 
   function toggleFilter(type, val) {
@@ -289,6 +295,7 @@
 
   function clearFilters() {
     state.filters = { providers: [], regions: [], opens: [] };
+    state.onlyPriced = false;
     applyFiltersUI();
     renderTable();
     renderChart();
@@ -318,6 +325,16 @@
       renderChart();
       applyFiltersUI();
     });
+    var onlyPriced = document.getElementById('onlyPriced');
+    if (onlyPriced) {
+      onlyPriced.addEventListener('change', function (e) {
+        state.onlyPriced = e.target.checked;
+        state.showAll = false;
+        applyFiltersUI();
+        renderTable();
+        renderChart();
+      });
+    }
     /* 筛选 chip 事件委托：点击切换 */
     document.getElementById('filterSection').addEventListener('click', function (e) {
       var chip = e.target.closest('.filter-chip');
@@ -356,6 +373,18 @@
     document.getElementById('dataDate').textContent = meta.updated;
     document.getElementById('modelCount').textContent = R.getModels().length;
     document.getElementById('footDate').textContent = meta.updated;
+
+    /* 价格日期与覆盖率：让读者在表格上方就知道价格不是当天的 */
+    var cov = R.priceCoverage();
+    var pd = document.getElementById('priceDate');
+    if (pd) pd.textContent = R.priceDateText();
+    var pc = document.getElementById('priceCoverage');
+    if (pc) pc.textContent = cov.priced + ' / ' + cov.total + ' 款';
+    document.querySelectorAll('.js-price-asof').forEach(function (el) {
+      el.textContent = '截至 ' + R.priceDateText();
+    });
+    var pn = document.getElementById('priceNote');
+    if (pn) pn.textContent = R.priceNote();
     var ul = document.getElementById('sources');
     ul.innerHTML = meta.sources.map(function (s) {
       return '<li><span class="src-name">' + R.esc(s.name) + '</span>'

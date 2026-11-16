@@ -711,7 +711,7 @@ def match_model(src_name: str, mid: str) -> bool:
 
 
 def apply_updates(models, elo_map, families, scores, prices,
-                  sc_date: str = "") -> tuple[list[str], set[str], bool, bool]:
+                  sc_date: str = "", price_date: str = "") -> tuple[list[str], set[str], bool, bool]:
     changed: list[str] = []
     covered: set[str] = set()  # 已被现有模型消费的家族键（避免重复新增）
     missing_dims: set[str] = set()  # 本月 SuperCLUE 未提供的维度（口径变更留痕）
@@ -829,6 +829,10 @@ def apply_updates(models, elo_map, families, scores, prices,
                         m.get("est", {}).pop(field, None)
                 if m.get("priceCurrency") != "CNY":
                     m["priceCurrency"] = "CNY"
+                # 每个模型单独记价格核验月份：将来逐模型核价时，
+                # 表格里的「xx月」角标才能各自准确，而不是全站一个日期。
+                if price_date:
+                    m["priceDate"] = price_date
                 hit_pr = True
                 break
         if hit_pr:
@@ -938,7 +942,8 @@ def main() -> int:
         ],
     }
     changes, covered, sc_skipped, sc_basis_switched = apply_updates(
-        data["models"], elo_map, families, sc_scores, sc_prices, sc_date=used_date)
+        data["models"], elo_map, families, sc_scores, sc_prices,
+        sc_date=used_date, price_date=price_date)
     if sc_skipped:
         # 抓到了新一期但口径不可比，明确标记「未采用」，避免元数据误报成已更新
         diff["sources"]["superclue"]["applied"] = False
@@ -1025,6 +1030,11 @@ def main() -> int:
                        "date": price_date, "kind": "官方"}
         if used_date and price_date != used_date:
             fi["price"]["note"] = f"价格表自 {price_date} 后未再发布，沿用该月数据"
+        fi["price"]["coverage"] = {
+            "priced": sum(1 for m in data["models"]
+                          if m.get("priceIn") is not None or m.get("priceOut") is not None),
+            "total": len(data["models"]),
+        }
     else:
         old = prev_fi.get("price")
         if old:

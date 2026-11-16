@@ -62,15 +62,16 @@
     <h1>MaaS Rank · 大模型 API 排行榜</h1>
     <p>聚合 LMArena 人类偏好竞技场与 SuperCLUE 中文综合测评，覆盖国内外主流 MaaS 模型的能力、价格、上下文与输出速度。点击模型名可查看详情页。</p>
     <div class="hero-meta">
-      <span class="chip">数据快照 <b id="dataDate">–</b></span>
-      <span class="chip">收录模型 <b id="modelCount">–</b></span>
-      <span class="chip">价格：国产为<b>官方人民币报价</b> · 海外按 $1≈¥7.2 换算</span>
+      <span class="chip">数据快照 <b id="dataDate">载入中…</b></span>
+      <span class="chip">收录模型 <b id="modelCount">载入中…</b></span>
+      <span class="chip">价格：国产为<b>官方人民币报价</b> · 海外按 $1≈¥7.2 折算</span>
     </div>
     <div class="hero-links">
       <a href="report.html">本周榜单变化 →</a>
     </div>
     <!-- 快照日与各指标数据日分开显示：快照更新 ≠ 每项数据都更新 -->
     <p class="data-freshness" id="dataFreshness" hidden></p>
+    <noscript><p class="dim-note">本页的榜单、周对比与价格日期由 JavaScript 读取本地数据文件后渲染，请启用 JavaScript 并刷新。</p></noscript>
   </section>
 
   <!-- 1) 本周竞技场 Top 3（大卡片高视觉重量） -->
@@ -82,8 +83,8 @@
 
   <!-- 2) 本周榜单变化摘要 -->
   <section class="card weekly-card" id="weeklySection">
-    <h2>本周榜单变化 <span class="dim" id="weeklyRange">–</span></h2>
-    <p class="sub" id="weeklySub">对比上周快照数据。</p>
+    <h2>本周榜单变化 <span class="dim" id="weeklyRange">载入中…</span></h2>
+    <p class="sub" id="weeklySub">正在对比上一期快照…</p>
     <div class="weekly-grid" id="weeklyGrid">
       <div class="weekly-cell">
         <h3>涨幅 Top 5</h3>
@@ -102,13 +103,14 @@
 
   <!-- 3) 最新解读：正文内链指向文章页（SEO 权重传递 + 新鲜度信号） -->
   <section class="card" id="latestSection">
-    <h2>最新解读 <span class="dim" id="latestDate">–</span></h2>
+    <h2>最新解读 <span class="dim" id="latestDate">载入中…</span></h2>
     <p class="sub">基于榜单数据的原创内容：周报、选型指南、厂商盘点、模型实测与行业观察 · <a href="articles.html">全部文章 →</a></p>
     <div class="art-list art-list-latest" id="latestGrid"></div>
   </section>
 
   <!-- 4) 关键冠军 4 卡片 -->
   <section class="kpi-grid" id="kpiSection"></section>
+  <p class="dim-note kpi-caveat" id="kpiCaveat"></p>
 
   <!-- 5) 查看完整榜单 CTA -->
   <section class="card cta-band">
@@ -132,7 +134,7 @@
 </main>
 
 <footer>
-  <div>MaaS Rank · 大模型排行榜 · 数据快照 <span id="footDate">–</span> · 开源数据，标注来源引用</div>
+  <div>MaaS Rank · 大模型排行榜 · 数据快照 <span id="footDate">载入中…</span> · 开源数据，标注来源引用</div>
 </footer>
 
 <script src="js/site.js"></script>

@@ -62,6 +62,81 @@
     return v == null ? '—' : '¥' + v.toFixed(2);
   }
 
+  /* ---------- 价格时效 / 覆盖率 ----------
+     价格是本页最容易过期的字段：数据源 2026-07 后停更，页面快照日却是每天新的。
+     所以价格必须在「用到它的地方」自带核验日期，而不是只在页脚写一句。 */
+
+  function priceFieldInfo() {
+    return (META && META.fieldInfo && META.fieldInfo.price) || {};
+  }
+
+  /* 单模型价格日期优先（便于将来逐模型核验），否则回落到全站价格数据期 */
+  function priceDateRaw(m) {
+    return (m && m.priceDate) || priceFieldInfo().date || '';
+  }
+
+  /* 统一成 YYYY-MM：兼容 "2026-07" / "2026年7月" */
+  function priceDateISO(m) {
+    var hit = /(\d{4})\D+(\d{1,2})/.exec(priceDateRaw(m));
+    return hit ? hit[1] + '-' + ('0' + hit[2]).slice(-2) : '';
+  }
+
+  function priceDateText(m) {
+    var raw = priceDateRaw(m);
+    var iso = priceDateISO(m);
+    /* 统一成中文数据期（2026年7月）：正文里比 2026-07 易读，
+       紧凑角标另用 priceAsOfShort() 输出「07月」。 */
+    if (raw && raw.indexOf('年') > -1) return raw;
+    if (iso) {
+      var p = iso.split('-');
+      return p[0] + '年' + parseInt(p[1], 10) + '月';
+    }
+    return raw || '未知';
+  }
+
+  function priceAsOfShort(m) {
+    var iso = priceDateISO(m);
+    return iso ? iso.slice(5) + '月' : '';
+  }
+
+  /* 距今天数折算的月数，用来提示「已经四个月没核验」 */
+  function priceAgeMonths(m) {
+    var iso = priceDateISO(m);
+    if (!iso) return null;
+    var p = iso.split('-');
+    var now = new Date();
+    var months = (now.getFullYear() - +p[0]) * 12 + (now.getMonth() + 1 - +p[1]);
+    return months > 0 ? months : 0;
+  }
+
+  /* 价格单元格：数字 + 紧邻的核验月份。缺失时写明「未收录」并解释，
+     避免读者把 — 误读成 0 元 / 免费。 */
+  function priceCell(m, field) {
+    if (!m || m[field] == null) {
+      return '<span class="price-missing" title="未收录官方定价：可能未公开报价、需按量询价，或本期尚未核验；不代表免费">未收录</span>';
+    }
+    var short = priceAsOfShort(m);
+    var d = priceDateText(m);
+    return fmtPrice(m, field)
+      + (short ? '<span class="price-asof" title="官方定价核验于 ' + esc(d) + '">' + esc(short) + '</span>' : '');
+  }
+
+  function priceCoverage() {
+    var list = MODELS || [];
+    var priced = 0;
+    list.forEach(function (m) { if (m.priceIn != null || m.priceOut != null) priced++; });
+    return { priced: priced, total: list.length };
+  }
+
+  /* 全站统一的价格口径说明（表格脚注 / 计算器 / 详情页复用） */
+  function priceNote() {
+    var cov = priceCoverage();
+    var age = priceAgeMonths();
+    return '价格核验于 ' + priceDateText()
+      + (age != null ? '（约 ' + age + ' 个月前）' : '')
+      + '，仅覆盖 ' + cov.priced + ' / ' + cov.total + ' 款模型；未收录不代表免费，调价请以厂商官网为准。';
+  }
+
   function fmtCtx(v) {
     if (v == null) return '—';
     if (v >= 1000000) return (v / 1000000).toLocaleString('zh-CN') + 'M';
@@ -152,6 +227,13 @@
     fmtCny: fmtCny,
     priceToCny: priceToCny,
     fmtPrice: fmtPrice,
+    priceCell: priceCell,
+    priceDateText: priceDateText,
+    priceDateISO: priceDateISO,
+    priceAsOfShort: priceAsOfShort,
+    priceAgeMonths: priceAgeMonths,
+    priceCoverage: priceCoverage,
+    priceNote: priceNote,
     fmtCtx: fmtCtx,
     fmtSpeed: fmtSpeed,
     fmtBench: fmtBench,

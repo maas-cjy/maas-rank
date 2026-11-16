@@ -44,8 +44,9 @@
     <h1>API 成本计算器</h1>
     <p>输入你的月度 token 用量与缓存命中率，自动计算并对比最多 4 个模型的月度调用成本。价格为快照数据，缓存读价折扣按行业常见口径默认 50%，实际以厂商计费为准。</p>
     <div class="hero-meta">
-      <span class="chip">数据快照 <b id="dataDate">–</b></span>
-      <span class="chip">价格核验 <b id="priceDate">–</b></span>
+      <span class="chip">数据快照 <b id="dataDate">载入中…</b></span>
+      <span class="chip">价格核验 <b id="priceDate">载入中…</b></span>
+      <span class="chip">覆盖 <b id="priceCoverage">载入中…</b></span>
       <span class="chip">汇率 <b>$1 ≈ ¥7.2</b></span>
     </div>
   </section>
@@ -53,6 +54,7 @@
   <section class="grid2">
     <div class="card">
       <h2>1 · 选择模型（最多 4 个）</h2>
+      <p class="dim-note" id="pickerNote">仅列出有公开定价的模型；未收录价格的模型无法参与计算，不代表免费。</p>
       <input id="search" class="search" type="text" placeholder="搜索模型或厂商…" autocomplete="off" spellcheck="false">
       <div id="pickerList" class="picker-list" role="group" aria-label="模型选择列表"></div>
     </div>
@@ -93,7 +95,7 @@
         <tbody id="costBody"></tbody>
       </table>
     </div>
-    <p class="dim-note" id="footNoteWrap">价格核验于 <span id="footDate">–</span>（该月后 SuperCLUE 价格表未再发布，沿用该期数据）· 价格口径：国产为官方人民币报价，海外按 $1≈¥7.2 换算 · 数据来源见<a href="about.html">数据说明</a>。本工具为<b>粗略估算</b>，未计入批处理折扣、阶梯价与最低消费，正式决策请以厂商计费为准。</p>
+    <p class="dim-note" id="footNoteWrap">价格核验于 <span id="footDate">载入中…</span>（该月后 SuperCLUE 价格表未再发布，沿用该期数据）· 覆盖 <span id="footCoverage">–</span> · 价格口径：国产为官方人民币报价，海外按 $1≈¥7.2 换算 · 数据来源见<a href="about.html">数据说明</a>。本工具为<b>粗略估算</b>，未计入批处理折扣、阶梯价与最低消费，正式决策请以厂商计费为准。</p>
   </section>
 </main>
 

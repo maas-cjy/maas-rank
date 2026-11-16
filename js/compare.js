@@ -123,8 +123,8 @@
       { label: '发布时间', cell: function (m) { return R.esc(m.release); } },
       { label: '竞技场 Elo', key: 'elo', cell: function (m) { return R.fmtNum(m.elo) + R.estMark(m, 'elo'); }, best: 'max' },
       { label: 'SuperCLUE', key: 'superclue', cell: function (m) { return R.fmtNum(m.superclue) + R.estMark(m, 'superclue'); }, best: 'max' },
-      { label: '输入价 ¥/M', key: 'priceIn', cell: function (m) { return R.fmtPrice(m, 'priceIn') + R.estMark(m, 'priceIn'); }, best: 'min', converted: true },
-      { label: '输出价 ¥/M', key: 'priceOut', cell: function (m) { return R.fmtPrice(m, 'priceOut') + R.estMark(m, 'priceOut'); }, best: 'min', converted: true },
+      { label: '输入价 ¥/M', key: 'priceIn', cell: function (m) { return R.priceCell(m, 'priceIn') + R.estMark(m, 'priceIn'); }, best: 'min', converted: true },
+      { label: '输出价 ¥/M', key: 'priceOut', cell: function (m) { return R.priceCell(m, 'priceOut') + R.estMark(m, 'priceOut'); }, best: 'min', converted: true },
       { label: '上下文', key: 'context', cell: function (m) { return R.fmtCtx(m.context); }, best: 'max' },
       { label: '输出速度', key: 'speed', cell: function (m) { return R.fmtSpeed(m.speed) + R.estMark(m, 'speed'); }, best: 'max' }
     ];
@@ -192,6 +192,11 @@
 
   R.loadData().then(function () {
     document.getElementById('footDate').textContent = R.getMeta().updated;
+    var note = document.getElementById('cmpPriceNote');
+    if (note) {
+      note.textContent = '每百万 tokens 价格（¥：国产为官方人民币报价，海外按 $1≈¥7.2 换算）· '
+        + '核验于 ' + R.priceDateText() + '；未收录不代表免费。';
+    }
     init();
     /* 兼容两种参数名：?models=a,b,c（分享规范）与 ?m=a,b,c（历史链接） */
     var pre = (R.qs('models') || R.qs('m') || '').split(',').filter(Boolean);

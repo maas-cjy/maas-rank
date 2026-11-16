@@ -56,9 +56,10 @@
     <h1>完整排行榜</h1>
     <p>全量展示收录模型的竞技场 Elo、综合能力、中文能力、API 价格、上下文与输出速度，支持搜索与多维筛选。点击模型名可查看详情页。</p>
     <div class="hero-meta">
-      <span class="chip">数据快照 <b id="dataDate">–</b></span>
-      <span class="chip">收录模型 <b id="modelCount">–</b></span>
-      <span class="chip">价格：国产为<b>官方人民币报价</b> · 海外按 $1≈¥7.2 换算</span>
+      <span class="chip">数据快照 <b id="dataDate">载入中…</b></span>
+      <span class="chip">收录模型 <b id="modelCount">载入中…</b></span>
+      <span class="chip">价格核验 <b id="priceDate">载入中…</b> · 覆盖 <b id="priceCoverage">载入中…</b></span>
+      <span class="chip">国产为<b>官方人民币报价</b> · 海外按 $1≈¥7.2 折算</span>
     </div>
     <div class="hero-links">
       <a href="index.html">← 返回首页总览</a>
@@ -98,6 +99,7 @@
       <p class="sub" id="tableSub">LMArena 全球人类盲测投票 · 分数越高代表真实用户偏好越强</p>
       <div class="table-toolbar">
         <input id="searchBox" type="search" placeholder="搜索模型 / 厂商，如 claude、deepseek、阿里…" autocomplete="off" spellcheck="false">
+        <label class="only-priced"><input type="checkbox" id="onlyPriced"> 只看有公开定价</label>
         <span class="match-hint" id="matchHint"></span>
         <button id="showAllBtn" class="show-all" hidden>显示全部</button>
       </div>
@@ -110,8 +112,8 @@
               <th scope="col" data-key="elo">Elo <span class="arr"></span></th>
               <th scope="col" data-key="bench">综合能力</th>
               <th scope="col" data-key="superclue">SuperCLUE</th>
-              <th scope="col" data-key="priceIn">输入价</th>
-              <th scope="col" data-key="priceOut">输出价</th>
+              <th scope="col" data-key="priceIn">输入价 <span class="th-unit">¥/M</span><span class="th-asof js-price-asof" data-field="priceIn">截至 –</span></th>
+              <th scope="col" data-key="priceOut">输出价 <span class="th-unit">¥/M</span><span class="th-asof js-price-asof" data-field="priceOut">截至 –</span></th>
               <th scope="col" data-key="context">上下文</th>
               <th scope="col" data-key="speed">输出速度</th>
               <th scope="col"></th>
@@ -121,6 +123,7 @@
         </table>
       </div>
       <p class="dim-note" id="tableNote"></p>
+      <p class="dim-note price-note" id="priceNote"></p>
     </div>
 
     <div class="card chart-card">

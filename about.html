@@ -61,8 +61,9 @@
     <h1>数据说明</h1>
     <p>本站聚合 LMArena 人类偏好竞技场与 SuperCLUE 中文综合测评的能力得分，叠加各厂商公开 API 定价，覆盖国内外主流 MaaS 模型。以下说明数据从哪来、怎么更新、口径是什么。</p>
     <div class="hero-meta">
-      <span class="chip">数据快照 <b id="dataDate">–</b></span>
-      <span class="chip">收录模型 <b id="modelCount">–</b></span>
+      <span class="chip">数据快照 <b id="dataDate">载入中…</b></span>
+      <span class="chip">收录模型 <b id="modelCount">载入中…</b></span>
+      <span class="chip">价格覆盖 <b id="priceCoverage">载入中…</b></span>
       <span class="chip">更新频率 <b>每日检查</b></span>
       <span class="chip">国产为<b>官方人民币报价</b> · 海外按 $1≈¥7.2 换算</span>
     </div>
@@ -87,6 +88,7 @@
   <section class="card data-card">
     <h2>各指标的数据期并不相同</h2>
     <p class="text-block">页面顶部标注的「数据快照」是本次生成快照的时间，<b>不等于每项数据的时间</b>。各字段有各自的日期：Elo 取 LMArena 最新一期榜单的发布时间；中文能力与六维子分取 SuperCLUE 当期测评；API 价格取最近一份可用的价格表。当某个来源停更或更换评分口径时，对应字段会沿用上一期，并在榜单页「各字段数据日期与口径」中注明。首页的「数据时效」一行会同时列出这几项日期，带 ※ 的表示该指标本期未更新。</p>
+    <p class="text-block">价格字段还有一层限制：<b>并非每款模型都能拿到公开定价</b>。当前收录的 <span id="aboutTotal">444</span> 款模型中，只有 <span id="aboutPriced">23</span> 款有可核验的输入/输出价（见页首「价格覆盖」）。榜单与详情页把缺失值写成「未收录」，表示尚未核验到官方报价（可能未公开、需按量询价，或本期未覆盖），<b>不等于免费或 0 元</b>。价格表自 <span id="aboutPriceDate">2026年7月</span> 后未再发布，这期间的调价可能未反映，预算估算请以厂商官网为准。</p>
   </section>
 
   <section class="card data-card">
@@ -95,7 +97,7 @@
       <li><span class="flow-step elo">Elo</span><div><b>竞技场 Elo 分</b><p>来自 LMArena（原 Chatbot Arena）全球匿名盲测投票，采用 Bradley-Terry 模型计算。分数反映真实用户对模型输出的偏好强度，分数越高代表综合体验越好，与"考试分数"无直接换算关系。</p></div></li>
       <li><span class="flow-step cn">CN</span><div><b>SuperCLUE 智能指数</b><p>来自 SuperCLUE 中文通用大模型综合测评，维度随评测基准演进（2026年11月新口径：数理推理、幻觉控制、精确指令遵循、智能体编程、超长上下文等）。海外模型若未参加当期测评，不参与该列排序。</p></div></li>
       <li><span class="flow-step bench">综合</span><div><b>综合能力分</b><p>对 SuperCLUE（<span id="scPeriod">最近一期</span>）公开的子维度得分取平均。维度构成随 SuperCLUE 评测基准变化：2026年11月起为新评分口径（「数理推理」替代「数学推理」，科学推理、任务规划停更，新增超长上下文等维度），<b>新旧口径的分数不可直接对比</b>；切换前的历史快照保留原值并在趋势中标注断点。仅统计当期公布子分的模型；未公布子分或未参加当期测评的模型不参与该列排序，避免以估算值误导选型。</p></div></li>
-      <li><span class="flow-step price">¥</span><div><b>API 价格</b><p>按每百万 tokens 计价：国产模型来自 SuperCLUE 价格库（<b>元/百万tokens，即官方人民币报价</b>）；海外模型取厂商官方美元定价，按 <code>$1 ≈ ¥7.2</code> 汇率折算展示。实际计费请以开通时官方价格为准。</p></div></li>
+      <li><span class="flow-step price">¥</span><div><b>API 价格</b><p>按每百万 tokens 计价：国产模型来自 SuperCLUE 价格库（<b>元/百万tokens，即官方人民币报价</b>）；海外模型取厂商官方美元定价，按 <code>$1 ≈ ¥7.2</code> 汇率折算展示。价格核验日会紧邻显示在价格数字旁（如「07月」角标）；该日期之后厂商的调价可能尚未反映，实际计费请以开通时官方价格为准。</p></div></li>
       <li><span class="flow-step ctx">CTX</span><div><b>上下文窗口</b><p>模型支持的最大输入上下文长度（tokens），以官方技术文档为准；部分模型按同系列/同代产品合理推算并标注 <span class="est-mark">*</span>。</p></div></li>
       <li><span class="flow-step spd">SPD</span><div><b>输出速度</b><p>输出吞吐量（tokens/s），取公开测评或厂商公布值的合理估算，不同测试环境下差异较大，仅作横向量级参考。</p></div></li>
     </ul>
@@ -149,6 +151,15 @@
     if (scEl) {
       scEl.textContent = (fi.superclue && fi.superclue.date) ? fi.superclue.date : '最近一期';
     }
+    var cov = MRank.priceCoverage();
+    var pc = document.getElementById('priceCoverage');
+    if (pc) pc.textContent = cov.priced + ' / ' + cov.total + ' 款';
+    var at = document.getElementById('aboutTotal');
+    if (at) at.textContent = cov.total;
+    var ap = document.getElementById('aboutPriced');
+    if (ap) ap.textContent = cov.priced;
+    var ad = document.getElementById('aboutPriceDate');
+    if (ad) ad.textContent = MRank.priceDateText();
   }).catch(function () {
     document.getElementById('dataDate').textContent = '加载失败';
   });

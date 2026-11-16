@@ -20,13 +20,19 @@
     });
   }
 
-  /* 参数表价格行：官方币种优先展示，另一种货币括注折算值 */
+  /* 参数表价格行：官方币种优先展示，另一种货币括注折算值；
+     缺失时写明「未收录」，并解释这不是免费；有价时紧邻核验月份。 */
   function fmtParamPrice(m, field) {
-    if (m[field] == null) return '—';
-    if (m.priceCurrency === 'CNY') {
-      return '¥' + (+m[field]).toFixed(2) + '（官方人民币报价，约 ' + R.fmtUsd(+m[field] / R.USD_CNY) + '）';
+    if (m[field] == null) {
+      return '<span class="price-missing" title="未收录官方定价：可能未公开报价、需按量询价，或本期尚未核验；不代表免费">未收录官方定价</span>';
     }
-    return R.fmtUsd(m[field]) + '（约 ' + R.fmtCny(m[field]) + '）';
+    var asof = R.priceAsOfShort(m)
+      ? '<span class="price-asof" title="官方定价核验于 ' + R.esc(R.priceDateText(m)) + '">' + R.esc(R.priceAsOfShort(m)) + ' 核验</span>'
+      : '';
+    if (m.priceCurrency === 'CNY') {
+      return '¥' + (+m[field]).toFixed(2) + '（官方人民币报价，约 ' + R.fmtUsd(+m[field] / R.USD_CNY) + '）' + asof;
+    }
+    return R.fmtUsd(m[field]) + '（约 ' + R.fmtCny(m[field]) + '）' + asof;
   }
 
   function rankOf(list, m) { return list.indexOf(m) + 1; }
@@ -42,8 +48,8 @@
 
   function setSeo(m) {
     var url = SITE + 'model.html?id=' + encodeURIComponent(m.id);
-    var pIn = m.priceIn == null ? '—' : R.fmtPrice(m, 'priceIn');
-    var pOut = m.priceOut == null ? '—' : R.fmtPrice(m, 'priceOut');
+    var pIn = m.priceIn == null ? '未收录' : R.fmtPrice(m, 'priceIn');
+    var pOut = m.priceOut == null ? '未收录' : R.fmtPrice(m, 'priceOut');
     var title = m.name + '（' + m.provider + '）价格、Elo 排名、上下文长度 | MaaS Rank 大模型排行榜';
     var desc = m.name + '（' + m.provider + '）——' + m.desc
       + '。竞技场 Elo ' + (m.elo == null ? '—' : m.elo) + ' 分，SuperCLUE 中文能力 ' + (m.superclue == null ? '—' : m.superclue) + ' 分，'
@@ -105,6 +111,9 @@
     document.getElementById('mMeta').innerHTML =
       '<span class="chip">厂商 <b>' + R.esc(m.provider) + '</b></span>'
       + '<span class="chip">发布时间 <b>' + R.esc(m.release || '—') + '</b></span>'
+      + (m.priceIn != null || m.priceOut != null
+        ? '<span class="chip">价格核验 <b>' + R.esc(R.priceDateText(m)) + '</b></span>'
+        : '<span class="chip">价格 <b>未收录</b></span>')
       + '<span class="chip">' + R.badgeOpen(m) + '</span>'
       + '<span class="chip">' + R.badgeRegion(m) + '</span>';
     document.getElementById('mCompare').setAttribute('href', 'compare.html?m=' + encodeURIComponent(m.id));
@@ -137,15 +146,30 @@
       '全榜第 ' + rankOf(eloList, m) + ' 名 · 共 ' + total + ' 个',
       estNote(m, 'elo'));
 
-    html += kpiCard('SuperCLUE 智能指数',
-      R.fmtNum(m.superclue), '分',
-      '中文榜第 ' + rankOf(cnList, m) + ' 名 · 共 ' + total + ' 个',
-      estNote(m, 'superclue'));
+    if (m.superclue == null) {
+      html += kpiCard('SuperCLUE 智能指数',
+        '<span class="kpi-missing">未收录</span>', '',
+        '本期未参加中文测评，不参与该列排序',
+        '未收录不等于能力为零');
+    } else {
+      html += kpiCard('SuperCLUE 智能指数',
+        R.fmtNum(m.superclue), '分',
+        '中文榜第 ' + rankOf(cnList, m) + ' 名 · 共 ' + cnList.filter(function (x) { return x.superclue != null; }).length + ' 个有效评分',
+        estNote(m, 'superclue'));
+    }
 
-    html += kpiCard('API 价格 · 每百万 tokens',
-      R.fmtPrice(m, 'priceOut'), '/M',
-      '输出价第 ' + rankOf(priceList, m) + ' 低 · 输入 ' + R.fmtPrice(m, 'priceIn'),
-      (estNote(m, 'priceIn') + ' ' + estNote(m, 'priceOut')).trim());
+    if (m.priceIn == null && m.priceOut == null) {
+      html += kpiCard('API 价格 · 每百万 tokens',
+        '<span class="kpi-missing">未收录</span>', '',
+        '未收录官方定价，不代表免费',
+        '可能未公开报价或需按量询价');
+    } else {
+      html += kpiCard('API 价格 · 每百万 tokens',
+        R.fmtPrice(m, 'priceOut'), '/M',
+        '输出价第 ' + rankOf(priceList, m) + ' 低（' + R.priceCoverage().priced + ' 款有定价）· 输入 ' + R.fmtPrice(m, 'priceIn'),
+        '价格核验 ' + R.priceDateText(m) + ' · 输入价不含输出与缓存'
+          + ((R.isEst(m, 'priceIn') || R.isEst(m, 'priceOut')) ? ' · <span class="est-mark">*</span>估算值' : ''));
+    }
 
     html += kpiCard('上下文窗口',
       R.fmtCtx(m.context), 'tokens',

@@ -50,6 +50,12 @@
         + '</label>';
     });
     document.getElementById('pickerList').innerHTML = html || '<p class="empty">没有匹配的模型</p>';
+    var note = document.getElementById('pickerNote');
+    if (note) {
+      var cov = R.priceCoverage();
+      note.textContent = '仅列出 ' + cov.priced + ' 款有公开定价的模型（收录共 ' + cov.total
+        + ' 款）；未收录价格的模型无法参与计算，不代表免费。';
+    }
   }
 
   function render() {
@@ -76,6 +82,8 @@
       sumEl.textContent = '按每月输入 ' + inTok + 'M / 输出 ' + outTok + 'M tokens、缓存命中 '
         + Math.round(hit * 100) + '%、缓存读价折扣 ' + Math.round(off * 100) + '% 估算。'
         + '价格口径：国产模型为官方人民币报价，海外模型按汇率 $1≈¥' + R.USD_CNY + ' 换算。'
+        + '单价核验于 ' + R.priceDateText() + (R.priceAgeMonths() != null ? '（约 ' + R.priceAgeMonths() + ' 个月前）' : '')
+        + '，这期间的调价未反映，预算请留余量。'
         + (missing > 0 ? '另有 ' + missing + ' 个所选模型缺少价格数据，未参与对比。' : '');
     }
 
@@ -86,8 +94,8 @@
     } else {
       tbody.innerHTML = rows.map(function (r, i) {
         var m = r.m;
-        var pin = R.fmtPrice(m, 'priceIn');
-        var pout = R.fmtPrice(m, 'priceOut');
+        var pin = R.priceCell(m, 'priceIn');
+        var pout = R.priceCell(m, 'priceOut');
         return '<tr' + (i === 0 && rows.length > 1 ? ' class="row-top3"' : '') + '>'
           + '<td><a href="model.html?id=' + encodeURIComponent(m.id) + '">' + R.esc(m.name) + '</a>'
           + '<div class="mprov">' + R.esc(m.provider) + '</div></td>'
@@ -143,10 +151,15 @@
     var meta = R.getMeta();
     /* 价格日期单独取：页面快照日 ≠ 价格核验日（价格表可能已停更数月） */
     var priceDate = (meta.fieldInfo && meta.fieldInfo.price && meta.fieldInfo.price.date) || meta.updated;
+    var cov = R.priceCoverage();
     document.getElementById('dataDate').textContent = meta.updated;
     var pd = document.getElementById('priceDate');
-    if (pd) pd.textContent = priceDate;
+    if (pd) pd.textContent = R.priceDateText();
+    var pc = document.getElementById('priceCoverage');
+    if (pc) pc.textContent = cov.priced + ' / ' + cov.total + ' 款';
     document.getElementById('footDate').textContent = priceDate;
+    var fc = document.getElementById('footCoverage');
+    if (fc) fc.textContent = cov.priced + ' / ' + cov.total + ' 款有公开定价';
     document.getElementById('footDate2').textContent = meta.updated;
     init();
     /* 支持预选：cost.html?models=id1,id2 */
