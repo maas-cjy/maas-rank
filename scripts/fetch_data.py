@@ -991,9 +991,12 @@ def main() -> int:
     log(f"✓ 已写入变更摘要 {DIFF_FILE}")
 
     # 上周快照（用于首页「本周榜单变化」摘要卡片做对比）
-    # 仅在数据确有变化时写入：否则重复执行（如 CI 在数据已是最新时再跑一次）
-    # 会把 prev 覆盖成「当前」状态，首页就会变成「本期 vs 本期」的假对比。
-    if changes:
+    # 仅在数据确有变化、且「更新前的那一期不是今天」时写入。
+    # 同一天可能更新多次（例如上午修数据源、下午修价格）：第二次更新前的状态
+    # 本身就是今天的结果，若照常写入 prev，首页会变成「2026-11-13 → 2026-11-13」，
+    # 真正的周变化（相对 11-10）就丢了。
+    same_day_rerun = prev_snapshot["date"] == today
+    if changes and not same_day_rerun:
         prev_path = ROOT / "data" / "prev.json"
         prev_tmp = prev_path.with_suffix(".json.tmp")
         with open(prev_tmp, "w", encoding="utf-8") as f:
@@ -1001,12 +1004,14 @@ def main() -> int:
                       f, ensure_ascii=False, indent=2)
         prev_tmp.replace(prev_path)
         log(f"✓ 已保存上周快照 {prev_path}（{len(prev_snapshot['models'])} 个模型）")
+    elif changes:
+        log("  同日重复更新，保留上期快照（不覆盖 prev.json）")
     else:
         log("  数据无变化，保留上期快照（不覆盖 prev.json）")
 
-    # 历史快照归档：仅当数据确有变化时，把「更新前」的榜单写入 history.json，
-    # 供榜单变化周报页对比展示。同一天重复更新则覆盖最后一条，避免堆积重复快照。
-    if changes:
+    # 历史快照归档：把「更新前」的榜单写入 history.json，供周报页对比展示。
+    # 同日重复更新时跳过（那一期就是今天的中间状态，归档会多出一条同日期快照）。
+    if changes and not same_day_rerun:
         history: dict = {"meta": {"count": 0, "generated": ""}, "snapshots": []}
         if HISTORY_FILE.exists():
             try:
@@ -1025,6 +1030,8 @@ def main() -> int:
             json.dump(history, f, ensure_ascii=False, indent=2)
         htmp.replace(HISTORY_FILE)
         log(f"✓ 已归档历史快照 {len(snaps)} 期 → {HISTORY_FILE}")
+    elif changes:
+        log("  同日重复更新，不重复归档历史快照")
     return 0
 
 

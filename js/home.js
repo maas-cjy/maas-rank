@@ -116,6 +116,9 @@
       ul.innerHTML = items.slice(0, 5).map(function (it) {
         var m = it.m || it;
         var d = it.d != null ? it.d : null;
+        /* 单周涨跌超过 100 分基本不是能力变化，而是 LMArena 调整评测样本池、
+           或同一家族的不同版本被归并后取了最高分。加 † 提示，避免被当成真进步。 */
+        var jump = d != null && Math.abs(d) >= 100;
         var dStr = d == null ? ''
           : (kind === 'up'   ? '+' + d
             : kind === 'down' ? d
@@ -124,16 +127,19 @@
         return '<li>'
           + '<span class="wk-name"><a href="model.html?id=' + R.esc(m.id) + '">' + R.esc(m.name) + '</a>'
           + '<small>' + R.esc(m.provider || '') + '</small></span>'
-          + (dStr ? '<span class="wk-delta">' + dStr + (kind === 'new' || kind === 'out' ? '' : ' Elo') + '</span>' : '')
+          + (dStr ? '<span class="wk-delta">' + dStr + (kind === 'new' || kind === 'out' ? '' : ' Elo') + (jump ? '†' : '') + '</span>' : '')
           + '</li>';
       }).join('');
     };
+
+    var bigJumps = upList.concat(downList).some(function (it) { return Math.abs(it.d) >= 100; });
 
     if (subEl) {
       var totalChanges = upList.length + downList.length + newList.length + outList.length;
       subEl.textContent = totalChanges === 0
         ? '与上周快照相比，本期榜单保持稳定'
-        : '对比 ' + prev.date + ' 快照：' + upList.length + ' 涨 / ' + downList.length + ' 跌 / ' + newList.length + ' 新进 / ' + outList.length + ' 退出。';
+        : '对比 ' + prev.date + ' 快照：' + upList.length + ' 涨 / ' + downList.length + ' 跌 / ' + newList.length + ' 新进 / ' + outList.length + ' 退出。'
+          + (bigJumps ? ' † 单周变动超过 100 分，多为评测样本调整或同家族版本归并所致，不代表模型能力突变。' : '');
     }
 
     if (totalChanges === 0) {
