@@ -38,10 +38,25 @@ def load(path, default):
         return json.load(f)
 
 
-def fmt_cny(v):
+def price_cny(m, field):
+    """模型价格折算为 ¥：CNY（官方人民币报价）原样，其余（美元）按 $1≈¥7.2。"""
+    v = (m or {}).get(field)
+    if v is None:
+        return None
+    return v if (m or {}).get("priceCurrency") == "CNY" else v * 7.2
+
+
+def cny_val(m, v):
+    if v is None:
+        return None
+    return v if (m or {}).get("priceCurrency") == "CNY" else v * 7.2
+
+
+def fmt_cny(m, field):
+    v = price_cny(m, field)
     if v is None:
         return "—"
-    return f"¥{v * 7.2:.1f}" if v >= 1 else f"¥{v * 7.2:.2f}"
+    return f"¥{v:.1f}" if v >= 1 else f"¥{v:.2f}"
 
 
 def top_by(models, key, n=5, reverse=True):
@@ -165,7 +180,7 @@ def build_sections(models):
     def value_ratio(m):
         if m.get("priceIn") is None or m.get("priceIn") <= 0 or not m.get("elo"):
             return None
-        return m["elo"] / m["priceIn"]
+        return m["elo"] / cny_val(m, m["priceIn"])
 
     pr = top_value(models, value_ratio, 6)
     sec_value = (
@@ -175,12 +190,12 @@ def build_sections(models):
         + scene_table(pr, [
             ("模型", model_link),
             ("厂商", lambda m: esc(m.get("provider", ""))),
-            ("输入价", lambda m: fmt_cny(m.get("priceIn"))),
-            ("输出价", lambda m: fmt_cny(m.get("priceOut"))),
+            ("输入价", lambda m: fmt_cny(m, "priceIn")),
+            ("输出价", lambda m: fmt_cny(m, "priceOut")),
             ("Elo", lambda m: m.get("elo", "—")),
             ("性价比", lambda m: f"{value_ratio(m):.0f}" if value_ratio(m) else "—"),
         ])
-        + "<p>点评：DeepSeek V4 Flash 以 ¥7.2/百万 tokens 的输入价拿到 1432 的 Elo，"
+        + "<p>点评：DeepSeek V4 Flash 以 ¥1/百万 tokens（官方人民币报价）的输入价拿到 1432 的 Elo，"
           "是「便宜又够强」的代表；混元 Hy3 同样是一块钱级别里能力最均衡的选项。"
           "注：部分低价开源模型（如 Llama 4 Maverick）Elo 偏低，适合非关键路径使用。</p>"
     )
@@ -211,7 +226,7 @@ def build_sections(models):
         "<li><b>上线前实测</b>：正式项目请用自己的业务数据做小规模 A/B 测试。</li>"
         "</ul>"
         "<blockquote>数据口径：Elo 来自 LMArena 竞技场，六维评分与 SuperCLUE 来自 SuperCLUE 测评；"
-        "价格为公开 API 报价，按 1 美元 ≈ 7.2 元换算。榜单实时快照见<a href=\"../rank.html\">排行榜</a>。</blockquote>"
+        "价格为公开 API 报价：国产模型为官方人民币报价，海外按 $1≈¥7.2 换算。榜单实时快照见<a href=\"../rank.html\">排行榜</a>。</blockquote>"
     )
 
     return [sec_overview, sec_code, sec_math, sec_cn, sec_agent, sec_value, sec_open, sec_close]

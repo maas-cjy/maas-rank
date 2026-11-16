@@ -49,6 +49,19 @@
 
   function fmtCny(v) { return v == null ? '—' : '¥' + (+v * USD_CNY).toFixed(2); }
 
+  /* 价格换算（统一折算为 ¥）：priceCurrency 为 CNY 的模型原样展示（官方人民币报价），
+     其余（含缺省）按美元 ×7.2 换算。所有价格展示与排序必须经过这里，禁止直接 ×7.2。 */
+  function priceToCny(m, field) {
+    var v = m ? m[field] : null;
+    if (v == null) return null;
+    return m.priceCurrency === 'CNY' ? +v : +v * USD_CNY;
+  }
+
+  function fmtPrice(m, field) {
+    var v = priceToCny(m, field);
+    return v == null ? '—' : '¥' + v.toFixed(2);
+  }
+
   function fmtCtx(v) {
     if (v == null) return '—';
     if (v >= 1000000) return (v / 1000000).toLocaleString('zh-CN') + 'M';
@@ -137,6 +150,8 @@
     fmtNum: fmtNum,
     fmtUsd: fmtUsd,
     fmtCny: fmtCny,
+    priceToCny: priceToCny,
+    fmtPrice: fmtPrice,
     fmtCtx: fmtCtx,
     fmtSpeed: fmtSpeed,
     fmtBench: fmtBench,

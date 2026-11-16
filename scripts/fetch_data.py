@@ -46,7 +46,7 @@ HISTORY_FILE = ROOT / "data" / "history.json"
 TIMEOUT = 25
 
 # 历史快照仅归档以下字段（自动更新只涉及这几个指标）
-HISTORY_FIELDS = ("id", "name", "elo", "superclue", "bench", "priceIn", "priceOut")
+HISTORY_FIELDS = ("id", "name", "elo", "superclue", "bench", "priceIn", "priceOut", "priceCurrency")
 
 # 已确认采用的 SuperCLUE 口径切换（2026-11 新基准，经站点维护者确认）：
 # 命中该期数时按新口径合并（维度整体替换、不再与旧口径混排），并在
@@ -563,7 +563,9 @@ def fetch_sc_prices(candidates: list[str]) -> tuple[dict[str, dict], str]:
                     name = r[0] if r else None
                     if not name:
                         continue
-                    entry = prices.setdefault(str(name).strip().lower(), {})
+                    # 表头明确为「元/百万tokens」：SuperCLUE 价格一律是官方人民币报价
+                    entry = prices.setdefault(str(name).strip().lower(),
+                                              {"currency": "CNY"})
                     if i_in >= 0 and len(r) > i_in:
                         v = to_num(r[i_in])
                         if v is not None:
@@ -812,7 +814,8 @@ def apply_updates(models, elo_map, families, scores, prices,
         if hit_sc:
             n_sc += 1
 
-        # SuperCLUE 价格
+        # SuperCLUE 价格（表头为「元/百万tokens」，官方人民币报价，带 CNY 标记；
+        # 海外模型价格不来自该表，保留美元口径）
         hit_pr = False
         for src_name, e in prices.items():
             if match_model(src_name, mid):
@@ -824,6 +827,8 @@ def apply_updates(models, elo_map, families, scores, prices,
                             m[field] = new_v
                             changed.append(f"{mid}.{field} {old}→{new_v}")
                         m.get("est", {}).pop(field, None)
+                if m.get("priceCurrency") != "CNY":
+                    m["priceCurrency"] = "CNY"
                 hit_pr = True
                 break
         if hit_pr:
@@ -1014,7 +1019,9 @@ def main() -> int:
     # 价格标注与智能指数解耦：只按「实际抓到的是哪个月的表」标注。
     # 价格表 2026-08 起停更，若跟着智能指数标成当期，属于错误标注。
     if sc_prices and price_date:
-        fi["price"] = {"label": "API 价格", "source": "SuperCLUE 价格库（$1≈¥7.2 换算）",
+        fi["price"] = {"label": "API 价格",
+                       "source": "国产模型：SuperCLUE 价格库（元/百万tokens，官方人民币报价）；"
+                                 "海外模型：厂商官方美元定价，按 $1≈¥7.2 折算展示",
                        "date": price_date, "kind": "官方"}
         if used_date and price_date != used_date:
             fi["price"]["note"] = f"价格表自 {price_date} 后未再发布，沿用该月数据"

@@ -45,19 +45,17 @@
         "label": "中文能力（SuperCLUE 智能指数）",
         "source": "SuperCLUE 公开测评",
         "date": "2026年11月",
-        "kind": "实测",
-        "note": "2026年11月 起采用新评分口径，与此前各期数值不可直接对比"
+        "kind": "实测"
       },
       "dims": {
         "label": "六维子分 / 综合能力分",
         "source": "SuperCLUE 分项测评",
         "date": "2026年11月",
-        "kind": "实测",
-        "note": "新基准维度已整体替换（2026-11 起「数理推理」替代「数学推理」，部分维度停更），综合分按新基准可用子分计算"
+        "kind": "实测"
       },
       "price": {
         "label": "API 价格",
-        "source": "SuperCLUE 价格库（$1≈¥7.2 换算）",
+        "source": "国产模型：SuperCLUE 价格库（元/百万tokens，官方人民币报价）；海外模型：厂商官方美元定价，按 $1≈¥7.2 折算展示",
         "date": "2026年7月",
         "kind": "官方",
         "note": "价格表自 2026年7月 后未再发布，沿用该月数据"
@@ -312,7 +310,8 @@
         "coding": 42.31,
         "longctx": 44.38
       },
-      "bench": 41.77
+      "bench": 41.77,
+      "priceCurrency": "CNY"
     },
     {
       "id": "qwen",
@@ -332,7 +331,8 @@
         "coding": 42.31,
         "longctx": 44.38
       },
-      "bench": 41.77
+      "bench": 41.77,
+      "priceCurrency": "CNY"
     },
     {
       "id": "muse-spark-1.2",
@@ -466,7 +466,8 @@
       "speed": 95,
       "est": {
         "speed": true
-      }
+      },
+      "priceCurrency": "CNY"
     },
     {
       "id": "kimi-k3",
@@ -484,7 +485,8 @@
       "aliases": [
         "kimi k3",
         "Kimi k3"
-      ]
+      ],
+      "priceCurrency": "CNY"
     },
     {
       "id": "glm-5.3-flash",
@@ -558,7 +560,8 @@
       "speed": 100,
       "est": {
         "speed": true
-      }
+      },
+      "priceCurrency": "CNY"
     },
     {
       "id": "gpt-5.4",
@@ -597,7 +600,8 @@
       "aliases": [
         "ernie 5.1",
         "Ernie 5.1"
-      ]
+      ],
+      "priceCurrency": "CNY"
     },
     {
       "id": "gemini-3-flash",
@@ -636,7 +640,8 @@
       "speed": 110,
       "est": {
         "speed": true
-      }
+      },
+      "priceCurrency": "CNY"
     },
     {
       "id": "deepseek-v4.1-flash",
@@ -665,7 +670,8 @@
       "elo": 1464,
       "desc": "来自 小米 的模型，竞技场 Elo 1428 分。数据每周自动更新。",
       "priceIn": 3.0,
-      "priceOut": 6.0
+      "priceOut": 6.0,
+      "priceCurrency": "CNY"
     },
     {
       "id": "glm-5.1",
@@ -842,7 +848,8 @@
       "speed": 120,
       "est": {
         "speed": true
-      }
+      },
+      "priceCurrency": "CNY"
     },
     {
       "id": "mimo-v2.6-flash",
@@ -1129,7 +1136,8 @@
       "elo": 1439,
       "desc": "来自 腾讯 的模型，竞技场 Elo 1442 分。数据每周自动更新。",
       "priceIn": 1.0,
-      "priceOut": 4.0
+      "priceOut": 4.0,
+      "priceCurrency": "CNY"
     },
     {
       "id": "qwen3",
@@ -1164,7 +1172,8 @@
       "speed": 90,
       "est": {
         "speed": true
-      }
+      },
+      "priceCurrency": "CNY"
     },
     {
       "id": "gpt-5.2-chat",
@@ -1300,7 +1309,8 @@
       "speed": 180,
       "est": {
         "speed": true
-      }
+      },
+      "priceCurrency": "CNY"
     },
     {
       "id": "gpt-5.6-luna",
@@ -1431,7 +1441,8 @@
         "coding": 42.31,
         "longctx": 42.88
       },
-      "bench": 39.71
+      "bench": 39.71,
+      "priceCurrency": "CNY"
     },
     {
       "id": "grok-3",
@@ -1829,7 +1840,8 @@
         "coding": 38.46,
         "longctx": 37.68
       },
-      "bench": 40.92
+      "bench": 40.92,
+      "priceCurrency": "CNY"
     },
     {
       "id": "qwen3.5-27b",

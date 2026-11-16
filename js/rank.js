@@ -29,9 +29,9 @@
       fmt: function (m) { return R.fmtBench(m.bench) + R.estMark(m, 'bench'); }
     },
     priceIn: {
-      label: '输入价格', unit: '¥/M', dir: 1, note: '每百万输入 tokens 价格（按 $1≈¥7.2 换算）',
+      label: '输入价格', unit: '¥/M', dir: 1, note: '每百万输入 tokens 价格：国产模型为官方人民币报价，海外按 $1≈¥7.2 换算',
       title: '输入价格排名（由低到高）', desc: '每百万输入 tokens 价格 · 越低越便宜',
-      fmt: function (m) { return R.fmtCny(m.priceIn) + R.estMark(m, 'priceIn'); }
+      fmt: function (m) { return R.fmtPrice(m, 'priceIn') + R.estMark(m, 'priceIn'); }
     },
     context: {
       label: '上下文', unit: 'tokens', dir: -1, note: '最大输入上下文窗口',
@@ -46,7 +46,12 @@
   };
 
   function sortKey(m) {
-    var v = m[state.key];
+    var v;
+    if (state.key === 'priceIn') {
+      v = R.priceToCny(m, 'priceIn');  // 混合币种排序必须折算后再比
+    } else {
+      v = m[state.key];
+    }
     return v == null ? (state.dir === 1 ? Infinity : -Infinity) : v;
   }
 
@@ -116,8 +121,8 @@
         + '<td class="num">' + t.fmt(m) + '</td>'
         + '<td class="num">' + R.fmtNum(m.superclue) + R.estMark(m, 'superclue') + '</td>'
         + '<td class="num">' + R.fmtBench(m.bench) + R.estMark(m, 'bench') + '</td>'
-        + '<td class="num">' + R.fmtCny(m.priceIn) + R.estMark(m, 'priceIn') + '</td>'
-        + '<td class="num">' + R.fmtCny(m.priceOut) + R.estMark(m, 'priceOut') + '</td>'
+        + '<td class="num">' + R.fmtPrice(m, 'priceIn') + R.estMark(m, 'priceIn') + '</td>'
+        + '<td class="num">' + R.fmtPrice(m, 'priceOut') + R.estMark(m, 'priceOut') + '</td>'
         + '<td class="num">' + R.fmtCtx(m.context) + '</td>'
         + '<td class="num">' + R.fmtSpeed(m.speed) + R.estMark(m, 'speed') + '</td>'
         + '<td>' + R.badgeOpen(m) + ' ' + R.badgeRegion(m) + '</td>'

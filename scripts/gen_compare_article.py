@@ -49,10 +49,25 @@ def load(path, default):
         return json.load(f)
 
 
-def fmt_cny(v):
+def price_cny(m, field):
+    """模型价格折算为 ¥：CNY（官方人民币报价）原样，其余（美元）按 $1≈¥7.2。"""
+    v = (m or {}).get(field)
+    if v is None:
+        return None
+    return v if (m or {}).get("priceCurrency") == "CNY" else v * 7.2
+
+
+def cny_val(m, v):
+    if v is None:
+        return None
+    return v if (m or {}).get("priceCurrency") == "CNY" else v * 7.2
+
+
+def fmt_cny(m, field):
+    v = price_cny(m, field)
     if v is None:
         return "—"
-    return f"¥{v * 7.2:.1f}" if v >= 1 else f"¥{v * 7.2:.2f}"
+    return f"¥{v:.1f}" if v >= 1 else f"¥{v:.2f}"
 
 
 def fmt_val(v, nd=2):
@@ -288,12 +303,12 @@ def build_sections(models, by_id, history, used_period="最近一期"):
     def ratio(tid):
         m = by_id[tid]
         if m.get("priceIn") and m["priceIn"] > 0 and m.get("elo"):
-            return m["elo"] / m["priceIn"]
+            return m["elo"] / cny_val(m, m["priceIn"])
         return None
 
     pr_rows = "".join(
-        f"<tr><td>{LABELS[t]}</td><td>{fmt_cny(by_id[t].get('priceIn'))}</td>"
-        f"<td>{fmt_cny(by_id[t].get('priceOut'))}</td><td>{fmt_val(ratio(t), 0)}</td></tr>"
+        f"<tr><td>{LABELS[t]}</td><td>{fmt_cny(by_id[t], 'priceIn')}</td>"
+        f"<td>{fmt_cny(by_id[t], 'priceOut')}</td><td>{fmt_val(ratio(t), 0)}</td></tr>"
         for t in TARGETS
     )
     # 价格与性价比（数据驱动）
@@ -308,7 +323,7 @@ def build_sections(models, by_id, history, used_period="最近一期"):
         )
     sec_price = (
         "<h2>四、价格与性价比</h2>"
-        "<p>价格为公开 API 报价（元 / 百万 tokens，按 1 美元 ≈ 7.2 元换算）；性价比 = Elo ÷ 输入价。</p>"
+        "<p>价格为公开 API 报价（每百万 tokens：国产模型为官方人民币报价，海外按 $1≈¥7.2 换算）；性价比 = Elo ÷ 输入价（折算为 ¥）。</p>"
         "<table><thead><tr><th>模型</th><th>输入价</th><th>输出价</th><th>性价比指数</th></tr></thead>"
         f"<tbody>{pr_rows}</tbody></table>"
         + price_para
@@ -341,7 +356,7 @@ def build_sections(models, by_id, history, used_period="最近一期"):
     if best_price:
         m = by_id[best_price]
         price_li = (f"<li><b>成本敏感 / 大规模调用</b>：<b>{LABELS[best_price]}</b>"
-                    f"（输入 {fmt_cny(m.get('priceIn'))}，性价比指数最高）。</li>")
+                    f"（输入 {fmt_cny(m, 'priceIn')}，性价比指数最高）。</li>")
     sec_close = (
         "<h2>五、结论：什么场景选谁</h2>"
         "<ul>"

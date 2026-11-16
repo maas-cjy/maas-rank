@@ -10,11 +10,23 @@
   /* ---------- 排序 / 排名工具 ---------- */
 
   function sortedBy(key, dir) {
+    var conv = key === 'priceIn' || key === 'priceOut';  // 混合币种，先折算成 ¥ 再排序
     return R.getModels().slice().sort(function (a, b) {
-      var va = a[key] == null ? (dir === 1 ? Infinity : -Infinity) : a[key];
-      var vb = b[key] == null ? (dir === 1 ? Infinity : -Infinity) : b[key];
+      var va = conv ? R.priceToCny(a, key) : a[key];
+      var vb = conv ? R.priceToCny(b, key) : b[key];
+      if (va == null) va = dir === 1 ? Infinity : -Infinity;
+      if (vb == null) vb = dir === 1 ? Infinity : -Infinity;
       return (va - vb) * dir;
     });
+  }
+
+  /* 参数表价格行：官方币种优先展示，另一种货币括注折算值 */
+  function fmtParamPrice(m, field) {
+    if (m[field] == null) return '—';
+    if (m.priceCurrency === 'CNY') {
+      return '¥' + (+m[field]).toFixed(2) + '（官方人民币报价，约 ' + R.fmtUsd(+m[field] / R.USD_CNY) + '）';
+    }
+    return R.fmtUsd(m[field]) + '（约 ' + R.fmtCny(m[field]) + '）';
   }
 
   function rankOf(list, m) { return list.indexOf(m) + 1; }
@@ -30,8 +42,8 @@
 
   function setSeo(m) {
     var url = SITE + 'model.html?id=' + encodeURIComponent(m.id);
-    var pIn = m.priceIn == null ? '—' : R.fmtCny(m.priceIn);
-    var pOut = m.priceOut == null ? '—' : R.fmtCny(m.priceOut);
+    var pIn = m.priceIn == null ? '—' : R.fmtPrice(m, 'priceIn');
+    var pOut = m.priceOut == null ? '—' : R.fmtPrice(m, 'priceOut');
     var title = m.name + '（' + m.provider + '）价格、Elo 排名、上下文长度 | MaaS Rank 大模型排行榜';
     var desc = m.name + '（' + m.provider + '）——' + m.desc
       + '。竞技场 Elo ' + (m.elo == null ? '—' : m.elo) + ' 分，SuperCLUE 中文能力 ' + (m.superclue == null ? '—' : m.superclue) + ' 分，'
@@ -61,7 +73,7 @@
       'offers': m.priceIn == null ? undefined : {
         '@type': 'Offer',
         'price': String(m.priceIn),
-        'priceCurrency': 'USD',
+        'priceCurrency': m.priceCurrency === 'CNY' ? 'CNY' : 'USD',
         'description': '每百万输入 tokens 价格'
       }
     };
@@ -131,8 +143,8 @@
       estNote(m, 'superclue'));
 
     html += kpiCard('API 价格 · 每百万 tokens',
-      R.fmtCny(m.priceOut), '/M',
-      '输出价第 ' + rankOf(priceList, m) + ' 低 · 输入 ' + R.fmtCny(m.priceIn),
+      R.fmtPrice(m, 'priceOut'), '/M',
+      '输出价第 ' + rankOf(priceList, m) + ' 低 · 输入 ' + R.fmtPrice(m, 'priceIn'),
       (estNote(m, 'priceIn') + ' ' + estNote(m, 'priceOut')).trim());
 
     html += kpiCard('上下文窗口',
@@ -341,8 +353,8 @@
       ['竞技场 Elo', R.fmtNum(m.elo) + R.estMark(m, 'elo')],
       ['SuperCLUE 智能指数', R.fmtNum(m.superclue) + R.estMark(m, 'superclue')],
       ['综合能力分', R.fmtBench(m.bench) + R.estMark(m, 'bench')],
-      ['输入价格', (m.priceIn == null ? '—' : R.fmtUsd(m.priceIn)) + '（约 ' + R.fmtCny(m.priceIn) + '）' + R.estMark(m, 'priceIn')],
-      ['输出价格', (m.priceOut == null ? '—' : R.fmtUsd(m.priceOut)) + '（约 ' + R.fmtCny(m.priceOut) + '）' + R.estMark(m, 'priceOut')],
+      ['输入价格', fmtParamPrice(m, 'priceIn') + R.estMark(m, 'priceIn')],
+      ['输出价格', fmtParamPrice(m, 'priceOut') + R.estMark(m, 'priceOut')],
       ['上下文窗口', R.fmtCtx(m.context)],
       ['输出速度', R.fmtSpeed(m.speed) + R.estMark(m, 'speed')]
     ];

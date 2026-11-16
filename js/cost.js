@@ -12,14 +12,14 @@
     return isNaN(v) || v < 0 ? fallback : v;
   }
 
-  /* 月成本（¥）：未命中输入×输入价 + 命中输入×输入价×(1−缓存折扣) + 输出×输出价 */
+  /* 月成本（¥）：未命中输入×输入价 + 命中输入×输入价×(1−缓存折扣) + 输出×输出价
+     价格按模型币种折算：CNY 原样（官方人民币报价），USD ×7.2 */
   function monthlyCost(m, inTok, outTok, hit, off) {
     if (m.priceIn == null && m.priceOut == null) return null;
-    var pin = m.priceIn || 0, pout = m.priceOut || 0;
-    var usd = (inTok * (1 - hit) * pin)
+    var pin = R.priceToCny(m, 'priceIn') || 0, pout = R.priceToCny(m, 'priceOut') || 0;
+    return (inTok * (1 - hit) * pin)
       + (inTok * hit * pin * (1 - off))
       + (outTok * pout);
-    return usd * R.USD_CNY;
   }
 
   function fmtCnyBig(v) {
@@ -34,7 +34,8 @@
       return m.priceIn != null || m.priceOut != null;
     }).sort(function (a, b) {
       if (a.region !== b.region) return a.region === 'china' ? -1 : 1;
-      return ((a.priceIn || 0) + (a.priceOut || 0)) - ((b.priceIn || 0) + (b.priceOut || 0));
+      return ((R.priceToCny(a, 'priceIn') || 0) + (R.priceToCny(a, 'priceOut') || 0))
+           - ((R.priceToCny(b, 'priceIn') || 0) + (R.priceToCny(b, 'priceOut') || 0));
     });
     var html = '';
     models.forEach(function (m) {
@@ -45,7 +46,7 @@
       html += '<label class="picker-item' + (full ? ' disabled' : '') + '">'
         + '<input type="checkbox" value="' + R.esc(m.id) + '"' + (on ? ' checked' : '') + (full ? ' disabled' : '') + '>'
         + '<span class="pi-name">' + R.esc(m.name) + '</span>'
-        + '<span class="pi-prov">' + R.esc(m.provider) + ' · ¥' + (m.priceIn == null ? '—' : (m.priceIn * R.USD_CNY).toFixed(1)) + '/' + (m.priceOut == null ? '—' : (m.priceOut * R.USD_CNY).toFixed(1)) + '</span>'
+        + '<span class="pi-prov">' + R.esc(m.provider) + ' · ' + R.fmtPrice(m, 'priceIn') + ' / ' + R.fmtPrice(m, 'priceOut') + '</span>'
         + '</label>';
     });
     document.getElementById('pickerList').innerHTML = html || '<p class="empty">没有匹配的模型</p>';
@@ -73,8 +74,8 @@
     } else {
       var missing = selected.length - priced.length;
       sumEl.textContent = '按每月输入 ' + inTok + 'M / 输出 ' + outTok + 'M tokens、缓存命中 '
-        + Math.round(hit * 100) + '%、缓存读价折扣 ' + Math.round(off * 100) + '% 估算，汇率 $1≈¥'
-        + R.USD_CNY + '。'
+        + Math.round(hit * 100) + '%、缓存读价折扣 ' + Math.round(off * 100) + '% 估算。'
+        + '价格口径：国产模型为官方人民币报价，海外模型按汇率 $1≈¥' + R.USD_CNY + ' 换算。'
         + (missing > 0 ? '另有 ' + missing + ' 个所选模型缺少价格数据，未参与对比。' : '');
     }
 
@@ -85,8 +86,8 @@
     } else {
       tbody.innerHTML = rows.map(function (r, i) {
         var m = r.m;
-        var pin = m.priceIn == null ? '—' : '¥' + (m.priceIn * R.USD_CNY).toFixed(2);
-        var pout = m.priceOut == null ? '—' : '¥' + (m.priceOut * R.USD_CNY).toFixed(2);
+        var pin = R.fmtPrice(m, 'priceIn');
+        var pout = R.fmtPrice(m, 'priceOut');
         return '<tr' + (i === 0 && rows.length > 1 ? ' class="row-top3"' : '') + '>'
           + '<td><a href="model.html?id=' + encodeURIComponent(m.id) + '">' + R.esc(m.name) + '</a>'
           + '<div class="mprov">' + R.esc(m.provider) + '</div></td>'

@@ -37,10 +37,25 @@ def load(path, default):
         return json.load(f)
 
 
-def fmt_cny(v):
+def price_cny(m, field):
+    """模型价格折算为 ¥：CNY（官方人民币报价）原样，其余（美元）按 $1≈¥7.2。"""
+    v = (m or {}).get(field)
+    if v is None:
+        return None
+    return v if (m or {}).get("priceCurrency") == "CNY" else v * 7.2
+
+
+def cny_val(m, v):
+    if v is None:
+        return None
+    return v if (m or {}).get("priceCurrency") == "CNY" else v * 7.2
+
+
+def fmt_cny(m, field):
+    v = price_cny(m, field)
     if v is None:
         return "—"
-    return f"¥{v * 7.2:.1f}" if v >= 1 else f"¥{v * 7.2:.2f}"
+    return f"¥{v:.1f}" if v >= 1 else f"¥{v:.2f}"
 
 
 def short_name(m, limit=20):

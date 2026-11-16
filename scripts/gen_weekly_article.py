@@ -37,10 +37,25 @@ def load(path, default):
         return json.load(f)
 
 
-def fmt_cny(v):
+def price_cny(m, field):
+    """模型价格折算为 ¥：CNY（官方人民币报价）原样，其余（美元）按 $1≈¥7.2。"""
+    v = (m or {}).get(field)
+    if v is None:
+        return None
+    return v if (m or {}).get("priceCurrency") == "CNY" else v * 7.2
+
+
+def cny_val(m, v):
+    if v is None:
+        return None
+    return v if (m or {}).get("priceCurrency") == "CNY" else v * 7.2
+
+
+def fmt_cny(m, field):
+    v = price_cny(m, field)
     if v is None:
         return "—"
-    return f"¥{v * 7.2:.1f}" if v >= 1 else f"¥{v * 7.2:.2f}"
+    return f"¥{v:.1f}" if v >= 1 else f"¥{v:.2f}"
 
 
 def fmt_price(v):
@@ -122,7 +137,7 @@ def build_sections(d, date, basis=None):
     if b1:
         lead.append(f"综合能力分（SuperCLUE 六维均值）第一为 <b>{esc(b1['name'])}</b>（{b1['bench']:.2f} 分）")
     if c1:
-        lead.append(f"最便宜的模型是 <b>{esc(c1['name'])}</b>，输入价格 {fmt_cny(c1['priceIn'])} / 百万 tokens")
+        lead.append(f"最便宜的模型是 <b>{esc(c1['name'])}</b>，输入价格 {fmt_cny(c1, 'priceIn')} / 百万 tokens")
     lead_html = "<p>" + "；".join(lead) + "。</p>"
 
     # 口径切换当期：周报里旧→新的中文能力分差是口径切换造成的，
@@ -179,7 +194,7 @@ def build_sections(d, date, basis=None):
             more = " …" if len(d["outs"]) > 8 else ""
             parts.append(f"<h3>退出榜单</h3><ul>{lis}{more}</ul>")
         if d["price_changes"]:
-            lis = "".join(f"<li><a href=\"../model.html?id={esc(m['id'])}\">{esc(m['name'])}</a> {label}价：{fmt_price(old)} → <b>{fmt_price(new)}</b></li>"
+            lis = "".join(f"<li><a href=\"../model.html?id={esc(m['id'])}\">{esc(m['name'])}</a> {label}价：{'—' if old is None else f'¥{cny_val(m, old):g}'} → <b>{'—' if new is None else f'¥{cny_val(m, new):g}'} / 百万 tokens</b></li>"
                           for m, label, old, new in d["price_changes"][:8])
             parts.append(f"<h3>价格调整</h3><ul>{lis}</ul>")
         sec_change = "".join(parts)
@@ -221,12 +236,12 @@ def build_sections(d, date, basis=None):
         rows = "".join(
             f"<tr><td><a href=\"../model.html?id={esc(m['id'])}\">{esc(m['name'])}</a></td>"
             f"<td>{esc(m.get('provider',''))}</td>"
-            f"<td>{fmt_cny(m['priceIn'])} / {fmt_cny(m['priceOut'])}</td>"
+            f"<td>{fmt_cny(m, 'priceIn')} / {fmt_cny(m, 'priceOut')}</td>"
             f"<td>{'开源' if m.get('open') else '闭源'}</td></tr>"
             for m in d["cheap_top"]
         )
         parts.append(
-            "<p>当前输入价格最低的五个模型（输入 / 输出，每百万 tokens，按 1 美元 ≈ 7.2 元换算）：</p>"
+            "<p>当前输入价格最低的五个模型（输入 / 输出，每百万 tokens；国产模型为官方人民币报价，海外按 $1≈¥7.2 换算）：</p>"
             "<table><thead><tr><th>模型</th><th>厂商</th><th>输入 / 输出价</th><th>开源</th></tr></thead>"
             f"<tbody>{rows}</tbody></table>"
         )

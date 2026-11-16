@@ -29,14 +29,16 @@
   /* 「关键冠军 4 卡片」：竞技场 Elo / 中文能力 / 输入价最低 / 上下文最大，点击跳转完整榜单对应排序 */
   function renderKpi() {
     var models = R.getModels();
-    var pickBy = function (key, dir) {
+    var pickBy = function (key, dir, useConverted) {
       return models.filter(function (m) { return m[key] != null; })
         .reduce(function (best, m) {
           if (!best) return m;
-          return dir > 0 ? (m[key] < best[key] ? m : best) : (m[key] > best[key] ? m : best);
+          var mv = useConverted ? R.priceToCny(m, key) : m[key];
+          var bv = useConverted ? R.priceToCny(best, key) : best[key];
+          return dir > 0 ? (mv < bv ? m : best) : (mv > bv ? m : best);
         }, null);
     };
-    var fmtPrice = function (v) { return v == null ? '–' : '¥' + v.toFixed(2); };
+    var fmtPrice = function (m, field) { return R.fmtPrice(m, field); };
     var fmtCtx = function (v) {
       if (v == null) return '–';
       if (v >= 10000) return (v / 10000).toFixed(0) + '万';
@@ -46,7 +48,7 @@
       { label: '竞技场 Elo 第一',   pick: pickBy('elo', -1),       val: function (m) { return m.elo; },       unit: 'Elo',     tab: 'elo' },
       { label: '综合能力第一',       pick: pickBy('bench', -1),    val: function (m) { return R.fmtBench(m.bench); }, unit: '分', tab: 'bench' },
       { label: '中文能力第一',        pick: pickBy('superclue', -1), val: function (m) { return m.superclue; }, unit: '分',      tab: 'superclue' },
-      { label: '输入价最低',         pick: pickBy('priceIn', 1),   val: function (m) { return fmtPrice(m.priceIn); }, unit: '/ 百万tok', tab: 'priceIn' },
+      { label: '输入价最低',         pick: pickBy('priceIn', 1, true), val: function (m) { return fmtPrice(m, 'priceIn'); }, unit: '/ 百万tok', tab: 'priceIn' },
       { label: '上下文最长',         pick: pickBy('context', -1),  val: function (m) { return fmtCtx(m.context); }, unit: 'tokens', tab: 'context' }
     ];
     var grid = document.getElementById('kpiSection');
@@ -166,7 +168,7 @@
       }
       return list.slice(0, 3).map(function (m, i) {
         var v = key === 'bench' ? R.fmtBench(m.bench)
-          : key === 'priceIn' ? R.fmtCny(m.priceIn)
+          : key === 'priceIn' ? R.fmtPrice(m, 'priceIn')
           : R.fmtNum(m[key]);
         return '<li>'
           + '<span class="wk-name"><span class="wk-rank">' + (i + 1) + '</span>'
@@ -180,7 +182,7 @@
     var topBench = cur.filter(function (m) { return m.bench != null; })
       .sort(function (a, b) { return b.bench - a.bench; });
     var lowPrice = cur.filter(function (m) { return m.priceIn != null; })
-      .sort(function (a, b) { return a.priceIn - b.priceIn; });
+      .sort(function (a, b) { return (R.priceToCny(a, 'priceIn') || 0) - (R.priceToCny(b, 'priceIn') || 0); });
     grid.innerHTML = '<div class="weekly-stable-note">'
       + '<b>本期榜单保持稳定</b> · 与上周快照相比，竞技场 Elo、综合能力分与 API 价格均无变化。'
       + 'LMArena 官方数据更新较慢时，这种情况会偶尔出现。'

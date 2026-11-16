@@ -75,8 +75,8 @@
       return '<tr><td>' + (i + 1) + '</td><td>' + modelCell(m) + '</td>'
         + '<td>' + R.fmtNum(m.elo) + '</td>'
         + '<td>' + (m.superclue == null ? '—' : R.fmtNum(m.superclue)) + '</td>'
-        + '<td>' + (m.priceIn == null ? '—' : R.fmtCny(m.priceIn)) + '</td>'
-        + '<td>' + (m.priceOut == null ? '—' : R.fmtCny(m.priceOut)) + '</td></tr>';
+        + '<td>' + (m.priceIn == null ? '—' : R.fmtPrice(m, 'priceIn')) + '</td>'
+        + '<td>' + (m.priceOut == null ? '—' : R.fmtPrice(m, 'priceOut')) + '</td></tr>';
     }).join('');
 
     document.getElementById('rBody').innerHTML = tableCard(
@@ -186,8 +186,8 @@
 
     if (priceChanges.length) {
       var prRows = priceChanges.map(function (x) {
-        var inCell = priceCell(x.p.priceIn, x.m.priceIn);
-        var outCell = priceCell(x.p.priceOut, x.m.priceOut);
+        var inCell = priceCell(x.p, x.m, 'priceIn');
+        var outCell = priceCell(x.p, x.m, 'priceOut');
         return '<tr><td>' + modelCell(x.m) + '</td>'
           + '<td>' + inCell + '</td>'
           + '<td>' + outCell + '</td></tr>';
@@ -205,8 +205,8 @@
           return '<tr><td>' + modelCell(m) + '</td>'
             + '<td>' + R.fmtNum(m.elo) + '</td>'
             + '<td>' + (m.superclue == null ? '—' : R.fmtNum(m.superclue)) + '</td>'
-            + '<td>' + (m.priceIn == null ? '—' : R.fmtCny(m.priceIn)) + '</td>'
-            + '<td>' + (m.priceOut == null ? '—' : R.fmtCny(m.priceOut)) + '</td></tr>';
+            + '<td>' + (m.priceIn == null ? '—' : R.fmtPrice(m, 'priceIn')) + '</td>'
+            + '<td>' + (m.priceOut == null ? '—' : R.fmtPrice(m, 'priceOut')) + '</td></tr>';
         }).join(''));
     }
 
@@ -236,7 +236,7 @@
         + '<td>' + R.fmtNum(m.elo) + '</td>'
         + '<td>' + (m.bench == null ? '—' : R.fmtBench(m.bench)) + '</td>'
         + '<td>' + (m.superclue == null ? '—' : R.fmtNum(m.superclue)) + '</td>'
-        + '<td>' + (m.priceIn == null ? '—' : R.fmtCny(m.priceIn)) + '</td></tr>';
+        + '<td>' + (m.priceIn == null ? '—' : R.fmtPrice(m, 'priceIn')) + '</td></tr>';
     }).join('');
 
     var html = '<section class="card r-section">'
@@ -283,11 +283,15 @@
     window.addEventListener('resize', function () { chart.resize(); });
   }
 
-  function priceCell(oldV, newV) {
+  function priceCell(p, m, field) {
+    /* 上期价格在 prev 快照里没有币种字段，按当前模型的币种折算（同一模型币种不会跨期突变） */
+    var oldV = p ? p[field] : null;
+    var newV = R.priceToCny(m, field);
     if (oldV == null && newV == null) return '—';
-    var s = (oldV == null ? '—' : R.fmtCny(oldV)) + ' → ' + (newV == null ? '—' : R.fmtCny(newV));
+    var oldC = oldV == null ? '—' : (m.priceCurrency === 'CNY' ? '¥' + (+oldV).toFixed(2) : R.fmtCny(oldV));
+    var s = oldC + ' → ' + (newV == null ? '—' : R.fmtPrice(m, field));
     var dv = d(oldV, newV);
-    if (dv != null && dv !== 0) s += ' ' + diffBadge((dv * R.USD_CNY).toFixed(2), '元');
+    if (dv != null && dv !== 0) s += ' ' + diffBadge(dv.toFixed(2), '元');
     return s;
   }
 
