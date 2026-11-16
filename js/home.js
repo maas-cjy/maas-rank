@@ -235,7 +235,12 @@
     var items = [{ label: '快照', date: meta.updated }];
     function add(label, field) {
       if (!field || !field.date) return;
-      items.push({ label: label, date: field.date, stale: !!field.note, note: field.note });
+      items.push({
+        label: label, date: field.date,
+        // ※ 只标「沿用旧数据」；「换口径」是已更新但不可比，用提示而非陈旧符号
+        stale: !!(field.note && field.note.indexOf('沿用') >= 0),
+        note: field.note
+      });
     }
     add('Elo 数据期', fi.elo);
     add('中文测评', fi.superclue);
@@ -260,8 +265,10 @@
     var elo = (fi.elo && fi.elo.date) || meta.updated;
     var sc = fi.superclue && fi.superclue.date;
     var pr = fi.price && fi.price.date;
+    var basis = meta.basisChange && meta.basisChange.field === 'superclue' ? meta.basisChange : null;
     dd.textContent = 'Elo 来自 LMArena 公开快照（数据期 ' + elo + '）'
-      + (sc ? '，中文能力来自 SuperCLUE ' + sc + '测评' : '')
+      + (sc ? '，中文能力来自 SuperCLUE ' + sc + '测评'
+        + (basis ? '（本期起为新评分口径，与此前数值不可比）' : '') : '')
       + (pr ? '，API 价格核验于 ' + pr : '')
       + '，上下文窗口取自厂商公开资料，输出速度为公开评测汇总并标注为估算值。';
   }

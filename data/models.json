@@ -1,8 +1,8 @@
 {
   "meta": {
     "name": "MaaS Rank · 数据快照",
-    "updated": "2026-11-13",
-    "note": "榜单数据自动更新：Elo 来自 LMArena（数据期 2026-11-11）；中文能力沿用上期（SuperCLUE 2026年11月 换口径未合并）；价格核验于 2026年7月；未抓取到的字段保留上次快照。",
+    "updated": "2026-11-16",
+    "note": "榜单数据自动更新：Elo 来自 LMArena（数据期 2026-11-11）；中文能力已切换为 SuperCLUE 2026年11月 新评分口径（与此前数值不可直接对比）；价格核验于 2026年7月；未抓取到的字段保留上次快照。",
     "exchangeRate": 7.2,
     "sources": [
       {
@@ -21,7 +21,7 @@
         "desc": "OpenAI / Anthropic / Google / DeepSeek / 阿里云 / 智谱 / 月之暗面 / 字节 等官方 API 定价"
       }
     ],
-    "lastAutoUpdate": "2026-11-13 08:32:08",
+    "lastAutoUpdate": "2026-11-16 10:44:18",
     "fieldInfo": {
       "elo": {
         "label": "竞技场 Elo",
@@ -44,16 +44,16 @@
       "superclue": {
         "label": "中文能力（SuperCLUE 智能指数）",
         "source": "SuperCLUE 公开测评",
-        "date": "2026年7月",
+        "date": "2026年11月",
         "kind": "实测",
-        "note": "本期未合并，沿用上次数据"
+        "note": "2026年11月 起采用新评分口径，与此前各期数值不可直接对比"
       },
       "dims": {
         "label": "六维子分 / 综合能力分",
         "source": "SuperCLUE 分项测评",
-        "date": "2026年7月",
+        "date": "2026年11月",
         "kind": "实测",
-        "note": "本期未合并，沿用上次数据"
+        "note": "新基准维度已整体替换（2026-11 起「数理推理」替代「数学推理」，部分维度停更），综合分按新基准可用子分计算"
       },
       "price": {
         "label": "API 价格",
@@ -62,6 +62,13 @@
         "kind": "官方",
         "note": "价格表自 2026年7月 后未再发布，沿用该月数据"
       }
+    },
+    "basisChange": {
+      "field": "superclue",
+      "date": "2026-11-16",
+      "period": "2026年11月",
+      "fromPeriod": "2026年7月",
+      "note": "SuperCLUE 自 2026年11月 起采用新评分口径（维度与分数分布均有变化），新旧数值不可直接对比。"
     }
   },
   "models": [
@@ -85,7 +92,16 @@
       "aliases": [
         "gemini 4 argon",
         "Gemini 4 argon"
-      ]
+      ],
+      "superclue": 73.62,
+      "dims": {
+        "math": 71.05,
+        "hallu": 83.19,
+        "ifollow": 68.97,
+        "coding": 65.38,
+        "longctx": 95.63
+      },
+      "bench": 76.84
     },
     {
       "id": "claude-opus-5.5",
@@ -122,14 +138,10 @@
       "desc": "前沿智能体编程与复杂推理旗舰",
       "release": "2026-07",
       "elo": 1507,
-      "superclue": 75.0,
       "priceIn": 5.0,
       "priceOut": 25.0,
       "context": 1000000,
       "speed": 74,
-      "est": {
-        "superclue": true
-      },
       "aliases": [
         "claude opus 5",
         "Claude opus 5"
@@ -208,7 +220,16 @@
       "region": "china",
       "open": true,
       "elo": 1492,
-      "desc": "来自 小米 的模型，竞技场 Elo 1491 分。数据每周自动更新。"
+      "desc": "来自 小米 的模型，竞技场 Elo 1491 分。数据每周自动更新。",
+      "superclue": 34.57,
+      "dims": {
+        "math": 50.0,
+        "hallu": 25.28,
+        "ifollow": 15.52,
+        "coding": 38.46,
+        "longctx": 36.83
+      },
+      "bench": 33.22
     },
     {
       "id": "muse-spark-1.3",
@@ -276,7 +297,7 @@
       "desc": "开源旗舰，中文与推理能力国内第一梯队",
       "release": "2026-08",
       "elo": 1485,
-      "superclue": 72.62,
+      "superclue": 43.22,
       "priceIn": 12.0,
       "priceOut": 36.0,
       "context": 1000000,
@@ -285,14 +306,13 @@
         "speed": true
       },
       "dims": {
-        "math": 78.95,
-        "hallu": 86.19,
-        "science": 75.44,
-        "ifollow": 42.86,
-        "coding": 70.53,
-        "plan": 89.53
+        "math": 68.42,
+        "hallu": 33.05,
+        "ifollow": 20.69,
+        "coding": 42.31,
+        "longctx": 44.38
       },
-      "bench": 73.92
+      "bench": 41.77
     },
     {
       "id": "qwen",
@@ -303,7 +323,16 @@
       "elo": 1485,
       "desc": "来自 阿里云 的模型，竞技场 Elo 1282 分。数据每周自动更新。",
       "priceIn": 12.0,
-      "priceOut": 36.0
+      "priceOut": 36.0,
+      "superclue": 43.22,
+      "dims": {
+        "math": 68.42,
+        "hallu": 33.05,
+        "ifollow": 20.69,
+        "coding": 42.31,
+        "longctx": 44.38
+      },
+      "bench": 41.77
     },
     {
       "id": "muse-spark-1.2",
@@ -327,7 +356,6 @@
       "desc": "高速高性价比的轻量旗舰",
       "release": "2026-06",
       "elo": 1483,
-      "superclue": 71.5,
       "priceIn": 1.5,
       "priceOut": 9.0,
       "context": 1000000,
@@ -362,7 +390,6 @@
       "desc": "多模态与长上下文综合旗舰",
       "release": "2026-05",
       "elo": 1480,
-      "superclue": 75.7,
       "priceIn": 2.0,
       "priceOut": 12.0,
       "context": 1000000,
@@ -413,7 +440,16 @@
       "region": "china",
       "open": true,
       "elo": 1475,
-      "desc": "来自 智谱 的模型，竞技场 Elo 1474 分。数据每周自动更新。"
+      "desc": "来自 智谱 的模型，竞技场 Elo 1474 分。数据每周自动更新。",
+      "superclue": 50.66,
+      "dims": {
+        "math": 65.79,
+        "hallu": 43.61,
+        "ifollow": 17.24,
+        "coding": 53.85,
+        "longctx": 77.6
+      },
+      "bench": 51.62
     },
     {
       "id": "qwen3.7-max",
@@ -424,7 +460,6 @@
       "desc": "闭源旗舰，代码生成接近海外头部",
       "release": "2026-06",
       "elo": 1475,
-      "superclue": 70.2,
       "priceIn": 1.25,
       "priceOut": 3.75,
       "context": 1000000,
@@ -442,20 +477,10 @@
       "desc": "开源开放权重，代码与智能体能力突出",
       "release": "2026-06",
       "elo": 1475,
-      "superclue": 70.68,
       "priceIn": 20.0,
       "priceOut": 100.0,
       "context": 1000000,
       "speed": 55,
-      "dims": {
-        "math": 71.93,
-        "hallu": 83.85,
-        "science": 70.17,
-        "ifollow": 40.95,
-        "coding": 75.79,
-        "plan": 84.35
-      },
-      "bench": 71.18,
       "aliases": [
         "kimi k3",
         "Kimi k3"
@@ -468,7 +493,16 @@
       "region": "china",
       "open": true,
       "elo": 1472,
-      "desc": "来自 智谱 的模型，竞技场 Elo 1472 分。数据每周自动更新。"
+      "desc": "来自 智谱 的模型，竞技场 Elo 1472 分。数据每周自动更新。",
+      "superclue": 47.18,
+      "dims": {
+        "math": 57.89,
+        "hallu": 48.89,
+        "ifollow": 20.69,
+        "coding": 50.0,
+        "longctx": 57.61
+      },
+      "bench": 47.02
     },
     {
       "id": "gpt-5.5",
@@ -479,7 +513,6 @@
       "desc": "通用前沿推理与工具调用旗舰",
       "release": "2026-04",
       "elo": 1471,
-      "superclue": 74.3,
       "priceIn": 5.0,
       "priceOut": 30.0,
       "context": 1000000,
@@ -519,23 +552,13 @@
       "desc": "开源权重，智能体与工具调用能力强",
       "release": "2026-07",
       "elo": 1469,
-      "superclue": 63.27,
       "priceIn": 8.0,
       "priceOut": 28.0,
       "context": 1000000,
       "speed": 100,
       "est": {
         "speed": true
-      },
-      "dims": {
-        "math": 70.18,
-        "hallu": 80.66,
-        "science": 68.42,
-        "ifollow": 30.48,
-        "coding": 64.13,
-        "plan": 65.27
-      },
-      "bench": 63.19
+      }
     },
     {
       "id": "gpt-5.4",
@@ -546,13 +569,11 @@
       "desc": "高性价比主力，覆盖大多数生产负载",
       "release": "2026-03",
       "elo": 1469,
-      "superclue": 72.0,
       "priceIn": 2.5,
       "priceOut": 15.0,
       "context": 400000,
       "speed": 100,
       "est": {
-        "superclue": true,
         "speed": true
       }
     },
@@ -565,7 +586,6 @@
       "desc": "文心系列旗舰，中文语义与幻觉控制见长",
       "release": "2026-07",
       "elo": 1468,
-      "superclue": 54.56,
       "priceIn": 4.0,
       "priceOut": 18.0,
       "context": 1000000,
@@ -574,15 +594,6 @@
         "speed": true,
         "context": true
       },
-      "dims": {
-        "math": 64.91,
-        "hallu": 83.02,
-        "science": 59.65,
-        "ifollow": 41.9,
-        "coding": 27.37,
-        "plan": 72.21
-      },
-      "bench": 58.18,
       "aliases": [
         "ernie 5.1",
         "Ernie 5.1"
@@ -619,23 +630,13 @@
       "desc": "开源旗舰，完整多模态模型家族",
       "release": "2026-06",
       "elo": 1464,
-      "superclue": 53.01,
       "priceIn": 3.0,
       "priceOut": 6.0,
       "context": 256000,
       "speed": 110,
       "est": {
         "speed": true
-      },
-      "dims": {
-        "math": 66.67,
-        "hallu": 63.17,
-        "science": 68.42,
-        "ifollow": 15.24,
-        "coding": 49.47,
-        "plan": 57.25
-      },
-      "bench": 53.37
+      }
     },
     {
       "id": "deepseek-v4.1-flash",
@@ -644,7 +645,16 @@
       "region": "china",
       "open": true,
       "elo": 1464,
-      "desc": "来自 DeepSeek 的模型，竞技场 Elo 1465 分。数据每周自动更新。"
+      "desc": "来自 DeepSeek 的模型，竞技场 Elo 1465 分。数据每周自动更新。",
+      "superclue": 58.95,
+      "dims": {
+        "math": 71.05,
+        "hallu": 43.89,
+        "ifollow": 43.1,
+        "coding": 65.38,
+        "longctx": 66.25
+      },
+      "bench": 57.93
     },
     {
       "id": "mimo-v2.5",
@@ -675,7 +685,6 @@
       "desc": "编码、智能体与计算机使用旗舰",
       "release": "2026-05",
       "elo": 1462,
-      "superclue": 73.9,
       "priceIn": 5.0,
       "priceOut": 25.0,
       "context": 1000000,
@@ -688,7 +697,16 @@
       "region": "china",
       "open": true,
       "elo": 1459,
-      "desc": "来自 月之暗面 的模型，竞技场 Elo 1457 分。数据每周自动更新。"
+      "desc": "来自 月之暗面 的模型，竞技场 Elo 1457 分。数据每周自动更新。",
+      "superclue": 61.46,
+      "dims": {
+        "math": 63.16,
+        "hallu": 67.78,
+        "ifollow": 44.83,
+        "coding": 57.69,
+        "longctx": 87.25
+      },
+      "bench": 64.14
     },
     {
       "id": "gemini-2.5-pro",
@@ -712,13 +730,11 @@
       "desc": "生产级主力，写作与编码均衡",
       "release": "2026-03",
       "elo": 1458,
-      "superclue": 70.0,
       "priceIn": 3.0,
       "priceOut": 15.0,
       "context": 1000000,
       "speed": 80,
       "est": {
-        "superclue": true,
         "speed": true
       }
     },
@@ -820,23 +836,13 @@
       "desc": "开源旗舰，性价比之王，1M 上下文",
       "release": "2026-07",
       "elo": 1451,
-      "superclue": 70.1,
       "priceIn": 3.0,
       "priceOut": 6.0,
       "context": 1000000,
       "speed": 120,
       "est": {
         "speed": true
-      },
-      "dims": {
-        "math": 77.19,
-        "hallu": 89.73,
-        "science": 71.93,
-        "ifollow": 42.86,
-        "coding": 63.16,
-        "plan": 85.48
-      },
-      "bench": 71.72
+      }
     },
     {
       "id": "mimo-v2.6-flash",
@@ -845,7 +851,16 @@
       "region": "china",
       "open": true,
       "elo": 1451,
-      "desc": "来自 小米 的模型，竞技场 Elo 1459 分。数据每周自动更新。"
+      "desc": "来自 小米 的模型，竞技场 Elo 1459 分。数据每周自动更新。",
+      "superclue": 36.4,
+      "dims": {
+        "math": 57.89,
+        "hallu": 27.78,
+        "ifollow": 6.9,
+        "coding": 42.31,
+        "longctx": 35.74
+      },
+      "bench": 34.12
     },
     {
       "id": "amazon-nova-experimental-chat",
@@ -909,13 +924,11 @@
       "desc": "长上下文与实时信息能力",
       "release": "2026-06",
       "elo": 1448,
-      "superclue": 68.0,
       "priceIn": 2.0,
       "priceOut": 6.0,
       "context": 500000,
       "speed": 100,
       "est": {
-        "superclue": true,
         "speed": true
       },
       "aliases": [
@@ -964,7 +977,16 @@
       "aliases": [
         "gpt-6.1 sol",
         "GPT 6.1 sol"
-      ]
+      ],
+      "superclue": 71.76,
+      "dims": {
+        "math": 76.32,
+        "hallu": 63.61,
+        "ifollow": 68.97,
+        "coding": 69.23,
+        "longctx": 88.14
+      },
+      "bench": 73.25
     },
     {
       "id": "nvidia-nemotron-3-ultra-550b-a55b-nvfp4",
@@ -1043,7 +1065,16 @@
       "region": "china",
       "open": false,
       "elo": 1443,
-      "desc": "来自 阶跃星辰 的模型，竞技场 Elo 1448 分。数据每周自动更新。"
+      "desc": "来自 阶跃星辰 的模型，竞技场 Elo 1448 分。数据每周自动更新。",
+      "superclue": 41.23,
+      "dims": {
+        "math": 57.89,
+        "hallu": 38.89,
+        "ifollow": 8.62,
+        "coding": 46.15,
+        "longctx": 49.39
+      },
+      "bench": 40.19
     },
     {
       "id": "gpt-5.1",
@@ -1127,23 +1158,13 @@
       "desc": "腾讯开源旗舰，数学推理表现亮眼",
       "release": "2026-07",
       "elo": 1439,
-      "superclue": 62.13,
       "priceIn": 1.0,
       "priceOut": 4.0,
       "context": 256000,
       "speed": 90,
       "est": {
         "speed": true
-      },
-      "dims": {
-        "math": 77.19,
-        "hallu": 79.2,
-        "science": 75.44,
-        "ifollow": 35.24,
-        "coding": 47.37,
-        "plan": 66.82
-      },
-      "bench": 63.54
+      }
     },
     {
       "id": "gpt-5.2-chat",
@@ -1273,23 +1294,13 @@
       "desc": "最便宜的高可用模型之一",
       "release": "2026-07",
       "elo": 1432,
-      "superclue": 65.6,
       "priceIn": 1.0,
       "priceOut": 2.0,
       "context": 1000000,
       "speed": 180,
       "est": {
         "speed": true
-      },
-      "dims": {
-        "math": 78.95,
-        "hallu": 78.25,
-        "science": 70.17,
-        "ifollow": 35.24,
-        "coding": 58.95,
-        "plan": 80.72
-      },
-      "bench": 67.05
+      }
     },
     {
       "id": "gpt-5.6-luna",
@@ -1405,7 +1416,7 @@
       "desc": "开源权重，SWE-bench 高分性价比选择",
       "release": "2026-05",
       "elo": 1428,
-      "superclue": 56.9,
+      "superclue": 41.17,
       "priceIn": 2.1,
       "priceOut": 8.4,
       "context": 1000000,
@@ -1414,14 +1425,13 @@
         "speed": true
       },
       "dims": {
-        "math": 70.18,
-        "hallu": 70.44,
-        "science": 70.17,
-        "ifollow": 20.0,
-        "coding": 46.32,
-        "plan": 77.68
+        "math": 63.16,
+        "hallu": 39.86,
+        "ifollow": 10.34,
+        "coding": 42.31,
+        "longctx": 42.88
       },
-      "bench": 59.13
+      "bench": 39.71
     },
     {
       "id": "grok-3",
@@ -1803,7 +1813,7 @@
       "desc": "豆包大模型旗舰，多模态能力均衡",
       "release": "2026-08",
       "elo": 1410,
-      "superclue": 65.94,
+      "superclue": 42.06,
       "priceIn": 6.0,
       "priceOut": 30.0,
       "context": 1000000,
@@ -1813,14 +1823,13 @@
         "speed": true
       },
       "dims": {
-        "math": 75.44,
-        "hallu": 78.85,
-        "science": 77.19,
-        "ifollow": 42.86,
-        "coding": 51.58,
-        "plan": 84.95
+        "math": 60.53,
+        "hallu": 42.09,
+        "ifollow": 25.86,
+        "coding": 38.46,
+        "longctx": 37.68
       },
-      "bench": 68.48
+      "bench": 40.92
     },
     {
       "id": "qwen3.5-27b",
@@ -1991,7 +2000,16 @@
       "desc": "来自 xAI 的模型，竞技场 Elo 1397 分。数据每周自动更新。",
       "aliases": [
         "grok 4.7"
-      ]
+      ],
+      "superclue": 49.66,
+      "dims": {
+        "math": 68.42,
+        "hallu": 56.95,
+        "ifollow": 27.59,
+        "coding": 50.0,
+        "longctx": 30.17
+      },
+      "bench": 46.63
     },
     {
       "id": "claude haiku 5.5",
@@ -3118,13 +3136,11 @@
       "desc": "开放权重阵营标杆，1M 上下文",
       "release": "2025-04",
       "elo": 1287,
-      "superclue": 62.0,
       "priceIn": 0.27,
       "priceOut": 0.85,
       "context": 1000000,
       "speed": 90,
       "est": {
-        "superclue": true,
         "speed": true
       }
     },

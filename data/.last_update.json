@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-13",
+  "updated": "2026-11-16",
   "sources": {
     "lmarena": {
       "ok": true,
@@ -11,16 +11,58 @@
       "date": "2026年11月",
       "price_count": 12,
       "price_date": "2026年7月",
-      "applied": false,
-      "note": "评分口径变更，本期未合并（沿用上期值）"
+      "applied": true,
+      "basis_switch": {
+        "to": "2026年11月",
+        "note": "已确认采用新评分口径"
+      }
     }
   },
   "changes": [
-    "qwen.priceIn None→12.0",
-    "qwen.priceOut None→36.0",
-    "mimo-v2.5.priceIn None→3.0",
-    "mimo-v2.5.priceOut None→6.0",
-    "hy3.priceIn None→1.0",
-    "hy3.priceOut None→4.0"
+    "gemini-4-argon.superclue None→73.62",
+    "gemini-4-argon.bench None→76.84",
+    "mimo-v2.6-pro.superclue None→34.57",
+    "mimo-v2.6-pro.bench None→33.22",
+    "qwen3.8-max.superclue 72.62→43.22",
+    "qwen3.8-max.bench 73.92→41.77",
+    "qwen.superclue None→43.22",
+    "qwen.bench None→41.77",
+    "glm-5.3.superclue None→50.66",
+    "glm-5.3.bench None→51.62",
+    "glm-5.3-flash.superclue None→47.18",
+    "glm-5.3-flash.bench None→47.02",
+    "deepseek-v4.1-flash.superclue None→58.95",
+    "deepseek-v4.1-flash.bench None→57.93",
+    "kimi k3.1 pro.superclue None→61.46",
+    "kimi k3.1 pro.bench None→64.14",
+    "mimo-v2.6-flash.superclue None→36.4",
+    "mimo-v2.6-flash.bench None→34.12",
+    "gpt-6.1-sol.superclue None→71.76",
+    "gpt-6.1-sol.bench None→73.25",
+    "step 5 preview.superclue None→41.23",
+    "step 5 preview.bench None→40.19",
+    "minimax-m3.superclue 56.9→41.17",
+    "minimax-m3.bench 59.13→39.71",
+    "doubao-seed-2.1-pro.superclue 65.94→42.06",
+    "doubao-seed-2.1-pro.bench 68.48→40.92",
+    "grok-4.7.superclue None→49.66",
+    "grok-4.7.bench None→46.63",
+    "claude-opus-5.superclue 清除旧口径值 75.0",
+    "gemini-3.5-flash.superclue 清除旧口径值 71.5",
+    "gemini-3.1-pro.superclue 清除旧口径值 75.7",
+    "qwen3.7-max.superclue 清除旧口径值 70.2",
+    "kimi-k3.superclue 清除旧口径值 70.68",
+    "gpt-5.5.superclue 清除旧口径值 74.3",
+    "glm-5.2.superclue 清除旧口径值 63.27",
+    "gpt-5.4.superclue 清除旧口径值 72.0",
+    "ernie-5.1.superclue 清除旧口径值 54.56",
+    "mimo-v2.5-pro.superclue 清除旧口径值 53.01",
+    "claude-opus-4.8.superclue 清除旧口径值 73.9",
+    "claude-sonnet-4.6.superclue 清除旧口径值 70.0",
+    "deepseek-v4-pro.superclue 清除旧口径值 70.1",
+    "grok-4.5.superclue 清除旧口径值 68.0",
+    "hunyuan-hy3.superclue 清除旧口径值 62.13",
+    "deepseek-v4-flash.superclue 清除旧口径值 65.6",
+    "llama-4-maverick.superclue 清除旧口径值 62.0"
   ]
 }

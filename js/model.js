@@ -254,11 +254,16 @@
     var box = document.getElementById('chartDims');
     var note = document.getElementById('dimsNote');
     if (!list.length) {
+      var basis = (R.getMeta().basisChange || {});
       box.innerHTML = '';
-      note.textContent = '该模型暂无 SuperCLUE 六维评测数据（海外模型多为参考值）。';
+      note.textContent = '该模型暂无 SuperCLUE 六维评测数据（海外模型多为参考值）。'
+        + (basis.field === 'superclue'
+          ? ' 自 ' + basis.period + ' 起采用新评分口径，未参加该期测评的模型暂无分数。' : '');
       return;
     }
-    note.textContent = '综合能力分 ' + R.fmtBench(m.bench) + ' = 六维子分平均值，满分 100。';
+    var basis = (R.getMeta().basisChange || {});
+    note.textContent = '综合能力分 ' + R.fmtBench(m.bench) + ' = 六维子分平均值，满分 100。'
+      + (basis.field === 'superclue' ? ' ' + basis.note : '');
     box.innerHTML = list.map(function (x) {
       var w = Math.max(0, Math.min(100, x.value));
       return '<div class="dim-row">'

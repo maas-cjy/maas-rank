@@ -61,10 +61,13 @@
   /* 综合能力分（SuperCLUE 六维子分平均，0–100） */
   function fmtBench(v) { return v == null ? '—' : (+v).toFixed(1); }
 
-  /* SuperCLUE 六维子分：中文键名 -> 展示名 */
+  /* SuperCLUE 维度子分：数据键名 -> 展示名。
+     2026-11 新口径：数理推理替代数学推理，科学推理/任务规划停更，新增超长上下文。
+     science/plan 保留映射是为了兼容切换前的历史快照数据。 */
   const DIM_KEYS = {
-    math: '数学推理', hallu: '幻觉控制', science: '科学推理',
-    ifollow: '指令遵循', coding: '智能体编程', plan: '任务规划'
+    math: '数理推理', hallu: '幻觉控制', science: '科学推理',
+    ifollow: '精确指令遵循', coding: '智能体编程', plan: '任务规划',
+    longctx: '超长上下文'
   };
 
   /* 返回模型的六维列表 [{key, label, value}]，缺维度自动跳过 */

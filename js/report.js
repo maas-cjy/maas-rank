@@ -165,6 +165,12 @@
     }
 
     if (cnChanges.length) {
+      var basis = (R.getMeta().basisChange || {});
+      var cnSub = '中文通用能力综合测评得分，按变化幅度排序';
+      if (basis.field === 'superclue') {
+        cnSub += '。<b class="basis-note">注意：本期切换为 SuperCLUE ' + R.esc(basis.period)
+          + ' 新评分口径，下表新旧分差来自口径切换而非能力涨跌，不可解读为模型退步。</b>';
+      }
       var cnRows = cnChanges.map(function (x) {
         var rankDelta = (prevCnRank[x.m.id] != null && curCnRank[x.m.id] != null)
           ? curCnRank[x.m.id] - prevCnRank[x.m.id] : null;
@@ -174,8 +180,7 @@
           + '<td>' + diffBadge(x.dv, '') + '</td>'
           + '<td>' + rankBadge(rankDelta) + '</td></tr>';
       }).join('');
-      html += tableCard('中文能力（SuperCLUE）变化',
-        '中文通用能力综合测评得分，按变化幅度排序',
+      html += tableCard('中文能力（SuperCLUE）变化', cnSub,
         ['模型', '上期', '本期', '变化', '名次'], cnRows);
     }
 

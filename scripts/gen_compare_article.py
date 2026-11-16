@@ -21,14 +21,19 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE = "https://maasrank.com/"
 
-# 对比组合（模型 id），全部需有 dims
-TARGETS = ["qwen3.8-max", "kimi-k3", "deepseek-v4-pro"]
-LABELS = {"qwen3.8-max": "Qwen3.8-Max", "kimi-k3": "Kimi K3", "deepseek-v4-pro": "DeepSeek V4 Pro"}
-COLORS = {"qwen3.8-max": "#8B5CF6", "kimi-k3": "#F59E0B", "deepseek-v4-pro": "#10B981"}
+# 对比组合（模型 id），全部需有 dims。2026-11 起 SuperCLUE 采用新口径，
+# 旧对象（qwen3.8-max 旧版 / kimi-k3 / deepseek-v4-pro）未参加新基准测评，
+# 已换为新口径下的三款代表性模型：国产开源新旗舰 / 国际闭源榜首 / 国产高性价比。
+TARGETS = ["kimi k3.1 pro", "gemini-4-argon", "deepseek-v4.1-flash"]
+LABELS = {"kimi k3.1 pro": "Kimi K3.1 Pro", "gemini-4-argon": "Gemini 4 Argon",
+          "deepseek-v4.1-flash": "DeepSeek V4.1 Flash"}
+COLORS = {"kimi k3.1 pro": "#F59E0B", "gemini-4-argon": "#8B5CF6",
+          "deepseek-v4.1-flash": "#10B981"}
 
+# 2026-11 新口径维度（与 fetch_data.DIM_KEYS 保持一致）
 DIMS = [
-    ("math", "数学推理"), ("hallu", "幻觉控制"), ("science", "科学推理"),
-    ("ifollow", "精确指令遵循"), ("coding", "智能体编程"), ("plan", "任务规划"),
+    ("math", "数理推理"), ("hallu", "幻觉控制"), ("ifollow", "精确指令遵循"),
+    ("coding", "智能体编程"), ("longctx", "超长上下文"),
 ]
 
 
@@ -98,7 +103,7 @@ def radar_svg(groups):
         parts.append(f'<rect x="{lx:.0f}" y="8" width="12" height="12" rx="2" fill="{color}"/>')
         parts.append(f'<text x="{lx + 17:.0f}" y="18" font-size="11" fill="#2A2F3A">{esc(name)}</text>')
     return (
-        f'<div class="cv-chart"><svg viewBox="0 0 {W} {H}" role="img" aria-label="六维能力雷达图">'
+        f'<div class="cv-chart"><svg viewBox="0 0 {W} {H}" role="img" aria-label="维度能力雷达图">'
         + "".join(parts)
         + "</svg></div>"
     )
@@ -151,7 +156,7 @@ def elo_trend_svg(series):
 
 
 # ---------------------------------------------------------------- 正文
-def build_sections(models, by_id, history):
+def build_sections(models, by_id, history, used_period="最近一期"):
     groups = []
     missing_dims = []
     for tid in TARGETS:
@@ -166,21 +171,29 @@ def build_sections(models, by_id, history):
         print(f"[warn] 部分模型缺少维度数据：{'；'.join(missing_dims)}", file=sys.stderr)
     radar = radar_svg(groups)
 
-    # 一、引言
+    # 一、引言（按当前数据生成，避免换对比对象后叙事失真）
+    dim_names = " / ".join(label for _, label in DIMS)
+    intro_bits = []
+    for tid in TARGETS:
+        m = by_id[tid]
+        intro_bits.append(
+            f"<b>{LABELS[tid]}（{esc(m.get('provider',''))}）</b>"
+            f"{'，开源' if m.get('open') else '，闭源'}"
+            f"· Elo {m.get('elo') or '—'}"
+        )
     sec_intro = (
-        "<h2>一、为什么是这三家</h2>"
-        "<p>六维评分（SuperCLUE 智能体六维能力）覆盖的头部模型几乎全是国产旗舰，"
-        "其中 <b>Qwen3.8-Max（阿里云）、Kimi K3（月之暗面）、DeepSeek V4 Pro（深度求索）</b>"
-        "最具代表性：三者都是开源模型、都支持 1M 上下文、都位居 Elo 综合榜前五，"
-        "是国产大模型「开源 + 长上下文」路线的三条典型路线。本文用同一套六维数据、同一套价格口径，"
-        "把它们放在一起实测对比。</p>"
+        "<h2>一、为什么是这三个</h2>"
+        f"<p>子维度评分（SuperCLUE {used_period} 新口径，覆盖 {dim_names}）"
+        "公布分项分的头部模型中，" + "、".join(intro_bits) +
+        " 三者最具代表性：分别是国产开源新旗舰、国际闭源榜首与国产高性价比路线。"
+        "本文用同一套维度数据、同一套价格口径，把它们放在一起对比。</p>"
     )
 
-    # 二、六维雷达图 + 拆解
+    # 二、雷达图 + 拆解
     sec_radar = (
-        "<h2>二、六维能力雷达图</h2>"
-        "<p>雷达图叠加三家模型在六个维度（数学推理 / 幻觉控制 / 科学推理 / 精确指令遵循 / "
-        "智能体编程 / 智能体任务规划）的得分，越靠外越强。一眼可见：三家形状差异巨大，各有明显强项。</p>"
+        "<h2>二、维度能力雷达图</h2>"
+        f"<p>雷达图叠加三个模型在 {len(DIMS)} 个维度（{dim_names}）的得分，越靠外越强。"
+        "一眼可见：三家形状差异明显，各有强项。</p>"
         + radar
     )
 
@@ -200,6 +213,33 @@ def build_sections(models, by_id, history):
             mark = ' class="cv-best"' if is_best else ""
             cells += f"<td{mark}><b>{v:.1f}</b>{' ★' if is_best else ''}</td>"
         rows.append(f"<tr><td>{label}</td>{cells}</tr>")
+    # 逐维度冠军（数据驱动，避免换对比对象后叙事失真）
+    dim_winners = []
+    for dim, label in DIMS:
+        best_tid, best_v = None, None
+        for tid in TARGETS:
+            v = (by_id[tid].get("dims") or {}).get(dim)
+            if v is not None and (best_v is None or v > best_v):
+                best_tid, best_v = tid, v
+        if best_tid:
+            dim_winners.append((label, best_tid, best_v))
+
+    insight_bits = []
+    for i, (label, tid, v) in enumerate(dim_winners[:3], 1):
+        insight_bits.append(
+            f"{'①②③'[i-1]} <b>{LABELS[tid]} 的{label} {v:.1f} 为三者最高</b>；")
+    # 三家共同低分维度 = 按三家最高值排序后最低的维度
+    dim_maxes = []
+    for key, label in DIMS:
+        vals = [(by_id[tid].get("dims") or {}).get(key) for tid in TARGETS]
+        present = [v for v in vals if v is not None]
+        if present:
+            dim_maxes.append((key, label, max(present)))
+    if dim_maxes:
+        low_key, low_label, low_max = min(dim_maxes, key=lambda x: x[2])
+        insight_bits.append(
+            f"相对而言，<b>{low_label}</b> 是三家共同的低分维度（三者最高仅 {low_max:.1f}），"
+            "选型时若强依赖该能力，建议用业务数据实测后再定。")
     sec_table = (
         "<h3>逐维度拆解</h3>"
         "<table><thead><tr><th>维度</th>"
@@ -207,11 +247,7 @@ def build_sections(models, by_id, history):
         + "</tr></thead><tbody>"
         + "".join(rows)
         + "</tbody></table>"
-        "<p><b>读法</b>：★ 为该维度最高分。三个值得注意的点——"
-        "① <b>DeepSeek V4 Pro 的幻觉控制 89.7 全场最高</b>，且数学与科学推理与 Qwen 并列第一；"
-        "② <b>Kimi K3 的智能体编程 75.8 领先</b>，是写代码场景的首选；"
-        "③ <b>三家「精确指令遵循」都只有 40 上下</b>，是国产旗舰目前的共同短板，"
-        "需要强约束输出的场景（如格式化的结构化数据）建议在应用层加校验。</p>"
+        "<p><b>读法</b>：★ 为该维度最高分。" + "".join(insight_bits) + "</p>"
     )
 
     # 三、Elo 与趋势
@@ -228,14 +264,24 @@ def build_sections(models, by_id, history):
         f"<td>{fmt_val(by_id[t].get('superclue'), 1)}</td></tr>"
         for t in TARGETS
     )
+    # 近期走势（数据驱动：取每家最近两个快照点比较）
+    trend_bits = []
+    for tid in TARGETS:
+        pts = [(s["date"], s["elo"][tid]) for s in series if tid in s["elo"]]
+        if len(pts) >= 2:
+            d0, d1 = pts[-2], pts[-1]
+            delta = d1[1] - d0[1]
+            trend_bits.append(
+                f"{LABELS[tid]} 从 {d0[1]}（{d0[0]}）到 {d1[1]}（{d1[0]}，{'%+d' % delta}）")
+    trend_text = ("近两期快照走势：" + "；".join(trend_bits) + "。"
+                  if trend_bits else "（历史快照积累中，趋势解读稍后自动补充。）")
     sec_elo = (
         "<h2>三、Elo 综合排名与历史趋势</h2>"
         "<p>Elo 来自 LMArena 竞技场，反映真实用户盲测的胜率偏好，是「综合体验」的参考指标。</p>"
         "<table><thead><tr><th>模型</th><th>当前 Elo</th><th>开源</th><th>上下文</th><th>SuperCLUE</th></tr></thead>"
         f"<tbody>{cur_rows}</tbody></table>"
         + (elo_trend_svg(series) if len(series) >= 2 else "<p>（历史快照不足，趋势图暂缺）</p>")
-        + "<p>近三周 Elo 走势：Qwen3.8-Max 从 1492 微降至 1482，Kimi K3 与 DeepSeek V4 Pro 基本持平——"
-          "三家都已进入稳定期，排名波动主要来自新模型入榜。</p>"
+        + f"<p>{trend_text}排名波动主要来自新模型入榜与评测样本更新。</p>"
     )
 
     # 四、价格与性价比
@@ -250,28 +296,65 @@ def build_sections(models, by_id, history):
         f"<td>{fmt_cny(by_id[t].get('priceOut'))}</td><td>{fmt_val(ratio(t), 0)}</td></tr>"
         for t in TARGETS
     )
+    # 价格与性价比（数据驱动）
+    priced = [(t, ratio(t)) for t in TARGETS if ratio(t) is not None]
+    price_para = ""
+    if priced:
+        best_t, best_r = max(priced, key=lambda x: x[1])
+        price_para = (
+            f"<p><b>{LABELS[best_t]}</b> 的性价比指数最高（Elo ÷ 输入价 ≈ {best_r:.0f}），"
+            "对成本敏感的大规模调用可优先考虑；其余两家适合对能力上限要求更高的场景。"
+            "价格缺失的模型表示暂无公开报价，不计入性价比排序。</p>"
+        )
     sec_price = (
         "<h2>四、价格与性价比</h2>"
         "<p>价格为公开 API 报价（元 / 百万 tokens，按 1 美元 ≈ 7.2 元换算）；性价比 = Elo ÷ 输入价。</p>"
         "<table><thead><tr><th>模型</th><th>输入价</th><th>输出价</th><th>性价比指数</th></tr></thead>"
         f"<tbody>{pr_rows}</tbody></table>"
-        "<p>DeepSeek V4 Pro 输入价只有 Kimi K3 的 1/6、Qwen3.8-Max 的 1/4，却拿到了接近前者的 Elo——"
-        "在三家中性价比断层领先。对成本敏感的大规模调用，它是第一顺位。</p>"
+        + price_para
     )
 
     # 五、结论
+    # 五、结论（按各维度冠军生成场景建议）
+    def winner_of(key):
+        cand = [(by_id[t].get("dims") or {}).get(key, -1) for t in TARGETS]
+        return TARGETS[max(range(len(cand)), key=lambda i: cand[i])]
+
+    best_coding = winner_of("coding")
+    best_math = winner_of("math")
+    best_hallu = winner_of("hallu")
+    best_price = priced[0][0] if priced else None
+    best_elo = max(TARGETS, key=lambda t: by_id[t].get("elo") or 0)
+
+    def li(scenario, tid, reason):
+        m = by_id[tid]
+        extra = ""
+        if reason == "elo":
+            extra = f"Elo {m.get('elo')} 三家最高"
+        else:
+            v = (m.get("dims") or {}).get(reason)
+            label = dict(DIMS).get(reason, reason)
+            extra = f"{label} {v:.1f} 领先" if v is not None else "该维度领先"
+        return f"<li><b>{scenario}</b>：优先看 <b>{LABELS[tid]}</b>（{extra}）。</li>"
+
+    price_li = ""
+    if best_price:
+        m = by_id[best_price]
+        price_li = (f"<li><b>成本敏感 / 大规模调用</b>：<b>{LABELS[best_price]}</b>"
+                    f"（输入 {fmt_cny(m.get('priceIn'))}，性价比指数最高）。</li>")
     sec_close = (
         "<h2>五、结论：什么场景选谁</h2>"
         "<ul>"
-        "<li><b>要 Agent 编排 / 复杂任务规划</b>：选 <b>Qwen3.8-Max</b>——任务规划 90.9 断层第一，配合 1M 上下文做多步工作流最稳；</li>"
-        "<li><b>要写代码 / 智能体编程</b>：选 <b>Kimi K3</b>——编程 75.8 领先，编程场景的用户口碑也长期靠前；</li>"
-        "<li><b>要便宜又稳 / 大规模调用</b>：选 <b>DeepSeek V4 Pro</b>——幻觉控制 89.7 全场最高，"
-        "输入仅 ¥21.6、输出 ¥43.2，是三家中性价比之王；</li>"
-        "<li><b>强约束输出</b>：三家指令遵循都偏弱，建议加 JSON Schema 校验或后处理，别裸奔；</li>"
-        "<li><b>私有化</b>：三家全部开源，许可证与硬件要求见各自仓库，DeepSeek 对推理硬件更友好。</li>"
+        + li("要综合体验上限", best_elo, "elo")
+        + li("要写代码 / 智能体编程", best_coding, "coding")
+        + li("要数理与推理能力", best_math, "math")
+        + li("要事实可靠性（低幻觉）", best_hallu, "hallu")
+        + price_li
+        + "<li><b>强约束输出</b>：无论选哪家，结构化输出都建议在应用层加 Schema 校验。</li>"
         "</ul>"
-        "<blockquote>数据口径：六维评分来自 SuperCLUE 智能体六维能力测评；Elo 来自 LMArena；"
-        "价格为公开 API 报价。完整榜单见<a href=\"../rank.html\">排行榜</a>，"
+        "<blockquote>数据口径：子维度评分来自 SuperCLUE "
+        + esc(used_period) + " 口径测评（2026-11 起为新口径，与此前各期不可直接对比）；"
+        "Elo 来自 LMArena；价格为公开 API 报价。完整榜单见<a href=\"../rank.html\">排行榜</a>，"
         "更多对比可用<a href=\"../compare.html\">模型对比工具</a>。</blockquote>"
     )
 
@@ -395,20 +478,22 @@ def main():
         return 1
     for t in TARGETS:
         if not by_id[t].get("dims"):
-            print(f"[error] {t} 无六维评分 dims", file=sys.stderr)
+            print(f"[error] {t} 无子维度评分 dims", file=sys.stderr)
             return 1
 
     history = load("data/history.json", {})
-    date = data.get("meta", {}).get("updated", "2026-09")
+    meta = data.get("meta", {})
+    date = meta.get("updated", "2026-09")
+    used_period = ((meta.get("fieldInfo") or {}).get("superclue") or {}).get("date", "最近一期")
     month = date[:7]
     fname = f"compare-{month}.html"
     names = " vs ".join(LABELS[t] for t in TARGETS)
-    title = f"{month} 国产旗舰实测：{names} 六维对比"
-    summary = (f"基于 SuperCLUE 六维评分与 LMArena Elo，对 {names} 三个开源旗舰模型做"
-               f"六维雷达、Elo 趋势、价格与性价比的横向实测，给出分场景选型结论，随数据每周自动更新。")
-    tags = ["模型对比", "六维评测", "国产大模型"]
+    title = f"{month} 旗舰模型实测：{names} 五维对比"
+    summary = (f"基于 SuperCLUE {used_period} 口径的子维度评分与 LMArena Elo，对 {names} 做"
+               f"维度雷达、Elo 趋势、价格与性价比的横向对比，给出分场景选型结论，随数据自动更新。")
+    tags = ["模型对比", "维度评测", "大模型选型"]
 
-    body_html = "\n".join(build_sections(models, by_id, history))
+    body_html = "\n".join(build_sections(models, by_id, history, used_period))
 
     articles = load("data/articles.json", [])
     os.makedirs(os.path.join(ROOT, "articles"), exist_ok=True)

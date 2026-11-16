@@ -48,6 +48,12 @@ TIMEOUT = 25
 # 历史快照仅归档以下字段（自动更新只涉及这几个指标）
 HISTORY_FIELDS = ("id", "name", "elo", "superclue", "bench", "priceIn", "priceOut")
 
+# 已确认采用的 SuperCLUE 口径切换（2026-11 新基准，经站点维护者确认）：
+# 命中该期数时按新口径合并（维度整体替换、不再与旧口径混排），并在
+# meta.basisChange / history.meta.breakpoints 留痕。切换当期未参加新基准
+# 测评的模型会清除旧口径分数——旧分与新分不可比，保留会污染中文榜排序。
+SC_BASIS_SWITCH_ACCEPT = "2026年11月"
+
 # SuperCLUE 总排行榜中的六维子分列名（用于计算「综合能力分」= 可用子分均值）
 # 每项可给多个候选表头：SuperCLUE 会改口径（2026-11 把「数学推理」改成「数理推理」、
 # 去掉「科学推理/任务规划」、新增「超长上下文」），只认一个名字会导致维度缺失。
@@ -703,7 +709,7 @@ def match_model(src_name: str, mid: str) -> bool:
 
 
 def apply_updates(models, elo_map, families, scores, prices,
-                  sc_date: str = "") -> tuple[list[str], set[str], bool]:
+                  sc_date: str = "") -> tuple[list[str], set[str], bool, bool]:
     changed: list[str] = []
     covered: set[str] = set()  # 已被现有模型消费的家族键（避免重复新增）
     missing_dims: set[str] = set()  # 本月 SuperCLUE 未提供的维度（口径变更留痕）
@@ -723,10 +729,19 @@ def apply_updates(models, elo_map, families, scores, prices,
                 shifts.append(total - m["superclue"])
                 break
     skip_sc = bool(shifts) and abs(statistics.median(shifts)) > 15
-    if skip_sc:
+    basis_switched = False
+    if skip_sc and sc_date == SC_BASIS_SWITCH_ACCEPT:
+        # 维护者已确认采用新口径：切换当期正常合并，历史断点由 main() 记录。
+        skip_sc = False
+        basis_switched = True
+        log(f"  ◆ 已确认采用 SuperCLUE {sc_date} 新评分口径"
+            f"（同模型分差中位 {statistics.median(shifts):+.1f}），"
+            f"本期起切换，维度整体替换，历史标注断点")
+    elif skip_sc:
         log(f"  ⚠ SuperCLUE {sc_date or '本期'} 疑似更换评分口径"
             f"（同模型分差中位 {statistics.median(shifts):+.1f}），"
             f"本期中文能力与六维数据不合并，沿用上期值")
+    sc_updated_ids: set[str] = set()
     for m in models:
         mid = m["id"]
         # Elo
@@ -771,11 +786,14 @@ def apply_updates(models, elo_map, families, scores, prices,
                     m.get("est", {}).pop("superclue", None)
                 dims = e.get("dims") or {}
                 if dims:
-                    # 合并而非覆盖：SuperCLUE 某些月份只给出部分维度（如 2026-11
-                    # 去掉了科学推理/任务规划），直接覆盖会让已有维度凭空丢失，
-                    # 下游雷达图/对比文章会因为缺 key 直接崩。
-                    merged = dict(m.get("dims") or {})
-                    merged.update({k: round(v, 2) for k, v in dims.items()})
+                    # 口径切换当期：新基准维度整体替换（旧口径子分与新口径不可比，
+                    # 与旧值混排会让雷达图同时出现两套标准）；平时仍合并不覆盖，
+                    # 避免 SuperCLUE 某月只给部分维度时已有维度凭空丢失。
+                    if basis_switched:
+                        merged = {k: round(v, 2) for k, v in dims.items()}
+                    else:
+                        merged = dict(m.get("dims") or {})
+                        merged.update({k: round(v, 2) for k, v in dims.items()})
                     if merged != m.get("dims"):
                         m["dims"] = merged
                     missing_dims.update(k for k, _ in DIM_KEYS if k not in dims)
@@ -789,6 +807,7 @@ def apply_updates(models, elo_map, families, scores, prices,
                             changed.append(f"{mid}.bench {old}→{b}")
                         m.get("est", {}).pop("bench", None)
                 hit_sc = True
+                sc_updated_ids.add(mid)
                 break
         if hit_sc:
             n_sc += 1
@@ -815,6 +834,21 @@ def apply_updates(models, elo_map, families, scores, prices,
             m.pop("est", None)
 
     log(f"  ✓ 匹配更新：Elo {n_elo} 个模型，中文能力 {n_sc} 个模型，价格 {n_price} 个模型")
+    if basis_switched:
+        # 切换当期未参加新基准测评的模型：旧口径分数不可比，清除而非保留，
+        # 避免中文榜出现「旧口径高分」压过「新口径低分」的假排序。
+        cleared = 0
+        for m in models:
+            if m["id"] not in sc_updated_ids and m.get("superclue") is not None:
+                changed.append(f"{m['id']}.superclue 清除旧口径值 {m['superclue']}")
+                for k in ("superclue", "dims", "bench"):
+                    m.pop(k, None)
+                    m.get("est", {}).pop(k, None)
+                if m.get("est") == {}:
+                    m.pop("est", None)
+                cleared += 1
+        if cleared:
+            log(f"  ◆ 口径切换：清除 {cleared} 个未参加新基准测评模型的旧口径分数")
     if missing_dims:
         labels = {k: (ks[-1] if isinstance(ks, tuple) else ks) for k, ks in DIM_KEYS}
         names = "、".join(labels.get(k, k) for k in sorted(missing_dims))
@@ -825,7 +859,7 @@ def apply_updates(models, elo_map, families, scores, prices,
             log(f"    - {c}")
     else:
         log("  数据无变化")
-    return changed, covered, skip_sc
+    return changed, covered, skip_sc, basis_switched
 
 
 def sync_new_models(models: list[dict], families: dict[str, dict], covered: set[str]) -> int:
@@ -898,12 +932,16 @@ def main() -> int:
             for m in data["models"]
         ],
     }
-    changes, covered, sc_skipped = apply_updates(
+    changes, covered, sc_skipped, sc_basis_switched = apply_updates(
         data["models"], elo_map, families, sc_scores, sc_prices, sc_date=used_date)
     if sc_skipped:
         # 抓到了新一期但口径不可比，明确标记「未采用」，避免元数据误报成已更新
         diff["sources"]["superclue"]["applied"] = False
         diff["sources"]["superclue"]["note"] = "评分口径变更，本期未合并（沿用上期值）"
+    elif sc_basis_switched:
+        diff["sources"]["superclue"]["applied"] = True
+        diff["sources"]["superclue"]["basis_switch"] = {
+            "to": used_date, "note": "已确认采用新评分口径"}
     else:
         diff["sources"]["superclue"]["applied"] = bool(sc_scores)
     n_added = sync_new_models(data["models"], families, covered)
@@ -928,7 +966,11 @@ def main() -> int:
         if elo_map:
             sources_note.append(f"Elo 来自 LMArena（数据期 {lm_pub or today}）")
         if sc_scores and not sc_skipped:
-            sources_note.append(f"中文能力来自 SuperCLUE（{used_date}）")
+            if sc_basis_switched:
+                sources_note.append(
+                    f"中文能力已切换为 SuperCLUE {used_date} 新评分口径（与此前数值不可直接对比）")
+            else:
+                sources_note.append(f"中文能力来自 SuperCLUE（{used_date}）")
         elif sc_scores:
             sources_note.append(f"中文能力沿用上期（SuperCLUE {used_date} 换口径未合并）")
         if sc_prices and price_date:
@@ -956,6 +998,12 @@ def main() -> int:
                            "date": used_date, "kind": "实测"}
         fi["dims"] = {"label": "六维子分 / 综合能力分", "source": "SuperCLUE 分项测评",
                       "date": used_date, "kind": "实测"}
+        if sc_basis_switched:
+            fi["superclue"]["note"] = (
+                f"{used_date} 起采用新评分口径，与此前各期数值不可直接对比")
+            fi["dims"]["note"] = (
+                "新基准维度已整体替换（2026-11 起「数理推理」替代「数学推理」，"
+                "部分维度停更），综合分按新基准可用子分计算")
     else:
         # 口径变更未合并：沿用上次标注并注明
         for k in ("superclue", "dims"):
@@ -976,6 +1024,20 @@ def main() -> int:
             fi["price"] = dict(old)
             fi["price"]["note"] = "本期未抓取，沿用上次数据"
     meta["fieldInfo"] = fi
+
+    # 口径切换断点：前端（模型页/数据说明）据此提示「自该期起数值不可比」；
+    # history.meta.breakpoints 供后续趋势图画断点线使用。
+    if sc_basis_switched:
+        meta["basisChange"] = {
+            "field": "superclue",
+            "date": today,
+            "period": used_date,
+            "fromPeriod": (prev_fi.get("superclue") or {}).get("date", ""),
+            "note": f"SuperCLUE 自 {used_date} 起采用新评分口径（维度与分数分布均有变化），"
+                    "新旧数值不可直接对比。",
+        }
+        if changes:
+            log(f"  ◆ 已记录口径切换断点：{prev_fi.get('superclue', {}).get('date', '?')} → {used_date}")
 
     if args.dry_run:
         log(f"（dry-run）共 {len(changes)} 处变更，未写文件。")
@@ -1025,6 +1087,14 @@ def main() -> int:
         else:
             snaps.append(prev_snapshot)
         history["meta"] = {"count": len(snaps), "generated": today}
+        # 口径切换断点写入历史元数据：下一期快照（新口径首期）之前的分界点。
+        # 趋势图据此在曲线上标注「该点之后数值不可比」。
+        if sc_basis_switched:
+            bps = history["meta"].setdefault("breakpoints", [])
+            bp = {"date": today, "field": "superclue",
+                  "note": f"SuperCLUE {used_date} 新口径启用，此后数值与此前不可比"}
+            if not bps or bps[-1] != bp:
+                bps.append(bp)
         htmp = HISTORY_FILE.with_suffix(".json.tmp")
         with open(htmp, "w", encoding="utf-8") as f:
             json.dump(history, f, ensure_ascii=False, indent=2)

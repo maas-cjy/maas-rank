@@ -103,8 +103,8 @@ def analyze(models, prev, hist):
     }
 
 
-def build_sections(d, date):
-    """生成文章正文 HTML 各节。"""
+def build_sections(d, date, basis=None):
+    """生成文章正文 HTML 各节。basis 为 meta.basisChange（口径切换提示用）。"""
     models_total = d["total"]
     e1 = d["elo_top"][0] if d["elo_top"] else None
     s1 = d["sc_top"][0] if d["sc_top"] else None
@@ -124,6 +124,19 @@ def build_sections(d, date):
     if c1:
         lead.append(f"最便宜的模型是 <b>{esc(c1['name'])}</b>，输入价格 {fmt_cny(c1['priceIn'])} / 百万 tokens")
     lead_html = "<p>" + "；".join(lead) + "。</p>"
+
+    # 口径切换当期：周报里旧→新的中文能力分差是口径切换造成的，
+    # 不加说明会被读者当成「模型集体退步」。
+    basis = (basis or {}) if isinstance(basis, dict) else {}
+    basis_alert = ""
+    if basis.get("field") == "superclue":
+        basis_alert = (
+            f"<p style=\"background:#fef3c7;border:1px solid #f59e0b;border-radius:8px;"
+            f"padding:10px 14px;color:#78350f;font-size:14px;\">"
+            f"<b>口径切换说明：</b>{esc(basis.get('note',''))}"
+            f"本期中文能力分与上期（{esc(basis.get('fromPeriod',''))} 旧口径）的分差"
+            "主要来自口径切换而非能力涨跌，请勿直接对比新旧数值。</p>"
+        )
 
     # ---------- 一、榜单总览 ----------
     fixed_rows = []
@@ -253,7 +266,7 @@ def build_sections(d, date):
         "<blockquote>以上结论基于公开榜单数据，仅供选型参考；正式决策前建议用自己的业务数据做小规模实测。</blockquote>"
     )
 
-    return lead_html, [s for s in [sec_overview, sec_change, sec_bench, sec_price, sec_trend, sec_advice] if s]
+    return lead_html, [s for s in [basis_alert, sec_overview, sec_change, sec_bench, sec_price, sec_trend, sec_advice] if s]
 
 
 def build_title_summary(d, date):
@@ -408,7 +421,7 @@ def main():
     summary = summary.replace("{issue}", str(issue))
     tags = ["周榜解读", "Elo", "选型建议"]
 
-    lead, sections = build_sections(d, date)
+    lead, sections = build_sections(d, date, basis=data.get("meta", {}).get("basisChange"))
     body_html = lead + "\n".join(sections)
 
     os.makedirs(os.path.join(ROOT, "articles"), exist_ok=True)
