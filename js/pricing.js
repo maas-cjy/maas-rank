@@ -58,6 +58,14 @@
     return R.priceCell(m, field) + usd;
   }
 
+  /* 能力榜排名导流：价格表专注价格，能力比较回排行榜 */
+  function eloRankOf(m) {
+    var withElo = R.getModels().filter(function (x) { return x.elo != null; })
+      .sort(function (a, b) { return b.elo - a.elo; });
+    var i = withElo.indexOf(m);
+    return i > -1 ? i + 1 : null;
+  }
+
   function render() {
     var list = filtered();
     var tbody = document.getElementById('priceBody');
@@ -71,12 +79,16 @@
       var note = m.priceNote
         ? '<div class="p-note" title="' + R.esc(m.priceNote) + '">' + R.esc(m.priceNote) + '</div>'
         : '';
+      var eloRank = eloRankOf(m);
+      var eloLink = eloRank
+        ? '<div class="p-note"><a href="rank.html?key=elo" title="竞技场 Elo 排名，见排行榜">能力榜第 ' + eloRank + ' 名 →</a></div>'
+        : '';
       var cache = m.priceCacheHit != null
         ? R.priceCell(m, 'priceCacheHit')
         : '<span class="price-missing" title="未收录缓存命中价：仅官网直采模型有该字段">—</span>';
       return '<tr>'
         + '<td><a href="model.html?id=' + encodeURIComponent(m.id) + '">' + R.esc(m.name) + '</a>'
-        + '<div class="mprov">' + R.esc(m.provider) + '</div>' + note + '</td>'
+        + '<div class="mprov">' + R.esc(m.provider) + '</div>' + note + eloLink + '</td>'
         + '<td class="num">' + R.fmtCtx(m.context) + '</td>'
         + '<td class="num">' + cellPrice(m, 'priceIn') + '</td>'
         + '<td class="num">' + cellPrice(m, 'priceOut') + '</td>'

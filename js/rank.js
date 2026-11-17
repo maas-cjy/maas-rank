@@ -12,6 +12,16 @@
   var PAGE = 50;
   var chart = null;
 
+  /* 排行榜价格列只做简要展示：缺价时引导到专门的「价格表」页，
+     而不是只留一个干巴巴的「未收录」。 */
+  function rankPriceCell(m, field) {
+    if (m[field] == null) {
+      return '<a class="price-missing" href="pricing.html" '
+        + 'title="本站未收录该模型定价：可能未公开报价或需按量询价，不代表免费；价格口径见价格表页">未收录</a>';
+    }
+    return R.priceCell(m, field);
+  }
+
   var TAB = {
     elo: {
       label: '竞技场 Elo', unit: 'Elo', dir: -1, note: 'LMArena 人类盲测投票，分差 25 分内属于噪声区间',
@@ -31,7 +41,7 @@
     priceIn: {
       label: '输入价格', unit: '¥/M', dir: 1, note: '每百万输入 tokens 价格：国产模型为官方人民币报价，海外按 $1≈¥7.2 换算；价格核验日见单元格角标',
       title: '输入价格排名（由低到高）', desc: '每百万输入 tokens 价格 · 越低越便宜 · 价格数据期见下方说明',
-      fmt: function (m) { return R.priceCell(m, 'priceIn') + R.estMark(m, 'priceIn'); }
+      fmt: function (m) { return rankPriceCell(m, 'priceIn') + R.estMark(m, 'priceIn'); }
     },
     context: {
       label: '上下文', unit: 'tokens', dir: -1, note: '最大输入上下文窗口',
@@ -124,8 +134,8 @@
         + '<td class="num">' + t.fmt(m) + '</td>'
         + '<td class="num">' + R.fmtNum(m.superclue) + R.estMark(m, 'superclue') + '</td>'
         + '<td class="num">' + R.fmtBench(m.bench) + R.estMark(m, 'bench') + '</td>'
-        + '<td class="num">' + R.priceCell(m, 'priceIn') + R.estMark(m, 'priceIn') + '</td>'
-        + '<td class="num">' + R.priceCell(m, 'priceOut') + R.estMark(m, 'priceOut') + '</td>'
+        + '<td class="num">' + rankPriceCell(m, 'priceIn') + R.estMark(m, 'priceIn') + '</td>'
+        + '<td class="num">' + rankPriceCell(m, 'priceOut') + R.estMark(m, 'priceOut') + '</td>'
         + '<td class="num">' + R.fmtCtx(m.context) + '</td>'
         + '<td class="num">' + R.fmtSpeed(m.speed) + R.estMark(m, 'speed') + '</td>'
         + '<td>' + R.badgeOpen(m) + ' ' + R.badgeRegion(m) + '</td>'

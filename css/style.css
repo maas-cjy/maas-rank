@@ -725,3 +725,9 @@ footer a {
   display: inline-block; margin-left: 3px; font-size: 10.5px; line-height: 1.5;
   color: #57534E; white-space: nowrap; vertical-align: 1px;
 }
+/* 排行榜缺价 → 引导到价格表页 */
+a.price-missing {
+  color: var(--muted); font-size: 11.5px; white-space: nowrap;
+  text-decoration: underline dotted; text-underline-offset: 2px;
+}
+a.price-missing:hover, a.price-missing:focus-visible { color: #4C1D95; }
