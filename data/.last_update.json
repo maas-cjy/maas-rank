@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-16",
+  "updated": "2026-11-17",
   "sources": {
     "lmarena": {
       "ok": true,
@@ -12,7 +12,17 @@
       "price_count": 12,
       "price_date": "2026年7月",
       "applied": true
+    },
+    "official": {
+      "ok": true,
+      "count": 3,
+      "date": "2026年11月17日"
     }
   },
-  "changes": []
+  "changes": [
+    "deepseek-v4-pro.priceIn 9.0→3.0",
+    "deepseek-v4-pro.priceOut 27.0→6.0",
+    "deepseek-v4-pro.priceIn 3.0→9.0",
+    "deepseek-v4-pro.priceOut 6.0→27.0"
+  ]
 }
