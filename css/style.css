@@ -686,3 +686,42 @@ footer a {
 
 /* 表格行悬停辅助：配合键盘浏览 */
 #rankTable tbody tr:hover, #costTable tbody tr:hover { background: #fafbfe; }
+
+/* ---------- API 价格表页（pricing.html） ---------- */
+.toolbar { display: flex; flex-direction: column; gap: 10px; margin: 0 2px 16px; }
+.search-wrap input[type="search"] {
+  width: 100%; max-width: 460px; padding: 9px 14px; font-size: 14px;
+  border: 1px solid var(--line); border-radius: 8px; background: var(--bg-card, #fff);
+  color: var(--text);
+}
+.search-wrap input[type="search"]:focus { outline: 2px solid #8B5CF6; outline-offset: 1px; }
+.filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+
+/* 可排序列头 */
+.rank-table th.sortable { cursor: pointer; user-select: none; white-space: nowrap; }
+.rank-table th.sortable:hover { color: #4C1D95; }
+.rank-table th.sortable::after { content: '↕'; opacity: .35; margin-left: 3px; font-size: 11px; }
+.rank-table th.sort-asc::after { content: '↑'; opacity: 1; color: #4C1D95; }
+.rank-table th.sort-desc::after { content: '↓'; opacity: 1; color: #4C1D95; }
+.rank-table .unit { font-weight: 400; font-size: 11px; color: var(--muted); }
+
+/* SuperCLUE 价格表来源徽标（与 .src-official 区分） */
+.src-sc {
+  display: inline-block; margin-left: 4px; font-size: 10px; line-height: 1.5;
+  color: #334155; background: #E2E8F0; border-radius: 4px; padding: 0 5px;
+  font-weight: 600; white-space: nowrap; vertical-align: 1px;
+}
+/* 模型名下的价格说明（分段定价/高峰时段等） */
+.p-note { font-size: 11px; color: var(--muted); margin-top: 3px; line-height: 1.5; max-width: 320px; }
+
+.note-list { margin: 8px 0 0; padding-left: 1.2em; display: grid; gap: 8px; }
+.note-list li { line-height: 1.75; }
+
+/* 数据时效行辅助 */
+.df-hint { color: var(--muted); font-size: 12px; cursor: help; text-decoration: underline dotted; margin-left: 6px; }
+.table-scroll { overflow-x: auto; }
+/* 海外模型官方美元价括注 */
+.price-usd {
+  display: inline-block; margin-left: 3px; font-size: 10.5px; line-height: 1.5;
+  color: #57534E; white-space: nowrap; vertical-align: 1px;
+}

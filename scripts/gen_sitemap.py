@@ -25,6 +25,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MAIN_PAGES = [
     ("",            "weekly",  "1.0"),
     ("rank.html",   "weekly",  "0.9"),
+    ("pricing.html", "daily",  "0.8"),
     ("articles.html", "weekly", "0.8"),
     ("compare.html", "weekly", "0.8"),
     ("cost.html",    "monthly", "0.6"),

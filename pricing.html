@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="大模型 API 价格表：统一规格横向比较各厂商输入单价、输出单价与缓存命中价（元/百万 tokens），标注价格核验日期与来源。">
+<meta name="keywords" content="大模型价格表,API价格对比,大模型报价,token价格,LLM定价">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://maasrank.com/pricing.html">
+<meta name="theme-color" content="#1E1B4B">
+<link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+<title>MaaS Rank - API 价格表 · 大模型统一报价对比</title>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MaaS Rank">
+<meta property="og:title" content="MaaS Rank - API 价格表">
+<meta property="og:description" content="统一规格横向比较各大模型 API 报价：输入价、输出价、缓存命中价与价格核验日期。">
+<meta property="og:url" href="https://maasrank.com/pricing.html">
+<meta property="og:locale" content="zh_CN">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="index.html"><svg class="brand-mark" viewBox="0 0 64 64" width="22" height="22" aria-hidden="true" focusable="false"><rect width="64" height="64" rx="16" fill="#1E1B4B"/><text x="19.5" y="44.5" font-size="34" fill="#FFFFFF" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">M</text><rect x="33" y="39" width="4.5" height="11.5" rx="2.2" fill="#8B5CF6"/><rect x="40" y="32" width="4.5" height="18.5" rx="2.2" fill="#8B5CF6"/><rect x="47" y="25" width="4.5" height="25" rx="2.2" fill="#8B5CF6"/></svg>MaaS Rank</a>
+    <button class="nav-toggle" aria-label="打开导航" aria-expanded="false">☰</button>
+    <nav>
+      <a href="index.html">首页</a>
+      <a href="rank.html">排行榜</a>
+      <a href="pricing.html" class="active">价格表</a>
+      <a href="compare.html">模型对比</a>
+      <a href="cost.html">成本计算</a>
+      <a href="report.html">榜单周报</a>
+      <a href="articles.html">榜单解读</a>
+      <a href="about.html">数据说明</a>
+    </nav>
+    <div class="nav-extra">
+      <a href="https://github.com/maas-cjy/maas-rank" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+
+  <section class="hero">
+    <h1>API 价格表</h1>
+    <p class="sub">统一规格横向比较：<b>输入单价 · 输出单价 · 缓存命中</b>（每百万 tokens）。排序与筛选只统计有定价的模型。</p>
+    <div class="hero-meta">
+      <span class="chip">有定价模型 <b id="pricedCount">–</b></span>
+      <span class="chip">官网直采 <b id="officialCount">–</b></span>
+      <span class="chip">币种 <b>国产为官方人民币报价 · 海外按 $1≈¥7.2 折算排序</b></span>
+    </div>
+    <!-- 快照日 ≠ 价格核验日：每行单独标注核验月 -->
+    <p class="data-freshness" id="dataFreshness" hidden></p>
+  </section>
+
+  <section class="toolbar">
+    <div class="search-wrap">
+      <input id="searchBox" type="search" placeholder="搜索模型 / 厂商，如 deepseek、glm、kimi…" autocomplete="off" spellcheck="false">
+    </div>
+    <div class="filter-row" role="group" aria-label="筛选">
+      <button class="filter-chip" data-filter="region" data-value="china">国产</button>
+      <button class="filter-chip" data-filter="region" data-value="overseas">海外</button>
+      <button class="filter-chip" data-filter="source" data-value="官网">官网直采</button>
+      <button class="filter-chip" data-filter="cache" data-value="1">有缓存命中价</button>
+      <button class="filter-clear" id="filterClear" hidden>清除筛选</button>
+      <span class="match-hint" id="matchHint"></span>
+    </div>
+  </section>
+
+  <section class="card table-card">
+    <div class="table-scroll">
+      <table class="rank-table" id="priceTable">
+        <thead>
+          <tr>
+            <th scope="col">模型</th>
+            <th scope="col" data-key="context" class="sortable">上下文</th>
+            <th scope="col" data-key="priceIn" class="sortable" title="每百万输入 tokens 单价；点击按折算人民币价排序">输入单价<span class="unit"> ¥/M</span></th>
+            <th scope="col" data-key="priceOut" class="sortable" title="每百万输出 tokens 单价；点击按折算人民币价排序">输出单价<span class="unit"> ¥/M</span></th>
+            <th scope="col" data-key="priceCacheHit" class="sortable" title="读取已有缓存内容时的输入 token 单价（比未命中价低很多）。缓存保存费用部分厂商另计，见价格说明">缓存命中<span class="unit"> ¥/M</span></th>
+            <th scope="col">价格核验</th>
+            <th scope="col">来源</th>
+          </tr>
+        </thead>
+        <tbody id="priceBody">
+          <tr><td colspan="7" class="empty">载入中…</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="dim-note" id="tableNote">
+      「限时免费」= 官方标注限时免费，恢复收费请以官网现价为准；「—」= 未收录到官方定价（不代表免费，可能是未公开报价或需按量询价）。
+      海外模型按美元报价显示，排序按 $1≈¥7.2 折算。DeepSeek 等分时计价模型取高峰刊例价，空闲时段与缓存细则见<a href="cost.html">成本计算</a>或模型详情页。
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>字段口径说明</h2>
+    <ul class="text-block note-list">
+      <li><b>输入 / 输出单价</b>：每百万 tokens 的 API 报价。国产模型为官方人民币报价；海外模型显示官方美元价，括注按 $1≈¥7.2 折算的人民币参考值。</li>
+      <li><b>缓存命中</b>：读取已有缓存内容时的输入 token 单价，通常远低于未命中价。<b>缓存命中 ≠ 缓存存储</b>——前者是「读」的折扣价，后者是缓存保存成本（部分厂商按存储时长另计）。当前仅官网直采模型有此字段。</li>
+      <li><b>价格核验</b>：每行单独标注该模型价格的核验时间。不同模型日期可能不同——多数来自 SuperCLUE 2026年7月 价格表，官网直采模型为当日核验。</li>
+      <li><b>来源</b>：「官网」表示直采自厂商官方定价页（高峰/分时、分段定价、缓存细则等完整规则见各模型详情页）；「价格表」表示来自 SuperCLUE 价格库。</li>
+      <li>完整计价规则（高峰/空闲、分段档位、多模态）不在本表抹平展示，请进入模型详情页查看「价格来源」与价格说明。</li>
+    </ul>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <p>数据快照 <span id="footDate">载入中…</span> · 各字段核验日期见行内标注 · 数据来源见<a href="about.html">数据说明</a></p>
+    <p>MaaS Rank · 大模型竞技场与中文能力榜单</p>
+  </div>
+</footer>
+
+<script src="js/common.js"></script>
+<script src="js/pricing.js"></script>
+</body>
+</html>
