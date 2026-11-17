@@ -15,8 +15,28 @@
     },
     "official": {
       "ok": true,
-      "count": 3,
-      "date": "2026年11月17日"
+      "count": 15,
+      "date": "2026年11月17日",
+      "reports": [
+        {
+          "source": "deepseek",
+          "ok": true,
+          "count": 3,
+          "error": null
+        },
+        {
+          "source": "zhipu",
+          "ok": true,
+          "count": 9,
+          "error": null
+        },
+        {
+          "source": "kimi",
+          "ok": true,
+          "count": 3,
+          "error": null
+        }
+      ]
     }
   },
   "changes": [
