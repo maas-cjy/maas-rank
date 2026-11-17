@@ -55,13 +55,13 @@
       },
       "price": {
         "label": "API 价格",
-        "source": "15 款官网直采（当日核验，取官方刊例价，口径见各模型价格说明）；其余国产：SuperCLUE 价格库（元/百万tokens，官方人民币报价）；海外模型：厂商官方美元定价，按 $1≈¥7.2 折算展示",
+        "source": "19 款官网直采（当日核验，取官方刊例价，口径见各模型价格说明）；其余国产：SuperCLUE 价格库（元/百万tokens，官方人民币报价）；海外模型：厂商官方美元定价，按 $1≈¥7.2 折算展示",
         "date": "2026年11月17日",
         "kind": "官方",
-        "note": "15 款官网直采（当日核验），其余沿用 SuperCLUE 2026年7月 价格表",
+        "note": "19 款官网直采（当日核验），其余沿用 SuperCLUE 2026年7月 价格表",
         "stale": false,
         "coverage": {
-          "priced": 35,
+          "priced": 39,
           "total": 444
         }
       }
@@ -117,7 +117,13 @@
       "aliases": [
         "claude opus 5.5",
         "Claude opus 5.5"
-      ]
+      ],
+      "priceIn": 4.0,
+      "priceOut": 20.0,
+      "priceCurrency": "USD",
+      "priceSource": "官网",
+      "priceDate": "2026年11月17日",
+      "priceNote": "官方美元定价（$/百万tokens，标准档）"
     },
     {
       "id": "claude-fable-5.1",
@@ -215,7 +221,13 @@
       "aliases": [
         "claude fable 5",
         "Claude fable 5"
-      ]
+      ],
+      "priceIn": 10.0,
+      "priceOut": 50.0,
+      "priceCurrency": "USD",
+      "priceSource": "官网",
+      "priceDate": "2026年11月17日",
+      "priceNote": "官方美元定价（$/百万tokens，标准档）"
     },
     {
       "id": "mimo-v2.6-pro",
@@ -573,7 +585,13 @@
       "aliases": [
         "claude sonnet 5.5",
         "Claude sonnet 5.5"
-      ]
+      ],
+      "priceIn": 2.0,
+      "priceOut": 10.0,
+      "priceCurrency": "USD",
+      "priceSource": "官网",
+      "priceDate": "2026年11月17日",
+      "priceNote": "官方美元定价（$/百万tokens，标准档）"
     },
     {
       "id": "glm-5.2",
@@ -2129,7 +2147,13 @@
       "region": "overseas",
       "open": false,
       "elo": 1398,
-      "desc": "来自 Anthropic 的模型，竞技场 Elo 1401 分。数据每周自动更新。"
+      "desc": "来自 Anthropic 的模型，竞技场 Elo 1401 分。数据每周自动更新。",
+      "priceIn": 0.1,
+      "priceOut": 0.5,
+      "priceCurrency": "USD",
+      "priceSource": "官网",
+      "priceDate": "2026年11月17日",
+      "priceNote": "官方美元定价为阶梯价，此处取起步档"
     },
     {
       "id": "grok-4.3",

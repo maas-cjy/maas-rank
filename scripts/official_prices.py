@@ -303,6 +303,51 @@ def _parse_kimi_prices(page_html: str) -> dict[str, dict]:
     return result
 
 
+# ---------------- Anthropic（Next.js 动态页，无头 Chrome 渲染一页全表） ----------------
+
+ANTHROPIC_URL = "https://platform.claude.com/docs/en/models/fable-5/overview"
+
+# 官方模型页表格名 → 站内模型 id（官网在售款；下架旧款不在官网表中，保持「未收录」）
+ANTHROPIC_NAME_MAP = {
+    "claude fable 5": ["claude-fable-5"],
+    "claude opus 5.5": ["claude-opus-5.5"],
+    "claude sonnet 5.5": ["claude-sonnet-5.5"],
+    "claude haiku 5.5": ["claude haiku 5.5"],
+}
+
+
+def fetch_anthropic(today: str) -> dict[str, dict]:
+    """抓取 Anthropic 官方模型页价格表（需无头 Chrome）。
+
+    表形如：Model | Context | Max output | Price / MTok | …
+    Price 列为 "$8 / $40"（输入/输出，$/MTok），阶梯价带 "From" 前缀。
+    """
+    body = _chrome_dump(ANTHROPIC_URL)
+    entries: dict[str, dict] = {}
+    for table in re.findall(r"<table.*?</table>", body, re.S):
+        for row in re.findall(r"<tr.*?</tr>", table, re.S):
+            cells = _cells(row)
+            if len(cells) < 4 or not cells[0] or cells[0].lower() == "model":
+                continue
+            # Legacy 标注内嵌在名称单元格里（如 "Claude Fable 5This modelLegacy"）
+            name = re.sub(r"This model.*$", "", cells[0]).strip()
+            m = re.match(r"(?:From\s+)?\$([\d.]+)\s*/\s*\$([\d.]+)", cells[3])
+            if not m:
+                continue
+            ids = ANTHROPIC_NAME_MAP.get(name.lower())
+            if not ids:
+                continue
+            note = "官方美元定价（$/百万tokens，标准档）"
+            if cells[3].strip().lower().startswith("from"):
+                note = "官方美元定价为阶梯价，此处取起步档"
+            for mid in ids:
+                entries[mid] = _make_entry(float(m.group(1)), float(m.group(2)),
+                                           today, note, currency="USD")
+    if not entries:
+        raise ValueError("Anthropic 模型页未解析出价格行（页面结构可能已改版或渲染超时）")
+    return entries
+
+
 def fetch_kimi(today: str) -> dict[str, dict]:
     """抓取 Kimi 官网价（需无头 Chrome）。"""
     body = _chrome_dump(KIMI_URL)
@@ -330,6 +375,7 @@ SOURCES = [
     ("deepseek", fetch_deepseek),
     ("zhipu", fetch_zhipu),
     ("kimi", fetch_kimi),
+    ("anthropic", fetch_anthropic),
 ]
 
 
