@@ -379,6 +379,10 @@
       ['综合能力分', R.fmtBench(m.bench) + R.estMark(m, 'bench')],
       ['输入价格', fmtParamPrice(m, 'priceIn') + R.estMark(m, 'priceIn')],
       ['输出价格', fmtParamPrice(m, 'priceOut') + R.estMark(m, 'priceOut')],
+      (m.priceSource === '官网'
+        ? ['价格来源', '<span class="src-official">官网直采</span> '
+          + R.esc(R.priceDateText(m)) + ' 核验 · ' + R.esc(m.priceNote || '高峰时段刊例价')]
+        : ['价格来源', 'SuperCLUE 价格库 ' + R.esc(R.priceDateText(m)) + '（国产为官方人民币报价）']),
       ['上下文窗口', R.fmtCtx(m.context)],
       ['输出速度', R.fmtSpeed(m.speed) + R.estMark(m, 'speed')]
     ];

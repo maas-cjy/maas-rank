@@ -381,7 +381,11 @@
     var pc = document.getElementById('priceCoverage');
     if (pc) pc.textContent = cov.priced + ' / ' + cov.total + ' 款';
     document.querySelectorAll('.js-price-asof').forEach(function (el) {
-      el.textContent = '截至 ' + R.priceDateText();
+      /* 官网直采与价格表并存时，单一「截至 xx月」会失真，改为逐模型标注 */
+      var fiP = (meta.fieldInfo || {}).price || {};
+      el.textContent = (fiP.note && fiP.note.indexOf('官网直采') > -1)
+        ? '逐模型标注'
+        : '截至 ' + R.priceDateText();
     });
     var pn = document.getElementById('priceNote');
     if (pn) pn.textContent = R.priceNote();

@@ -53,7 +53,7 @@
       { label: '综合能力第一',       pick: pickBy('bench', -1),    val: function (m) { return R.fmtBench(m.bench); }, unit: '分', tab: 'bench' },
       { label: '中文能力第一',        pick: pickBy('superclue', -1), val: function (m) { return m.superclue; }, unit: '分',      tab: 'superclue' },
       { label: '输入价最低',         pick: pickBy('priceIn', 1, true), val: function (m) { return fmtPrice(m, 'priceIn'); }, unit: '/ 百万输入 tok', tab: 'priceIn',
-        foot: '输入价，不含输出与缓存 · 截至 ' + R.priceDateText() + ' · 仅 ' + R.priceCoverage().priced + ' 款有公开定价' },
+        foot: function (m) { return '输入价，不含输出与缓存 · 该模型价格核验于 ' + R.priceDateText(m) + ' · 仅 ' + R.priceCoverage().priced + ' 款有公开定价'; } },
       { label: '上下文最长',         pick: pickBy('context', -1),  val: function (m) { return fmtCtx(m.context); }, unit: 'tokens', tab: 'context' }
     ];
     var grid = document.getElementById('kpiSection');
@@ -66,7 +66,7 @@
         + '<div class="kpi-num">' + (typeof v === 'number' ? v : R.esc(String(v))) + '<span class="kpi-unit"> ' + c.unit + '</span></div>'
         + '<div class="kpi-name">' + R.esc(m.name) + '</div>'
         + '<div class="kpi-sub">' + R.esc(m.provider || '–') + ' · ' + R.esc(R.regionName(m.region)) + '</div>'
-        + (c.foot ? '<div class="kpi-foot">' + R.esc(c.foot) + '</div>' : '')
+        + (c.foot ? '<div class="kpi-foot">' + R.esc(typeof c.foot === 'function' ? c.foot(m) : c.foot) + '</div>' : '')
         + '</a></div>';
     }).join('');
     /* 各「第一」的候选池并不相同：不写清楚会让人以为是 444 款里的第一 */
@@ -276,8 +276,11 @@
       if (!field || !field.date) return;
       items.push({
         label: label, date: field.date,
-        // ※ 只标「沿用旧数据」；「换口径」是已更新但不可比，用提示而非陈旧符号
-        stale: !!(field.note && field.note.indexOf('沿用') >= 0),
+        // ※ 只标「沿用旧数据」；优先用后端显式 stale 标记（官网直采当期不算旧），
+        //   「换口径」是已更新但不可比，用提示而非陈旧符号
+        stale: field.stale != null
+          ? !!field.stale
+          : !!(field.note && field.note.indexOf('沿用') >= 0 && field.note.indexOf('官网直采') < 0),
         note: field.note
       });
     }

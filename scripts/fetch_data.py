@@ -46,7 +46,8 @@ HISTORY_FILE = ROOT / "data" / "history.json"
 TIMEOUT = 25
 
 # 历史快照仅归档以下字段（自动更新只涉及这几个指标）
-HISTORY_FIELDS = ("id", "name", "elo", "superclue", "bench", "priceIn", "priceOut", "priceCurrency")
+HISTORY_FIELDS = ("id", "name", "elo", "superclue", "bench", "priceIn", "priceOut",
+                  "priceCurrency", "priceSource", "priceCacheHit")
 
 # 已确认采用的 SuperCLUE 口径切换（2026-11 新基准，经站点维护者确认）：
 # 命中该期数时按新口径合并（维度整体替换、不再与旧口径混排），并在
@@ -711,11 +712,12 @@ def match_model(src_name: str, mid: str) -> bool:
 
 
 def apply_updates(models, elo_map, families, scores, prices,
-                  sc_date: str = "", price_date: str = "") -> tuple[list[str], set[str], bool, bool]:
+                  sc_date: str = "", price_date: str = "",
+                  official: dict | None = None) -> tuple[list[str], set[str], bool, bool]:
     changed: list[str] = []
     covered: set[str] = set()  # 已被现有模型消费的家族键（避免重复新增）
     missing_dims: set[str] = set()  # 本月 SuperCLUE 未提供的维度（口径变更留痕）
-    n_elo = n_sc = n_price = 0
+    n_elo = n_sc = n_price = n_official = 0
 
     # —— SuperCLUE 口径突变检测 ——
     # SuperCLUE 换测评口径时会同时改维度列名和分数分布（2026-11：数学推理→数理推理、
@@ -838,11 +840,27 @@ def apply_updates(models, elo_map, families, scores, prices,
         if hit_pr:
             n_price += 1
 
+        # 官网直采价：优先级最高，覆盖 SuperCLUE 表（官网价以当天页面为准，
+        # 且带真实缓存命中价；未映射的官网新模型不在此处，仍走 SuperCLUE 兜底）
+        e_off = (official or {}).get(mid)
+        if e_off:
+            for field in ("priceIn", "priceOut", "priceCacheHit"):
+                v = e_off.get(field)
+                if v is not None and m.get(field) != v:
+                    changed.append(f"{mid}.{field} {m.get(field)}→{v}")
+                    m[field] = v
+                    m.get("est", {}).pop(field, None)
+            m["priceCurrency"] = "CNY"
+            m["priceSource"] = e_off.get("priceSource", "官网")
+            m["priceDate"] = e_off.get("priceDate") or m.get("priceDate")
+            m["priceNote"] = e_off.get("priceNote")
+            n_official += 1
+
         # 清理空 est
         if m.get("est") == {}:
             m.pop("est", None)
 
-    log(f"  ✓ 匹配更新：Elo {n_elo} 个模型，中文能力 {n_sc} 个模型，价格 {n_price} 个模型")
+    log(f"  ✓ 匹配更新：Elo {n_elo} 个模型，中文能力 {n_sc} 个模型，价格 {n_price} 个模型，官网直采 {n_official} 个")
     if basis_switched:
         # 切换当期未参加新基准测评的模型：旧口径分数不可比，清除而非保留，
         # 避免中文榜出现「旧口径高分」压过「新口径低分」的假排序。
@@ -933,6 +951,19 @@ def main() -> int:
         "price_date": price_date,
     }
 
+    # 4) 官网直采价（可选增强：失败不影响本次更新，价格走 SuperCLUE 兜底）
+    official, official_date = {}, ""
+    try:
+        import official_prices
+        official = official_prices.fetch_all()
+        if official:
+            official_date = next(iter(official.values()))["priceDate"]
+        log(f"  ✓ 官网直采：{len(official)} 个模型条目（{official_date or '无'}）")
+    except Exception as e:  # noqa: BLE001
+        log(f"  ⚠ 官网直采失败，价格回退 SuperCLUE 表：{e}")
+    diff["sources"]["official"] = {"ok": bool(official), "count": len(official),
+                                   "date": official_date}
+
     # 合并（注意：apply_updates 会原地修改 models，因此先保留更新前快照用于历史归档）
     prev_snapshot = {
         "date": meta.get("updated", ""),
@@ -943,7 +974,7 @@ def main() -> int:
     }
     changes, covered, sc_skipped, sc_basis_switched = apply_updates(
         data["models"], elo_map, families, sc_scores, sc_prices,
-        sc_date=used_date, price_date=price_date)
+        sc_date=used_date, price_date=price_date, official=official)
     if sc_skipped:
         # 抓到了新一期但口径不可比，明确标记「未采用」，避免元数据误报成已更新
         diff["sources"]["superclue"]["applied"] = False
@@ -1023,13 +1054,30 @@ def main() -> int:
                 fi[k]["note"] = "本期未合并，沿用上次数据"
     # 价格标注与智能指数解耦：只按「实际抓到的是哪个月的表」标注。
     # 价格表 2026-08 起停更，若跟着智能指数标成当期，属于错误标注。
+    # 官网直采的模型以当天页面为准，其余仍按 SuperCLUE 表月份标注。
+    n_official = sum(1 for m in data["models"] if m.get("priceSource") == "官网")
     if sc_prices and price_date:
         fi["price"] = {"label": "API 价格",
                        "source": "国产模型：SuperCLUE 价格库（元/百万tokens，官方人民币报价）；"
                                  "海外模型：厂商官方美元定价，按 $1≈¥7.2 折算展示",
                        "date": price_date, "kind": "官方"}
-        if used_date and price_date != used_date:
+        if n_official and official_date:
+            fi["price"]["date"] = official_date
+            fi["price"]["source"] = (
+                f"{n_official} 款官网直采（高峰时段刊例价，含缓存命中价）；"
+                "其余国产：SuperCLUE 价格库（元/百万tokens，官方人民币报价）；"
+                "海外模型：厂商官方美元定价，按 $1≈¥7.2 折算展示")
+            fi["price"]["note"] = (
+                f"{n_official} 款官网直采（当日核验），其余沿用 SuperCLUE {price_date} 价格表")
+            fi["price"]["stale"] = False
+        elif used_date and price_date != used_date:
             fi["price"]["note"] = f"价格表自 {price_date} 后未再发布，沿用该月数据"
+            fi["price"]["stale"] = True
+        fi["price"]["coverage"] = {
+            "priced": sum(1 for m in data["models"]
+                          if m.get("priceIn") is not None or m.get("priceOut") is not None),
+            "total": len(data["models"]),
+        }
         fi["price"]["coverage"] = {
             "priced": sum(1 for m in data["models"]
                           if m.get("priceIn") is not None or m.get("priceOut") is not None),

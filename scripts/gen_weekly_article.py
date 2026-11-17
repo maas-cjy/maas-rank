@@ -267,12 +267,23 @@ def build_sections(d, date, basis=None, meta=None):
         pmeta = (meta.get("fieldInfo") or {}).get("price") or {}
         pdate = pmeta.get("date") or "最近一期"
         cov = pmeta.get("coverage") or {}
+        official_note = "官网直采" in (pmeta.get("note") or "")
         if cov.get("priced") and cov.get("total"):
-            parts.append(
-                f"<p>价格核验于 <b>{esc(pdate)}</b>，仅覆盖 {cov['priced']} / {cov['total']} 款模型；"
-                "未收录不代表免费。价格表在该月之后未再发布，厂商调价可能尚未反映，"
-                "按此做年度预算请以官网现价为准。</p>"
-            )
+            # 官网直采与价格表并存时不能笼统说「价格核验于当天」：
+            # 直采的几家是当日核验，其余仍停留在价格表月份
+            if official_note:
+                parts.append(
+                    f"<p>价格核验：<b>DeepSeek 等官网直采模型于 {esc(pdate)} 当日核验</b>"
+                    f"（高峰刊例价，含缓存命中价），其余模型沿用 SuperCLUE 2026年7月 价格表；"
+                    f"共覆盖 {cov['priced']} / {cov['total']} 款，未收录不代表免费，"
+                    "预算请以厂商官网现价为准。</p>"
+                )
+            else:
+                parts.append(
+                    f"<p>价格核验于 <b>{esc(pdate)}</b>，仅覆盖 {cov['priced']} / {cov['total']} 款模型；"
+                    "未收录不代表免费。价格表在该月之后未再发布，厂商调价可能尚未反映，"
+                    "按此做年度预算请以官网现价为准。</p>"
+                )
         else:
             parts.append(f"<p>价格核验于 <b>{esc(pdate)}</b>；该日期之后的调价可能未反映，预算请以官网现价为准。</p>")
     else:

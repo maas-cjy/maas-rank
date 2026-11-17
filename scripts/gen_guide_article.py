@@ -92,15 +92,20 @@ def dim_val(m, dim):
 
 
 def price_caveat(meta):
-    """价格数据期与覆盖率提示：价格表 2026-07 后停更，不能写成「实时」。"""
+    """价格数据期与覆盖率提示：价格表 2026-07 后停更，不能写成「实时」。
+    官网直采的模型（DeepSeek 等）是当日核验，其余仍按价格表月份标注。"""
     pm = ((meta or {}).get("fieldInfo") or {}).get("price") or {}
     cov = pm.get("coverage") or {}
+    official_note = "官网直采" in (pm.get("note") or "")
     parts = []
-    if pm.get("date"):
+    if official_note:
+        parts.append(f"DeepSeek 等官网直采模型于 {pm.get('date') or '当日'} 核验，"
+                     "其余模型沿用 SuperCLUE 2026年7月 价格表")
+    elif pm.get("date"):
         parts.append(f"价格核验于 {pm['date']}")
     if cov.get("priced") and cov.get("total"):
         parts.append(f"仅覆盖 {cov['priced']} / {cov['total']} 款模型，未收录不代表免费")
-    parts.append("该日期后的调价可能未反映，预算请以官网现价为准")
+    parts.append("非直采模型在该日期后的调价可能未反映，预算请以官网现价为准")
     return "；".join(parts) + "。"
 
 

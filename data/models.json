@@ -1,8 +1,8 @@
 {
   "meta": {
     "name": "MaaS Rank · 数据快照",
-    "updated": "2026-11-16",
-    "note": "榜单数据自动更新：Elo 来自 LMArena（数据期 2026-11-11）；中文能力已切换为 SuperCLUE 2026年11月 新评分口径（与此前数值不可直接对比）；价格核验于 2026年7月；未抓取到的字段保留上次快照。",
+    "updated": "2026-11-17",
+    "note": "榜单数据自动更新：Elo 来自 LMArena（数据期 2026-11-11）；中文能力来自 SuperCLUE（2026年11月）；价格核验于 2026年7月；未抓取到的字段保留上次快照。",
     "exchangeRate": 7.2,
     "sources": [
       {
@@ -21,7 +21,7 @@
         "desc": "OpenAI / Anthropic / Google / DeepSeek / 阿里云 / 智谱 / 月之暗面 / 字节 等官方 API 定价"
       }
     ],
-    "lastAutoUpdate": "2026-11-16 10:44:18",
+    "lastAutoUpdate": "2026-11-17 09:35:11",
     "fieldInfo": {
       "elo": {
         "label": "竞技场 Elo",
@@ -55,12 +55,13 @@
       },
       "price": {
         "label": "API 价格",
-        "source": "国产模型：SuperCLUE 价格库（元/百万tokens，官方人民币报价）；海外模型：厂商官方美元定价，按 $1≈¥7.2 折算展示",
-        "date": "2026年7月",
+        "source": "3 款官网直采（高峰时段刊例价，含缓存命中价）；其余国产：SuperCLUE 价格库（元/百万tokens，官方人民币报价）；海外模型：厂商官方美元定价，按 $1≈¥7.2 折算展示",
+        "date": "2026年11月17日",
         "kind": "官方",
-        "note": "价格表自 2026年7月 后未再发布，沿用该月数据",
+        "note": "3 款官网直采（当日核验），其余沿用 SuperCLUE 2026年7月 价格表",
+        "stale": false,
         "coverage": {
-          "priced": 23,
+          "priced": 25,
           "total": 444
         }
       }
@@ -675,7 +676,14 @@
         "coding": 65.38,
         "longctx": 66.25
       },
-      "bench": 57.93
+      "bench": 57.93,
+      "priceIn": 2.0,
+      "priceOut": 8.0,
+      "priceCacheHit": 0.04,
+      "priceCurrency": "CNY",
+      "priceSource": "官网",
+      "priceDate": "2026年11月17日",
+      "priceNote": "高峰时段刊例价（空闲时段输入 ¥1、输出 ¥4）；缓存命中输入 ¥0.04"
     },
     {
       "id": "mimo-v2.5",
@@ -861,15 +869,18 @@
       "desc": "开源旗舰，性价比之王，1M 上下文",
       "release": "2026-07",
       "elo": 1451,
-      "priceIn": 3.0,
-      "priceOut": 6.0,
+      "priceIn": 9.0,
+      "priceOut": 27.0,
       "context": 1000000,
       "speed": 120,
       "est": {
         "speed": true
       },
       "priceCurrency": "CNY",
-      "priceDate": "2026年7月"
+      "priceDate": "2026年11月17日",
+      "priceCacheHit": 0.3,
+      "priceSource": "官网",
+      "priceNote": "高峰时段刊例价（空闲时段输入 ¥4.5、输出 ¥13.5）；缓存命中输入 ¥0.3"
     },
     {
       "id": "mimo-v2.6-flash",
@@ -1032,7 +1043,14 @@
       "region": "china",
       "open": true,
       "elo": 1445,
-      "desc": "来自 DeepSeek 的模型，竞技场 Elo 1445 分。数据每周自动更新。"
+      "desc": "来自 DeepSeek 的模型，竞技场 Elo 1445 分。数据每周自动更新。",
+      "priceIn": 9.0,
+      "priceOut": 27.0,
+      "priceCacheHit": 0.3,
+      "priceCurrency": "CNY",
+      "priceSource": "官网",
+      "priceDate": "2026年11月17日",
+      "priceNote": "高峰时段刊例价（空闲时段输入 ¥4.5、输出 ¥13.5）；缓存命中输入 ¥0.3"
     },
     {
       "id": "nvidia-nemotron-3-ultra-550b-a55b",

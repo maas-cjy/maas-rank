@@ -117,8 +117,12 @@
     }
     var short = priceAsOfShort(m);
     var d = priceDateText(m);
+    var srcMark = m.priceSource === '官网'
+      ? '<span class="src-official" title="价格直采自厂商官网（' + esc(d) + '核验）">官网</span>'
+      : '';
     return fmtPrice(m, field)
-      + (short ? '<span class="price-asof" title="官方定价核验于 ' + esc(d) + '">' + esc(short) + '</span>' : '');
+      + (short ? '<span class="price-asof" title="官方定价核验于 ' + esc(d) + '">' + esc(short) + '</span>' : '')
+      + srcMark;
   }
 
   function priceCoverage() {

@@ -12,13 +12,16 @@
     return isNaN(v) || v < 0 ? fallback : v;
   }
 
-  /* 月成本（¥）：未命中输入×输入价 + 命中输入×输入价×(1−缓存折扣) + 输出×输出价
-     价格按模型币种折算：CNY 原样（官方人民币报价），USD ×7.2 */
+  /* 月成本（¥）：未命中输入×输入价 + 命中输入×缓存命中价 + 输出×输出价
+     价格按模型币种折算：CNY 原样（官方人民币报价），USD ×7.2
+     官网直采模型带真实缓存命中价（priceCacheHit，¥/M），
+     其余仍按「输入价×(1−缓存折扣)」估算 */
   function monthlyCost(m, inTok, outTok, hit, off) {
     if (m.priceIn == null && m.priceOut == null) return null;
     var pin = R.priceToCny(m, 'priceIn') || 0, pout = R.priceToCny(m, 'priceOut') || 0;
+    var hitPin = m.priceCacheHit != null ? m.priceCacheHit : pin * (1 - off);
     return (inTok * (1 - hit) * pin)
-      + (inTok * hit * pin * (1 - off))
+      + (inTok * hit * hitPin)
       + (outTok * pout);
   }
 
@@ -79,8 +82,10 @@
       sumEl.textContent = '所选模型暂无价格数据。';
     } else {
       var missing = selected.length - priced.length;
+      var hasOfficialCache = priced.some(function (mm) { return mm.priceCacheHit != null; });
       sumEl.textContent = '按每月输入 ' + inTok + 'M / 输出 ' + outTok + 'M tokens、缓存命中 '
         + Math.round(hit * 100) + '%、缓存读价折扣 ' + Math.round(off * 100) + '% 估算。'
+        + (hasOfficialCache ? '官网直采模型按官方缓存命中价计，其余按缓存折扣估算。' : '')
         + '价格口径：国产模型为官方人民币报价，海外模型按汇率 $1≈¥' + R.USD_CNY + ' 换算。'
         + '单价核验于 ' + R.priceDateText() + (R.priceAgeMonths() != null ? '（约 ' + R.priceAgeMonths() + ' 个月前）' : '')
         + '，这期间的调价未反映，预算请留余量。'
