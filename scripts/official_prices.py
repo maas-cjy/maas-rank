@@ -225,7 +225,7 @@ def fetch_zhipu(today: str) -> dict[str, dict]:
             note = (f"分段定价共 {len(rows_)} 档（{lo['ctx']}：¥{lo['priceIn']:g}/¥{lo['priceOut']:g} 起），"
                     f"此处取最高档（{best['ctx']}）")
         if best["priceIn"] == 0 and best["priceOut"] == 0:
-            note = "官方免费模型" + (f"（{note}）" if note else "")
+            note = "官方限时免费（恢复收费请以官网现价为准）" + (f"（{note}）" if note else "")
         entry = _make_entry(best["priceIn"], best["priceOut"], today, note,
                             cache_hit=best["priceCacheHit"])
         for mid in ids:

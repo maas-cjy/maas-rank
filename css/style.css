@@ -208,6 +208,12 @@ tbody tr:last-child td { border-bottom: none; }
   color: #1d4ed8; background: #dbeafe; border-radius: 4px; padding: 0 5px;
   font-weight: 600; white-space: nowrap; vertical-align: 1px;
 }
+/* 官方限时免费（0 价）：避免 ¥0.00 被误读成永久免费 */
+.price-free {
+  display: inline-block; font-size: 11.5px; line-height: 1.5;
+  color: #166534; background: #dcfce7; border-radius: 4px; padding: 0 5px;
+  font-weight: 600; white-space: nowrap; vertical-align: 1px;
+}
 .price-missing {
   color: var(--muted); font-size: 11.5px; white-space: nowrap;
   border-bottom: 1px dotted #aab1bf; cursor: help;

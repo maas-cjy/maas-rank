@@ -29,6 +29,9 @@
     var asof = R.priceAsOfShort(m)
       ? '<span class="price-asof" title="官方定价核验于 ' + R.esc(R.priceDateText(m)) + '">' + R.esc(R.priceAsOfShort(m)) + ' 核验</span>'
       : '';
+    if (m[field] === 0) {
+      return '<span class="price-free">限时免费</span>（官方标注限时免费，恢复收费请以官网现价为准）' + asof;
+    }
     if (m.priceCurrency === 'CNY') {
       return '¥' + (+m[field]).toFixed(2) + '（官方人民币报价，约 ' + R.fmtUsd(+m[field] / R.USD_CNY) + '）' + asof;
     }
@@ -48,8 +51,8 @@
 
   function setSeo(m) {
     var url = SITE + 'model.html?id=' + encodeURIComponent(m.id);
-    var pIn = m.priceIn == null ? '未收录' : R.fmtPrice(m, 'priceIn');
-    var pOut = m.priceOut == null ? '未收录' : R.fmtPrice(m, 'priceOut');
+    var pIn = m.priceIn == null ? '未收录' : (m.priceIn === 0 ? '限时免费' : R.fmtPrice(m, 'priceIn'));
+    var pOut = m.priceOut == null ? '未收录' : (m.priceOut === 0 ? '限时免费' : R.fmtPrice(m, 'priceOut'));
     var title = m.name + '（' + m.provider + '）价格、Elo 排名、上下文长度 | MaaS Rank 大模型排行榜';
     var desc = m.name + '（' + m.provider + '）——' + m.desc
       + '。竞技场 Elo ' + (m.elo == null ? '—' : m.elo) + ' 分，SuperCLUE 中文能力 ' + (m.superclue == null ? '—' : m.superclue) + ' 分，'
@@ -165,9 +168,9 @@
         '可能未公开报价或需按量询价');
     } else {
       html += kpiCard('API 价格 · 每百万 tokens',
-        R.fmtPrice(m, 'priceOut'), '/M',
-        '输出价第 ' + rankOf(priceList, m) + ' 低（' + R.priceCoverage().priced + ' 款有定价）· 输入 ' + R.fmtPrice(m, 'priceIn'),
-        '价格核验 ' + R.priceDateText(m) + ' · 输入价不含输出与缓存'
+        m.priceOut === 0 ? '限时免费' : R.fmtPrice(m, 'priceOut'), m.priceOut === 0 ? '' : '/M',
+        '输出价第 ' + rankOf(priceList, m) + ' 低（' + R.priceCoverage().priced + ' 款有定价）· 输入 ' + (m.priceIn === 0 ? '限时免费' : R.fmtPrice(m, 'priceIn')),
+        '价格核验 ' + R.priceDateText(m) + (m.priceIn === 0 ? ' · 官方限时免费，恢复收费请以官网现价为准' : ' · 输入价不含输出与缓存')
           + ((R.isEst(m, 'priceIn') || R.isEst(m, 'priceOut')) ? ' · <span class="est-mark">*</span>估算值' : ''));
     }
 

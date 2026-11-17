@@ -110,7 +110,19 @@
   }
 
   /* 价格单元格：数字 + 紧邻的核验月份。缺失时写明「未收录」并解释，
-     避免读者把 — 误读成 0 元 / 免费。 */
+     避免读者把 — 误读成 0 元 / 免费。0 价显示「限时免费」而非 ¥0.00，
+     避免误读成永久免费（如 GLM-4.7-Flash 官方标注限时免费）。 */
+  function isFreePrice(m, field) {
+    return m && m[field] === 0;
+  }
+
+  function priceDisplay(m, field) {
+    if (isFreePrice(m, field)) {
+      return '<span class="price-free" title="官方限时免费：恢复收费请以厂商官网现价为准">限时免费</span>';
+    }
+    return fmtPrice(m, field);
+  }
+
   function priceCell(m, field) {
     if (!m || m[field] == null) {
       return '<span class="price-missing" title="未收录官方定价：可能未公开报价、需按量询价，或本期尚未核验；不代表免费">未收录</span>';
@@ -120,7 +132,7 @@
     var srcMark = m.priceSource === '官网'
       ? '<span class="src-official" title="价格直采自厂商官网（' + esc(d) + '核验）">官网</span>'
       : '';
-    return fmtPrice(m, field)
+    return priceDisplay(m, field)
       + (short ? '<span class="price-asof" title="官方定价核验于 ' + esc(d) + '">' + esc(short) + '</span>' : '')
       + srcMark;
   }
@@ -232,6 +244,8 @@
     priceToCny: priceToCny,
     fmtPrice: fmtPrice,
     priceCell: priceCell,
+    priceDisplay: priceDisplay,
+    isFreePrice: isFreePrice,
     priceDateText: priceDateText,
     priceDateISO: priceDateISO,
     priceAsOfShort: priceAsOfShort,

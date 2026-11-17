@@ -42,7 +42,7 @@
           return dir > 0 ? (mv < bv ? m : best) : (mv > bv ? m : best);
         }, null);
     };
-    var fmtPrice = function (m, field) { return R.fmtPrice(m, field); };
+    var fmtPrice = function (m, field) { return m[field] === 0 ? '限时免费' : R.fmtPrice(m, field); };
     var fmtCtx = function (v) {
       if (v == null) return '–';
       if (v >= 10000) return (v / 10000).toFixed(0) + '万';
@@ -53,7 +53,7 @@
       { label: '综合能力第一',       pick: pickBy('bench', -1),    val: function (m) { return R.fmtBench(m.bench); }, unit: '分', tab: 'bench' },
       { label: '中文能力第一',        pick: pickBy('superclue', -1), val: function (m) { return m.superclue; }, unit: '分',      tab: 'superclue' },
       { label: '输入价最低',         pick: pickBy('priceIn', 1, true), val: function (m) { return fmtPrice(m, 'priceIn'); }, unit: '/ 百万输入 tok', tab: 'priceIn',
-        foot: function (m) { return '输入价，不含输出与缓存 · 该模型价格核验于 ' + R.priceDateText(m) + ' · 仅 ' + R.priceCoverage().priced + ' 款有公开定价'; } },
+        foot: function (m) { return (m.priceIn === 0 ? '官方限时免费，恢复收费请以官网为准 · ' : '输入价，不含输出与缓存 · ') + '该模型价格核验于 ' + R.priceDateText(m) + ' · 仅 ' + R.priceCoverage().priced + ' 款有公开定价'; } },
       { label: '上下文最长',         pick: pickBy('context', -1),  val: function (m) { return fmtCtx(m.context); }, unit: 'tokens', tab: 'context' }
     ];
     var grid = document.getElementById('kpiSection');
@@ -185,7 +185,7 @@
       }
       return list.slice(0, 3).map(function (m, i) {
         var v = key === 'bench' ? R.fmtBench(m.bench)
-          : key === 'priceIn' ? R.fmtPrice(m, 'priceIn')
+          : key === 'priceIn' ? (m.priceIn === 0 ? '限时免费' : R.fmtPrice(m, 'priceIn'))
           : R.fmtNum(m[key]);
         return '<li>'
           + '<span class="wk-name"><span class="wk-rank">' + (i + 1) + '</span>'

@@ -49,7 +49,7 @@
       html += '<label class="picker-item' + (full ? ' disabled' : '') + '">'
         + '<input type="checkbox" value="' + R.esc(m.id) + '"' + (on ? ' checked' : '') + (full ? ' disabled' : '') + '>'
         + '<span class="pi-name">' + R.esc(m.name) + '</span>'
-        + '<span class="pi-prov">' + R.esc(m.provider) + ' · ' + R.fmtPrice(m, 'priceIn') + ' / ' + R.fmtPrice(m, 'priceOut') + '</span>'
+        + '<span class="pi-prov">' + R.esc(m.provider) + ' · ' + R.priceDisplay(m, 'priceIn') + ' / ' + R.priceDisplay(m, 'priceOut') + '</span>'
         + '</label>';
     });
     document.getElementById('pickerList').innerHTML = html || '<p class="empty">没有匹配的模型</p>';
@@ -83,9 +83,11 @@
     } else {
       var missing = selected.length - priced.length;
       var hasOfficialCache = priced.some(function (mm) { return mm.priceCacheHit != null; });
+      var nFree = priced.filter(function (mm) { return mm.priceIn === 0 && mm.priceOut === 0; }).length;
       sumEl.textContent = '按每月输入 ' + inTok + 'M / 输出 ' + outTok + 'M tokens、缓存命中 '
         + Math.round(hit * 100) + '%、缓存读价折扣 ' + Math.round(off * 100) + '% 估算。'
         + (hasOfficialCache ? '官网直采模型按官方缓存命中价计，其余按缓存折扣估算。' : '')
+        + (nFree > 0 ? '所选中有 ' + nFree + ' 个模型为官方限时免费（成本按 0 计），恢复收费后结果将失效。' : '')
         + '价格口径：国产模型为官方人民币报价，海外模型按汇率 $1≈¥' + R.USD_CNY + ' 换算。'
         + '单价核验于 ' + R.priceDateText() + (R.priceAgeMonths() != null ? '（约 ' + R.priceAgeMonths() + ' 个月前）' : '')
         + '，这期间的调价未反映，预算请留余量。'
