@@ -15,7 +15,7 @@
     },
     "official": {
       "ok": true,
-      "count": 15,
+      "count": 19,
       "date": "2026年11月17日",
       "reports": [
         {
@@ -34,6 +34,12 @@
           "source": "kimi",
           "ok": true,
           "count": 3,
+          "error": null
+        },
+        {
+          "source": "anthropic",
+          "ok": true,
+          "count": 4,
           "error": null
         }
       ]

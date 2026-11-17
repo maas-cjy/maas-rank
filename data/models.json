@@ -21,7 +21,7 @@
         "desc": "OpenAI / Anthropic / Google / DeepSeek / 阿里云 / 智谱 / 月之暗面 / 字节 等官方 API 定价"
       }
     ],
-    "lastAutoUpdate": "2026-11-17 08:43:06",
+    "lastAutoUpdate": "2026-11-17 09:17:52",
     "fieldInfo": {
       "elo": {
         "label": "竞技场 Elo",
@@ -120,7 +120,7 @@
       ],
       "priceIn": 4.0,
       "priceOut": 20.0,
-      "priceCurrency": "USD",
+      "priceCurrency": "CNY",
       "priceSource": "官网",
       "priceDate": "2026年11月17日",
       "priceNote": "官方美元定价（$/百万tokens，标准档）"
@@ -224,7 +224,7 @@
       ],
       "priceIn": 10.0,
       "priceOut": 50.0,
-      "priceCurrency": "USD",
+      "priceCurrency": "CNY",
       "priceSource": "官网",
       "priceDate": "2026年11月17日",
       "priceNote": "官方美元定价（$/百万tokens，标准档）"
@@ -588,7 +588,7 @@
       ],
       "priceIn": 2.0,
       "priceOut": 10.0,
-      "priceCurrency": "USD",
+      "priceCurrency": "CNY",
       "priceSource": "官网",
       "priceDate": "2026年11月17日",
       "priceNote": "官方美元定价（$/百万tokens，标准档）"
@@ -2150,7 +2150,7 @@
       "desc": "来自 Anthropic 的模型，竞技场 Elo 1401 分。数据每周自动更新。",
       "priceIn": 0.1,
       "priceOut": 0.5,
-      "priceCurrency": "USD",
+      "priceCurrency": "CNY",
       "priceSource": "官网",
       "priceDate": "2026年11月17日",
       "priceNote": "官方美元定价为阶梯价，此处取起步档"
