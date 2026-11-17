@@ -99,7 +99,7 @@ def price_caveat(meta):
     official_note = "官网直采" in (pm.get("note") or "")
     parts = []
     if official_note:
-        parts.append(f"DeepSeek 等官网直采模型于 {pm.get('date') or '当日'} 核验，"
+        parts.append(f"DeepSeek、智谱、Kimi 等官网直采模型于 {pm.get('date') or '当日'} 核验，"
                      "其余模型沿用 SuperCLUE 2026年7月 价格表")
     elif pm.get("date"):
         parts.append(f"价格核验于 {pm['date']}")

@@ -273,8 +273,8 @@ def build_sections(d, date, basis=None, meta=None):
             # 直采的几家是当日核验，其余仍停留在价格表月份
             if official_note:
                 parts.append(
-                    f"<p>价格核验：<b>DeepSeek 等官网直采模型于 {esc(pdate)} 当日核验</b>"
-                    f"（高峰刊例价，含缓存命中价），其余模型沿用 SuperCLUE 2026年7月 价格表；"
+                    f"<p>价格核验：<b>DeepSeek、智谱、Kimi 等官网直采模型于 {esc(pdate)} 当日核验</b>"
+                    f"（按官方刊例价），其余模型沿用 SuperCLUE 2026年7月 价格表；"
                     f"共覆盖 {cov['priced']} / {cov['total']} 款，未收录不代表免费，"
                     "预算请以厂商官网现价为准。</p>"
                 )

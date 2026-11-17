@@ -951,18 +951,23 @@ def main() -> int:
         "price_date": price_date,
     }
 
-    # 4) 官网直采价（可选增强：失败不影响本次更新，价格走 SuperCLUE 兜底）
-    official, official_date = {}, ""
+    # 4) 官网直采价（可选增强：单个厂商失败不影响其他厂商，也不阻塞本次更新）
+    official, official_date, official_reports = {}, "", []
     try:
         import official_prices
-        official = official_prices.fetch_all()
+        official, official_reports = official_prices.fetch_all()
         if official:
             official_date = next(iter(official.values()))["priceDate"]
-        log(f"  ✓ 官网直采：{len(official)} 个模型条目（{official_date or '无'}）")
+        for r in official_reports:
+            if r["ok"]:
+                log(f"  ✓ 官网直采[{r['source']}]：{r['count']} 个条目")
+            else:
+                log(f"  ⚠ 官网直采[{r['source']}]失败（该厂商价格回退 SuperCLUE 表）：{r['error']}")
+        log(f"  ✓ 官网直采合计：{len(official)} 个模型条目（{official_date or '无'}）")
     except Exception as e:  # noqa: BLE001
         log(f"  ⚠ 官网直采失败，价格回退 SuperCLUE 表：{e}")
     diff["sources"]["official"] = {"ok": bool(official), "count": len(official),
-                                   "date": official_date}
+                                   "date": official_date, "reports": official_reports}
 
     # 合并（注意：apply_updates 会原地修改 models，因此先保留更新前快照用于历史归档）
     prev_snapshot = {
@@ -1064,7 +1069,7 @@ def main() -> int:
         if n_official and official_date:
             fi["price"]["date"] = official_date
             fi["price"]["source"] = (
-                f"{n_official} 款官网直采（高峰时段刊例价，含缓存命中价）；"
+                f"{n_official} 款官网直采（当日核验，取官方刊例价，口径见各模型价格说明）；"
                 "其余国产：SuperCLUE 价格库（元/百万tokens，官方人民币报价）；"
                 "海外模型：厂商官方美元定价，按 $1≈¥7.2 折算展示")
             fi["price"]["note"] = (

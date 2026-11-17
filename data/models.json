@@ -55,13 +55,13 @@
       },
       "price": {
         "label": "API 价格",
-        "source": "3 款官网直采（高峰时段刊例价，含缓存命中价）；其余国产：SuperCLUE 价格库（元/百万tokens，官方人民币报价）；海外模型：厂商官方美元定价，按 $1≈¥7.2 折算展示",
+        "source": "15 款官网直采（当日核验，取官方刊例价，口径见各模型价格说明）；其余国产：SuperCLUE 价格库（元/百万tokens，官方人民币报价）；海外模型：厂商官方美元定价，按 $1≈¥7.2 折算展示",
         "date": "2026年11月17日",
         "kind": "官方",
-        "note": "3 款官网直采（当日核验），其余沿用 SuperCLUE 2026年7月 价格表",
+        "note": "15 款官网直采（当日核验），其余沿用 SuperCLUE 2026年7月 价格表",
         "stale": false,
         "coverage": {
-          "priced": 25,
+          "priced": 35,
           "total": 444
         }
       }
@@ -459,7 +459,14 @@
         "coding": 53.85,
         "longctx": 77.6
       },
-      "bench": 51.62
+      "bench": 51.62,
+      "priceIn": 8.0,
+      "priceOut": 28.0,
+      "priceCacheHit": 2.0,
+      "priceCurrency": "CNY",
+      "priceSource": "官网",
+      "priceDate": "2026年11月17日",
+      "priceNote": null
     },
     {
       "id": "qwen3.7-max",
@@ -498,7 +505,10 @@
         "Kimi k3"
       ],
       "priceCurrency": "CNY",
-      "priceDate": "2026年7月"
+      "priceDate": "2026年11月17日",
+      "priceCacheHit": 2.0,
+      "priceSource": "官网",
+      "priceNote": "缓存命中输入 ¥2/M；缓存写入（5min TTL）¥20/M、（1h TTL）¥40/M"
     },
     {
       "id": "glm-5.3-flash",
@@ -516,7 +526,14 @@
         "coding": 50.0,
         "longctx": 57.61
       },
-      "bench": 47.02
+      "bench": 47.02,
+      "priceIn": 0.8,
+      "priceOut": 2.8,
+      "priceCacheHit": 0.23,
+      "priceCurrency": "CNY",
+      "priceSource": "官网",
+      "priceDate": "2026年11月17日",
+      "priceNote": null
     },
     {
       "id": "gpt-5.5",
@@ -575,7 +592,10 @@
         "speed": true
       },
       "priceCurrency": "CNY",
-      "priceDate": "2026年7月"
+      "priceDate": "2026年11月17日",
+      "priceCacheHit": 2.0,
+      "priceSource": "官网",
+      "priceNote": null
     },
     {
       "id": "gpt-5.4",
@@ -705,7 +725,14 @@
       "region": "china",
       "open": true,
       "elo": 1462,
-      "desc": "来自 智谱 的模型，竞技场 Elo 1463 分。数据每周自动更新。"
+      "desc": "来自 智谱 的模型，竞技场 Elo 1463 分。数据每周自动更新。",
+      "priceIn": 8.0,
+      "priceOut": 28.0,
+      "priceCacheHit": 2.0,
+      "priceCurrency": "CNY",
+      "priceSource": "官网",
+      "priceDate": "2026年11月17日",
+      "priceNote": "分段定价共 2 档（输入长度 [0, 32K)：¥6/¥24 起），此处取最高档（输入长度 ≥32K）"
     },
     {
       "id": "claude-opus-4.8",
@@ -738,7 +765,14 @@
         "coding": 57.69,
         "longctx": 87.25
       },
-      "bench": 64.14
+      "bench": 64.14,
+      "priceIn": 13.0,
+      "priceOut": 68.0,
+      "priceCacheHit": 1.3,
+      "priceCurrency": "CNY",
+      "priceSource": "官网",
+      "priceDate": "2026年11月17日",
+      "priceNote": "缓存命中输入 ¥1.3/M；缓存写入（5min TTL）¥13/M、（1h TTL）¥26/M"
     },
     {
       "id": "gemini-2.5-pro",
@@ -804,7 +838,14 @@
       "aliases": [
         "kimi k2.6",
         "Kimi k2.6"
-      ]
+      ],
+      "priceIn": 6.5,
+      "priceOut": 27.0,
+      "priceCacheHit": 1.1,
+      "priceCurrency": "CNY",
+      "priceSource": "官网",
+      "priceDate": "2026年11月17日",
+      "priceNote": "缓存命中输入 ¥1.1/M"
     },
     {
       "id": "qwen3.7-plus",
@@ -990,7 +1031,14 @@
       "region": "china",
       "open": true,
       "elo": 1446,
-      "desc": "来自 智谱 的模型，竞技场 Elo 1445 分。数据每周自动更新。"
+      "desc": "来自 智谱 的模型，竞技场 Elo 1445 分。数据每周自动更新。",
+      "priceIn": 6.0,
+      "priceOut": 22.0,
+      "priceCacheHit": 1.5,
+      "priceCurrency": "CNY",
+      "priceSource": "官网",
+      "priceDate": "2026年11月17日",
+      "priceNote": "分段定价共 2 档（输入长度 [0, 32K)：¥4/¥18 起），此处取最高档（输入长度 ≥32K）"
     },
     {
       "id": "kimi-k2.5",
@@ -1311,7 +1359,14 @@
       "region": "china",
       "open": true,
       "elo": 1435,
-      "desc": "来自 智谱 的模型，竞技场 Elo 1435 分。数据每周自动更新。"
+      "desc": "来自 智谱 的模型，竞技场 Elo 1435 分。数据每周自动更新。",
+      "priceIn": 4.0,
+      "priceOut": 16.0,
+      "priceCacheHit": 0.8,
+      "priceCurrency": "CNY",
+      "priceSource": "官网",
+      "priceDate": "2026年11月17日",
+      "priceNote": "分段定价共 3 档（输入 [0, 32K)，输出 [0, 0.2K)：¥2/¥8 起），此处取最高档（输入 [32K, 200K)）"
     },
     {
       "id": "claude sonnet 4.5",
@@ -2237,7 +2292,14 @@
       "region": "china",
       "open": true,
       "elo": 1384,
-      "desc": "来自 智谱 的模型，竞技场 Elo 1383 分。数据每周自动更新。"
+      "desc": "来自 智谱 的模型，竞技场 Elo 1383 分。数据每周自动更新。",
+      "priceIn": 1.2,
+      "priceOut": 8.0,
+      "priceCacheHit": 0.24,
+      "priceCurrency": "CNY",
+      "priceSource": "官网",
+      "priceDate": "2026年11月17日",
+      "priceNote": "分段定价共 3 档（输入 [0, 32K)，输出 [0, 0.2K)：¥0.8/¥2 起），此处取最高档（输入 [32K, 128K)）"
     },
     {
       "id": "qwen3-30b-a3b-instruct",
@@ -2594,7 +2656,14 @@
       "region": "china",
       "open": true,
       "elo": 1351,
-      "desc": "来自 智谱 的模型，竞技场 Elo 1353 分。数据每周自动更新。"
+      "desc": "来自 智谱 的模型，竞技场 Elo 1353 分。数据每周自动更新。",
+      "priceIn": 0.0,
+      "priceOut": 0.0,
+      "priceCacheHit": 0.0,
+      "priceCurrency": "CNY",
+      "priceSource": "官网",
+      "priceDate": "2026年11月17日",
+      "priceNote": "官方免费模型"
     },
     {
       "id": "step-3",
@@ -2818,7 +2887,14 @@
       "region": "china",
       "open": false,
       "elo": 1331,
-      "desc": "来自 智谱 的模型，竞技场 Elo 1331 分。数据每周自动更新。"
+      "desc": "来自 智谱 的模型，竞技场 Elo 1331 分。数据每周自动更新。",
+      "priceIn": 5.0,
+      "priceOut": 5.0,
+      "priceCacheHit": 2.5,
+      "priceCurrency": "CNY",
+      "priceSource": "官网",
+      "priceDate": "2026年11月17日",
+      "priceNote": null
     },
     {
       "id": "command-a-03",
