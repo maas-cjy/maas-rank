@@ -850,7 +850,7 @@ def apply_updates(models, elo_map, families, scores, prices,
                     changed.append(f"{mid}.{field} {m.get(field)}→{v}")
                     m[field] = v
                     m.get("est", {}).pop(field, None)
-            m["priceCurrency"] = "CNY"
+            m["priceCurrency"] = e_off.get("priceCurrency", "CNY")
             m["priceSource"] = e_off.get("priceSource", "官网")
             m["priceDate"] = e_off.get("priceDate") or m.get("priceDate")
             m["priceNote"] = e_off.get("priceNote")
