@@ -7,7 +7,7 @@
     },
     "superclue": {
       "ok": true,
-      "count": 19,
+      "count": 21,
       "date": "2026年11月",
       "price_count": 12,
       "price_date": "2026年7月",
@@ -58,6 +58,8 @@
     }
   },
   "changes": [
+    "qwen.superclue 43.22→61.61",
+    "qwen.bench 41.77→62.76",
     "deepseek-v4-pro.priceIn 9.0→3.0",
     "deepseek-v4-pro.priceOut 27.0→6.0",
     "deepseek-v4-pro.priceIn 3.0→9.0",

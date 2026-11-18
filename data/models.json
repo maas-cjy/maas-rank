@@ -21,7 +21,7 @@
         "desc": "OpenAI / Anthropic / Google / DeepSeek / 阿里云 / 智谱 / 月之暗面 / 字节 等官方 API 定价"
       }
     ],
-    "lastAutoUpdate": "2026-11-18 03:45:26",
+    "lastAutoUpdate": "2026-11-18 08:58:41",
     "fieldInfo": {
       "elo": {
         "label": "竞技场 Elo",
@@ -344,15 +344,15 @@
       "desc": "来自 阿里云 的模型，竞技场 Elo 1282 分。数据每周自动更新。",
       "priceIn": 12.0,
       "priceOut": 36.0,
-      "superclue": 43.22,
+      "superclue": 61.61,
       "dims": {
-        "math": 68.42,
-        "hallu": 33.05,
-        "ifollow": 20.69,
-        "coding": 42.31,
-        "longctx": 44.38
+        "math": 73.68,
+        "hallu": 73.61,
+        "ifollow": 31.03,
+        "coding": 57.69,
+        "longctx": 77.8
       },
-      "bench": 41.77,
+      "bench": 62.76,
       "priceCurrency": "CNY",
       "priceDate": "2026年7月"
     },
