@@ -21,7 +21,7 @@
         "desc": "OpenAI / Anthropic / Google / DeepSeek / 阿里云 / 智谱 / 月之暗面 / 字节 等官方 API 定价"
       }
     ],
-    "lastAutoUpdate": "2026-11-18 03:22:04",
+    "lastAutoUpdate": "2026-11-18 03:45:26",
     "fieldInfo": {
       "elo": {
         "label": "竞技场 Elo",
@@ -1589,7 +1589,7 @@
       "priceDate": "2026年11月18日",
       "priceCacheHit": 1.26,
       "priceSource": "官网",
-      "priceNote": "官方永久五折，此处为折后价（原价 ¥2.52 起）；多档位定价（最低档 ¥2.1/¥8.4），此处取最高档"
+      "priceNote": "官方永久五折，此处为折后价（原价 ¥12.6 起）；多档位定价（最低档 ¥2.1/¥8.4），此处取最高档"
     },
     {
       "id": "grok-3",
