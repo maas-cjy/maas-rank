@@ -18,6 +18,14 @@
   （Mintlify Markdown，纯 HTTP；分段定价取最高档并注明档位区间）
 - Kimi      https://platform.kimi.com/docs/pricing/chat
   （Mintlify 动态表格，需无头 Chrome）
+- Anthropic https://platform.claude.com/docs/en/models/fable-5/overview
+  （Next.js 动态页，需无头 Chrome；一页全系表格）
+- 阿里百炼  https://help.aliyun.com/zh/model-studio/billing-for-model-studio
+  （纯 HTTP 静态 HTML；价格表分散在数十个分表中，需按表头过滤国际版/
+   音频/图像表，模型单元格有 rowspan 跨行档位，输出列可能拆「非思考/思考」）
+- MiniMax   https://platform.minimaxi.com/document/price
+  （纯 HTTP 静态 HTML；划线价 <del>原价</del> 折后价取折后，「标准/优先」
+   tab 两套表并存取高者，保守口径）
 """
 
 import html as _html
@@ -260,6 +268,9 @@ def _chrome_dump(url: str, budget_ms: int = 15000) -> str:
     try:
         out = subprocess.run(
             [exe, "--headless=new", "--disable-gpu", "--no-sandbox",
+             # 本机系统代理未启动时 Chrome 会 ERR_PROXY_CONNECTION_FAILED，
+             # 强制直连（CI runner 本就是直连，无副作用）
+             "--proxy-server=direct://", "--proxy-bypass-list=*",
              f"--user-data-dir={profile}", f"--virtual-time-budget={budget_ms}",
              "--dump-dom", url],
             capture_output=True, timeout=90, check=True,
@@ -369,6 +380,203 @@ def fetch_kimi(today: str) -> dict[str, dict]:
     return entries
 
 
+# ---------------- 阿里百炼（静态 HTML，数十个分表） ----------------
+
+ALIYUN_URL = "https://help.aliyun.com/zh/model-studio/billing-for-model-studio"
+
+# 官方 Model ID → 站内模型 id（只映射在售商业款；带日期快照/preview/latest 不映射）
+ALIYUN_NAME_MAP = {
+    "qwen3.8-max": ["qwen3.8-max"],
+    "qwen3.7-max": ["qwen3.7-max"],
+    "qwen3.7-plus": ["qwen3.7-plus"],
+    "qwen3.6-plus": ["qwen3.6-plus"],
+    "qwen3.5-flash": ["qwen3.5-flash"],
+    "qwen-plus": ["qwen-plus"],
+    "qwen3.8-27b": ["qwen3.8-27b"],
+    "qwen3.5-397b-a17b": ["qwen3.5-397b-a17b"],
+    "qwen3.5-122b-a10b": ["qwen3.5-122b-a10b"],
+    "qwen3.5-27b": ["qwen3.5-27b"],
+    "qwen3.5-35b-a3b": ["qwen3.5-35b-a3b"],
+}
+
+
+def _parse_aliyun_prices(page_html: str) -> dict[str, list]:
+    """解析百炼计费页，返回 {官方 Model ID: [{priceIn, priceOut, tier, discount}]}。
+
+    页面把各产品线价格拆成数十个分表，同一份数据在页内还会重复出现一遍。
+    过滤规则：跳过带「服务部署范围」（国际版）、「音频/图片」（按量非 token 计价）
+    的表头；正文行首格是 Model ID（可能带 rowspan 跨多条档位行），续行只有
+    档位+价格，靠 current_model 接力。价格单元格形如「10 元」或
+    「原价 2 元 （限时 8 折）」；输出列可能拆「非思考/思考模式」两列（取高者）。
+    """
+    tiers: dict[str, list] = {}
+    for tbl in re.findall(r"<table.*?</table>", page_html, re.S):
+        rows_html = re.findall(r"<tr.*?</tr>", tbl, re.S)
+        if len(rows_html) < 2:
+            continue
+        header = " ".join(_cells(rows_html[0]))
+        if ("服务部署范围" in header or "音频" in header or "图片" in header
+                or "每百万" not in header):
+            continue
+        current_model = None
+        for row_html in rows_html[1:]:
+            cells = _cells(row_html)
+            if not cells:
+                continue
+            m = re.match(r"(qwen[a-z0-9.-]+)", cells[0])
+            if m:
+                current_model = m.group(1)
+                rest = cells[1:]
+            elif current_model:
+                rest = cells  # 模型格 rowspan 的档位续行
+            else:
+                continue
+            if current_model not in ALIYUN_NAME_MAP:
+                continue
+            prices, discount = [], None
+            for c in rest:
+                pm = re.search(r"([\d.]+)\s*元", c)
+                if pm:
+                    prices.append(float(pm.group(1)))
+                    dm = re.search(r"([\d.]+)\s*折", c)
+                    if dm:
+                        discount = float(dm.group(1)) / 10
+            # 2 价=输入/输出；3 价=输入/非思考输出/思考输出（取高者，保守口径）。
+            # 其余（omni 的文本/音频四价、免费体验行等）结构不明，跳过不猜。
+            if len(prices) not in (2, 3):
+                continue
+            tier = next((c for c in rest if "Token" in c and ("≤" in c or "阶梯" in c)),
+                        None)
+            tiers.setdefault(current_model, []).append(
+                {"priceIn": prices[0],
+                 "priceOut": max(prices[1:]) if len(prices) == 3 else prices[1],
+                 "tier": tier, "discount": discount})
+    if not tiers:
+        raise ValueError("百炼计费页未解析出 Qwen 价格行（页面结构可能已改版）")
+    return tiers
+
+
+def fetch_aliyun(today: str) -> dict[str, dict]:
+    """抓取阿里云百炼官网价。多档位取最高档（保守口径），限时折扣取折后价。"""
+    body = http_get(ALIYUN_URL).decode("utf-8", "replace")
+    tiers = _parse_aliyun_prices(body)
+
+    entries: dict[str, dict] = {}
+    for src_name, rows_ in tiers.items():
+        ids = ALIYUN_NAME_MAP.get(src_name)
+        if not ids:
+            continue
+        # 统一折算：带限时折扣的档位折算成折后价，并保留原价供 note 说明
+        norm: list[dict] = []
+        for r in rows_:
+            d = r.get("discount")
+            if d and d < 1:
+                norm.append(dict(r, priceIn=round(r["priceIn"] * d, 2),
+                                 priceOut=round(r["priceOut"] * d, 2),
+                                 orig=(r["priceIn"], r["priceOut"])))
+            else:
+                norm.append(r)
+        # 保守口径：取输入+输出之和最大的档位
+        best = max(norm, key=lambda r: r["priceIn"] + r["priceOut"])
+        lo = min(norm, key=lambda r: r["priceIn"] + r["priceOut"])
+        note = None
+        if len(norm) > 1:
+            note = (f"分段定价共 {len(norm)} 档（¥{lo['priceIn']:g}/¥{lo['priceOut']:g} 起），"
+                    f"此处取最高档")
+        if best.get("orig"):
+            note = (f"官方限时 {best['discount'] * 10:g} 折，此处为折后价"
+                    f"（原价 ¥{best['orig'][0]:g}/¥{best['orig'][1]:g}）"
+                    + (f"；{note}" if note else ""))
+        if not note:
+            note = "官方刊例价（每百万 tokens）"
+        entry = _make_entry(best["priceIn"], best["priceOut"], today, note)
+        for mid in ids:
+            entries[mid] = dict(entry)
+    return entries
+
+
+# ---------------- MiniMax（静态 HTML，划线价+多 tab 档位） ----------------
+
+MINIMAX_URL = "https://platform.minimaxi.com/document/price"
+
+MINIMAX_NAME_MAP = {
+    "MiniMax-M3": ["minimax-m3"],
+}
+
+
+def _parse_minimax_prices(page_html: str) -> dict[str, list]:
+    """解析 MiniMax 定价页文本模型表，返回 {基础模型名: [{priceIn, priceOut, priceCacheHit, orig}]}。
+
+    - 单元格形如「<del>6.30</del> 3.15」（永久五折）：划线外数字为现价，取之；
+    - 同一模型有「标准 / 优先」两套 tab 表（优先档更贵），两套都收，取高者保守；
+    - 只解析表头含「输入价格」「百万 tokens」且不含视频/图片/每秒/每张的表。
+    """
+    tiers: dict[str, list] = {}
+    for tbl in re.findall(r"<table.*?</table>", page_html, re.S):
+        rows_html = re.findall(r"<tr.*?</tr>", tbl, re.S)
+        if len(rows_html) < 2:
+            continue
+        header = " ".join(_cells(rows_html[0]))
+        if ("输入价格" not in header or "百万" not in header
+                or any(k in header for k in ("视频", "图片", "每秒", "每张", "分辨率"))):
+            continue
+        for row_html in rows_html[1:]:
+            raw_cells = re.findall(r"<t[dh][^>]*>(.*?)</t[dh]>", row_html, re.S)
+            if not raw_cells:
+                continue
+            first = _html.unescape(re.sub(r"<[^>]+>", " ", raw_cells[0])).strip()
+            m = re.match(r"(MiniMax-[A-Za-z0-9.-]+)", first)
+            if not m:
+                continue
+            name = m.group(1)
+            # 价格列：去掉划线价后取第一个数字（=现价）；划线内数字为原价
+            vals, orig = [], None
+            for c in raw_cells[1:]:
+                dm = re.search(r"<del>\s*([\d.]+)", c)
+                if dm:
+                    orig = float(dm.group(1))
+                c_now = re.sub(r"<del>.*?</del>", "", c, flags=re.S)
+                pm = re.search(r"([\d.]+)", _html.unescape(re.sub(r"<[^>]+>", " ", c_now)))
+                if pm:
+                    vals.append(float(pm.group(1)))
+            if len(vals) < 2:
+                continue
+            tiers.setdefault(name, []).append(
+                {"priceIn": vals[0], "priceOut": vals[1],
+                 "priceCacheHit": vals[2] if len(vals) > 2 else None, "orig": orig})
+    if not tiers:
+        raise ValueError("MiniMax 定价页未解析出文本模型价格行（页面结构可能已改版）")
+    return tiers
+
+
+def fetch_minimax(today: str) -> dict[str, dict]:
+    """抓取 MiniMax 官网价。标准/优先多档取最高档（保守口径），折扣取折后价。"""
+    body = http_get(MINIMAX_URL).decode("utf-8", "replace")
+    tiers = _parse_minimax_prices(body)
+
+    entries: dict[str, dict] = {}
+    for src_name, rows_ in tiers.items():
+        ids = MINIMAX_NAME_MAP.get(src_name)
+        if not ids:
+            continue
+        best = max(rows_, key=lambda r: r["priceIn"] + r["priceOut"])
+        lo = min(rows_, key=lambda r: r["priceIn"] + r["priceOut"])
+        note = None
+        if len(rows_) > 1:
+            note = (f"多档位定价（最低档 ¥{lo['priceIn']:g}/¥{lo['priceOut']:g}），"
+                    f"此处取最高档")
+        if best.get("orig"):
+            note = (f"官方永久五折，此处为折后价（原价 ¥{best['orig']:g} 起）"
+                    + (f"；{note}" if note else ""))
+        if not note:
+            note = "官方刊例价（每百万 tokens）"
+        entry = _make_entry(best["priceIn"], best["priceOut"], today, note,
+                            cache_hit=best.get("priceCacheHit"))
+        for mid in ids:
+            entries[mid] = dict(entry)
+    return entries
+
+
 # ---------------- 汇总 ----------------
 
 SOURCES = [
@@ -376,6 +584,8 @@ SOURCES = [
     ("zhipu", fetch_zhipu),
     ("kimi", fetch_kimi),
     ("anthropic", fetch_anthropic),
+    ("aliyun", fetch_aliyun),
+    ("minimax", fetch_minimax),
 ]
 
 

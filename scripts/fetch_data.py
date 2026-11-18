@@ -121,12 +121,17 @@ def log(msg: str) -> None:
 
 
 def http_get(url: str, retries: int = 2) -> bytes:
-    """带重试的 GET，返回原始字节；彻底失败抛异常。"""
+    """带重试的 GET，返回原始字节；彻底失败抛异常。
+
+    强制不走系统代理：macOS 本机会把失效的系统代理注入 urllib
+    （Connection refused），CI runner 本就无代理，禁用后行为不变。
+    """
     last_err: Exception | None = None
+    opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
     for i in range(retries + 1):
         try:
             req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (MaaS-Rank updater)"})
-            with urllib.request.urlopen(req, timeout=TIMEOUT) as resp:
+            with opener.open(req, timeout=TIMEOUT) as resp:
                 return resp.read()
         except Exception as e:  # noqa: BLE001
             last_err = e
