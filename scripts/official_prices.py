@@ -530,10 +530,11 @@ def _parse_minimax_prices(page_html: str) -> dict[str, list]:
                 continue
             name = m.group(1)
             # 价格列：去掉划线价后取第一个数字（=现价）；划线内数字为原价
+            # （取首个划线价，即输入列原价，note 引用才不歧义）
             vals, orig = [], None
             for c in raw_cells[1:]:
                 dm = re.search(r"<del>\s*([\d.]+)", c)
-                if dm:
+                if dm and orig is None:
                     orig = float(dm.group(1))
                 c_now = re.sub(r"<del>.*?</del>", "", c, flags=re.S)
                 pm = re.search(r"([\d.]+)", _html.unescape(re.sub(r"<[^>]+>", " ", c_now)))
