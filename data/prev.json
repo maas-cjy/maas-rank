@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-17",
+  "date": "2026-11-18",
   "models": [
     {
       "id": "gemini 4 carbon",
@@ -214,15 +214,15 @@
       "priceIn": 12.0,
       "priceOut": 36.0,
       "priceCurrency": "CNY",
-      "priceSource": null,
+      "priceSource": "官网",
       "priceCacheHit": null
     },
     {
       "id": "qwen",
       "name": "Qwen",
       "elo": 1485,
-      "superclue": 43.22,
-      "bench": 41.77,
+      "superclue": 61.61,
+      "bench": 62.76,
       "priceIn": 12.0,
       "priceOut": 36.0,
       "priceCurrency": "CNY",
@@ -331,10 +331,10 @@
       "elo": 1475,
       "superclue": null,
       "bench": null,
-      "priceIn": 1.25,
-      "priceOut": 3.75,
+      "priceIn": 12.0,
+      "priceOut": 36.0,
       "priceCurrency": "CNY",
-      "priceSource": null,
+      "priceSource": "官网",
       "priceCacheHit": null
     },
     {
@@ -595,10 +595,10 @@
       "elo": 1454,
       "superclue": null,
       "bench": null,
-      "priceIn": null,
-      "priceOut": null,
-      "priceCurrency": null,
-      "priceSource": null,
+      "priceIn": 4.8,
+      "priceOut": 19.2,
+      "priceCurrency": "CNY",
+      "priceSource": "官网",
       "priceCacheHit": null
     },
     {
@@ -1015,10 +1015,10 @@
       "elo": 1438,
       "superclue": null,
       "bench": null,
-      "priceIn": null,
-      "priceOut": null,
-      "priceCurrency": null,
-      "priceSource": null,
+      "priceIn": 3.0,
+      "priceOut": 18.0,
+      "priceCurrency": "CNY",
+      "priceSource": "官网",
       "priceCacheHit": null
     },
     {
@@ -1075,10 +1075,10 @@
       "elo": 1437,
       "superclue": null,
       "bench": null,
-      "priceIn": null,
-      "priceOut": null,
-      "priceCurrency": null,
-      "priceSource": null,
+      "priceIn": 3.0,
+      "priceOut": 12.0,
+      "priceCurrency": "CNY",
+      "priceSource": "官网",
       "priceCacheHit": null
     },
     {
@@ -1099,10 +1099,10 @@
       "elo": 1436,
       "superclue": null,
       "bench": null,
-      "priceIn": null,
-      "priceOut": null,
-      "priceCurrency": null,
-      "priceSource": null,
+      "priceIn": 8.0,
+      "priceOut": 48.0,
+      "priceCurrency": "CNY",
+      "priceSource": "官网",
       "priceCacheHit": null
     },
     {
@@ -1279,11 +1279,11 @@
       "elo": 1428,
       "superclue": 41.17,
       "bench": 39.71,
-      "priceIn": 2.1,
-      "priceOut": 8.4,
+      "priceIn": 6.3,
+      "priceOut": 25.2,
       "priceCurrency": "CNY",
-      "priceSource": null,
-      "priceCacheHit": null
+      "priceSource": "官网",
+      "priceCacheHit": 1.26
     },
     {
       "id": "grok-3",
@@ -1567,10 +1567,10 @@
       "elo": 1417,
       "superclue": null,
       "bench": null,
-      "priceIn": null,
-      "priceOut": null,
-      "priceCurrency": null,
-      "priceSource": null,
+      "priceIn": 2.0,
+      "priceOut": 16.0,
+      "priceCurrency": "CNY",
+      "priceSource": "官网",
       "priceCacheHit": null
     },
     {
@@ -1771,10 +1771,10 @@
       "elo": 1409,
       "superclue": null,
       "bench": null,
-      "priceIn": null,
-      "priceOut": null,
-      "priceCurrency": null,
-      "priceSource": null,
+      "priceIn": 1.8,
+      "priceOut": 14.4,
+      "priceCurrency": "CNY",
+      "priceSource": "官网",
       "priceCacheHit": null
     },
     {
@@ -2011,10 +2011,10 @@
       "elo": 1397,
       "superclue": null,
       "bench": null,
-      "priceIn": null,
-      "priceOut": null,
-      "priceCurrency": null,
-      "priceSource": null,
+      "priceIn": 1.2,
+      "priceOut": 12.0,
+      "priceCurrency": "CNY",
+      "priceSource": "官网",
       "priceCacheHit": null
     },
     {
@@ -2059,10 +2059,10 @@
       "elo": 1395,
       "superclue": null,
       "bench": null,
-      "priceIn": null,
-      "priceOut": null,
-      "priceCurrency": null,
-      "priceSource": null,
+      "priceIn": 1.6,
+      "priceOut": 12.8,
+      "priceCurrency": "CNY",
+      "priceSource": "官网",
       "priceCacheHit": null
     },
     {
@@ -2971,10 +2971,10 @@
       "elo": 1326,
       "superclue": null,
       "bench": null,
-      "priceIn": null,
-      "priceOut": null,
-      "priceCurrency": null,
-      "priceSource": null,
+      "priceIn": 4.8,
+      "priceOut": 64.0,
+      "priceCurrency": "CNY",
+      "priceSource": "官网",
       "priceCacheHit": null
     },
     {
