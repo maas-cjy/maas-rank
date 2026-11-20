@@ -1,8 +1,8 @@
 {
   "meta": {
     "name": "MaaS Rank · 数据快照",
-    "updated": "2026-11-19",
-    "note": "榜单数据自动更新：Elo 来自 LMArena（数据期 2026-11-18）；中文能力来自 SuperCLUE（2026年11月）；价格核验于 2026年7月；未抓取到的字段保留上次快照。",
+    "updated": "2026-11-20",
+    "note": "榜单数据自动更新：Elo 来自 LMArena（数据期 2026-11-19）；中文能力来自 SuperCLUE（2026年11月）；价格核验于 2026年7月；未抓取到的字段保留上次快照。",
     "exchangeRate": 7.2,
     "sources": [
       {
@@ -21,12 +21,12 @@
         "desc": "OpenAI / Anthropic / Google / DeepSeek / 阿里云 / 智谱 / 月之暗面 / 字节 等官方 API 定价"
       }
     ],
-    "lastAutoUpdate": "2026-11-19 09:17:13",
+    "lastAutoUpdate": "2026-11-20 08:59:24",
     "fieldInfo": {
       "elo": {
         "label": "竞技场 Elo",
         "source": "LMArena 全球盲测投票",
-        "date": "2026-11-18",
+        "date": "2026-11-19",
         "kind": "实测"
       },
       "context": {
@@ -56,13 +56,13 @@
       "price": {
         "label": "API 价格",
         "source": "31 款官网直采（当日核验，取官方刊例价，口径见各模型价格说明）；其余国产：SuperCLUE 价格库（元/百万tokens，官方人民币报价）；海外模型：厂商官方美元定价，按 $1≈¥7.2 折算展示",
-        "date": "2026年11月19日",
+        "date": "2026年11月20日",
         "kind": "官方",
         "note": "31 款官网直采（当日核验），其余沿用 SuperCLUE 2026年7月 价格表",
         "stale": false,
         "coverage": {
           "priced": 48,
-          "total": 445
+          "total": 449
         }
       }
     },
@@ -81,17 +81,8 @@
       "provider": "Google",
       "region": "overseas",
       "open": false,
-      "elo": 1538,
+      "elo": 1539,
       "desc": "来自 Google 的模型，竞技场 Elo 1540 分。数据每周自动更新。"
-    },
-    {
-      "id": "gemini-4-neon",
-      "name": "Gemini 4 Neon",
-      "provider": "Google",
-      "region": "overseas",
-      "open": false,
-      "elo": 1530,
-      "desc": "来自 Google 的模型，竞技场 Elo 1530 分。数据每周自动更新。"
     },
     {
       "id": "gemini-4-argon",
@@ -99,7 +90,7 @@
       "provider": "Google",
       "region": "overseas",
       "open": false,
-      "elo": 1529,
+      "elo": 1528,
       "desc": "来自 Google 的模型，竞技场 Elo 1533 分。数据每周自动更新。",
       "aliases": [
         "gemini 4 argon",
@@ -116,12 +107,21 @@
       "bench": 76.84
     },
     {
+      "id": "gemini-4-neon",
+      "name": "Gemini 4 Neon",
+      "provider": "Google",
+      "region": "overseas",
+      "open": false,
+      "elo": 1524,
+      "desc": "来自 Google 的模型，竞技场 Elo 1530 分。数据每周自动更新。"
+    },
+    {
       "id": "claude-opus-5.5",
       "name": "Claude Opus 5.5",
       "provider": "Anthropic",
       "region": "overseas",
       "open": false,
-      "elo": 1514,
+      "elo": 1513,
       "desc": "来自 Anthropic 的模型，竞技场 Elo 1518 分。数据每周自动更新。",
       "aliases": [
         "claude opus 5.5",
@@ -131,7 +131,7 @@
       "priceOut": 20.0,
       "priceCurrency": "USD",
       "priceSource": "官网",
-      "priceDate": "2026年11月19日",
+      "priceDate": "2026年11月20日",
       "priceNote": "官方美元定价（$/百万tokens，标准档）"
     },
     {
@@ -225,7 +225,7 @@
       "provider": "Meta",
       "region": "overseas",
       "open": false,
-      "elo": 1493,
+      "elo": 1494,
       "desc": "来自 Meta 的模型，竞技场 Elo 1490 分。数据每周自动更新。",
       "aliases": [
         "muse spark 1.3",
@@ -238,12 +238,30 @@
       "provider": "Meta",
       "region": "overseas",
       "open": false,
-      "elo": 1493,
+      "elo": 1494,
       "desc": "来自 Meta 的模型，竞技场 Elo 1473 分。数据每周自动更新。",
       "aliases": [
         "muse spark",
         "Muse spark"
       ]
+    },
+    {
+      "id": "mimo-v2.6-pro",
+      "name": "MiMo V2.6 Pro",
+      "provider": "小米",
+      "region": "china",
+      "open": true,
+      "elo": 1493,
+      "desc": "来自 小米 的模型，竞技场 Elo 1491 分。数据每周自动更新。",
+      "superclue": 34.57,
+      "dims": {
+        "math": 50.0,
+        "hallu": 25.28,
+        "ifollow": 15.52,
+        "coding": 38.46,
+        "longctx": 36.83
+      },
+      "bench": 33.22
     },
     {
       "id": "claude-fable-5",
@@ -261,26 +279,8 @@
       "priceOut": 50.0,
       "priceCurrency": "USD",
       "priceSource": "官网",
-      "priceDate": "2026年11月19日",
+      "priceDate": "2026年11月20日",
       "priceNote": "官方美元定价（$/百万tokens，标准档）"
-    },
-    {
-      "id": "mimo-v2.6-pro",
-      "name": "MiMo V2.6 Pro",
-      "provider": "小米",
-      "region": "china",
-      "open": true,
-      "elo": 1492,
-      "desc": "来自 小米 的模型，竞技场 Elo 1491 分。数据每周自动更新。",
-      "superclue": 34.57,
-      "dims": {
-        "math": 50.0,
-        "hallu": 25.28,
-        "ifollow": 15.52,
-        "coding": 38.46,
-        "longctx": 36.83
-      },
-      "bench": 33.22
     },
     {
       "id": "claude-opus-4-7",
@@ -321,7 +321,7 @@
       "region": "china",
       "desc": "开源旗舰，中文与推理能力国内第一梯队",
       "release": "2026-08",
-      "elo": 1486,
+      "elo": 1485,
       "superclue": 43.22,
       "priceIn": 12.0,
       "priceOut": 36.0,
@@ -339,7 +339,7 @@
       },
       "bench": 41.77,
       "priceCurrency": "CNY",
-      "priceDate": "2026年11月19日",
+      "priceDate": "2026年11月20日",
       "priceSource": "官网",
       "priceNote": "分段定价共 2 档（¥12/¥36 起），此处取最高档"
     },
@@ -349,7 +349,7 @@
       "provider": "阿里云",
       "region": "china",
       "open": true,
-      "elo": 1486,
+      "elo": 1485,
       "desc": "来自 阿里云 的模型，竞技场 Elo 1282 分。数据每周自动更新。",
       "priceIn": 12.0,
       "priceOut": 36.0,
@@ -467,12 +467,21 @@
       ]
     },
     {
+      "id": "claude-fable-5.2",
+      "name": "Claude Fable 5.2",
+      "provider": "Anthropic",
+      "region": "overseas",
+      "open": false,
+      "elo": 1478,
+      "desc": "来自 Anthropic 的模型，竞技场 Elo 1478 分。数据每周自动更新。"
+    },
+    {
       "id": "glm-5.3",
       "name": "GLM 5.3",
       "provider": "智谱",
       "region": "china",
       "open": true,
-      "elo": 1476,
+      "elo": 1475,
       "desc": "来自 智谱 的模型，竞技场 Elo 1474 分。数据每周自动更新。",
       "superclue": 50.66,
       "dims": {
@@ -488,7 +497,7 @@
       "priceCacheHit": 2.0,
       "priceCurrency": "CNY",
       "priceSource": "官网",
-      "priceDate": "2026年11月19日",
+      "priceDate": "2026年11月20日",
       "priceNote": null
     },
     {
@@ -508,7 +517,7 @@
         "speed": true
       },
       "priceCurrency": "CNY",
-      "priceDate": "2026年11月19日",
+      "priceDate": "2026年11月20日",
       "priceSource": "官网",
       "priceNote": "分段定价共 2 档（¥12/¥36 起），此处取最高档"
     },
@@ -520,7 +529,7 @@
       "region": "china",
       "desc": "开源开放权重，代码与智能体能力突出",
       "release": "2026-06",
-      "elo": 1474,
+      "elo": 1475,
       "priceIn": 20.0,
       "priceOut": 100.0,
       "context": 1000000,
@@ -530,7 +539,7 @@
         "Kimi k3"
       ],
       "priceCurrency": "CNY",
-      "priceDate": "2026年11月19日",
+      "priceDate": "2026年11月20日",
       "priceCacheHit": 2.0,
       "priceSource": "官网",
       "priceNote": "缓存命中输入 ¥2/M；缓存写入（5min TTL）¥20/M、（1h TTL）¥40/M"
@@ -557,7 +566,7 @@
       "priceCacheHit": 0.23,
       "priceCurrency": "CNY",
       "priceSource": "官网",
-      "priceDate": "2026年11月19日",
+      "priceDate": "2026年11月20日",
       "priceNote": null
     },
     {
@@ -603,7 +612,7 @@
       "priceOut": 10.0,
       "priceCurrency": "USD",
       "priceSource": "官网",
-      "priceDate": "2026年11月19日",
+      "priceDate": "2026年11月20日",
       "priceNote": "官方美元定价（$/百万tokens，标准档）"
     },
     {
@@ -614,7 +623,7 @@
       "region": "china",
       "desc": "开源权重，智能体与工具调用能力强",
       "release": "2026-07",
-      "elo": 1470,
+      "elo": 1469,
       "priceIn": 8.0,
       "priceOut": 28.0,
       "context": 1000000,
@@ -623,7 +632,7 @@
         "speed": true
       },
       "priceCurrency": "CNY",
-      "priceDate": "2026年11月19日",
+      "priceDate": "2026年11月20日",
       "priceCacheHit": 2.0,
       "priceSource": "官网",
       "priceNote": null
@@ -746,7 +755,7 @@
       "priceCacheHit": 0.04,
       "priceCurrency": "CNY",
       "priceSource": "官网",
-      "priceDate": "2026年11月19日",
+      "priceDate": "2026年11月20日",
       "priceNote": "高峰时段刊例价（空闲时段输入 ¥1、输出 ¥4）；缓存命中输入 ¥0.04"
     },
     {
@@ -762,7 +771,7 @@
       "priceCacheHit": 2.0,
       "priceCurrency": "CNY",
       "priceSource": "官网",
-      "priceDate": "2026年11月19日",
+      "priceDate": "2026年11月20日",
       "priceNote": "分段定价共 2 档（输入长度 [0, 32K)：¥6/¥24 起），此处取最高档（输入长度 ≥32K）"
     },
     {
@@ -786,7 +795,7 @@
       "provider": "月之暗面",
       "region": "china",
       "open": true,
-      "elo": 1462,
+      "elo": 1458,
       "desc": "来自 月之暗面 的模型，竞技场 Elo 1457 分。数据每周自动更新。",
       "superclue": 61.46,
       "dims": {
@@ -802,7 +811,7 @@
       "priceCacheHit": 1.3,
       "priceCurrency": "CNY",
       "priceSource": "官网",
-      "priceDate": "2026年11月19日",
+      "priceDate": "2026年11月20日",
       "priceNote": "缓存命中输入 ¥1.3/M；缓存写入（5min TTL）¥13/M、（1h TTL）¥26/M"
     },
     {
@@ -864,7 +873,7 @@
       "provider": "月之暗面",
       "region": "china",
       "open": true,
-      "elo": 1456,
+      "elo": 1455,
       "desc": "来自 月之暗面 的模型，竞技场 Elo 1455 分。数据每周自动更新。",
       "aliases": [
         "kimi k2.6",
@@ -875,7 +884,7 @@
       "priceCacheHit": 1.1,
       "priceCurrency": "CNY",
       "priceSource": "官网",
-      "priceDate": "2026年11月19日",
+      "priceDate": "2026年11月20日",
       "priceNote": "缓存命中输入 ¥1.1/M"
     },
     {
@@ -890,7 +899,7 @@
       "priceOut": 19.2,
       "priceCurrency": "CNY",
       "priceSource": "官网",
-      "priceDate": "2026年11月19日",
+      "priceDate": "2026年11月20日",
       "priceNote": "官方限时 8 折，此处为折后价（原价 ¥6/¥24）；分段定价共 4 档（¥1.6/¥6.4 起），此处取最高档"
     },
     {
@@ -955,7 +964,7 @@
         "speed": true
       },
       "priceCurrency": "CNY",
-      "priceDate": "2026年11月19日",
+      "priceDate": "2026年11月20日",
       "priceCacheHit": 0.3,
       "priceSource": "官网",
       "priceNote": "高峰时段刊例价（空闲时段输入 ¥4.5、输出 ¥13.5）；缓存命中输入 ¥0.3"
@@ -1058,7 +1067,7 @@
       "provider": "OpenAI",
       "region": "overseas",
       "open": false,
-      "elo": 1447,
+      "elo": 1446,
       "desc": "来自 OpenAI 的模型，竞技场 Elo 1446 分。数据每周自动更新。",
       "aliases": [
         "gpt-6.1 sol",
@@ -1096,7 +1105,7 @@
       "priceCacheHit": 1.5,
       "priceCurrency": "CNY",
       "priceSource": "官网",
-      "priceDate": "2026年11月19日",
+      "priceDate": "2026年11月20日",
       "priceNote": "分段定价共 2 档（输入长度 [0, 32K)：¥4/¥18 起），此处取最高档（输入长度 ≥32K）"
     },
     {
@@ -1134,7 +1143,7 @@
       "priceCacheHit": 0.3,
       "priceCurrency": "CNY",
       "priceSource": "官网",
-      "priceDate": "2026年11月19日",
+      "priceDate": "2026年11月20日",
       "priceNote": "高峰时段刊例价（空闲时段输入 ¥4.5、输出 ¥13.5）；缓存命中输入 ¥0.3"
     },
     {
@@ -1152,29 +1161,8 @@
       "provider": "xAI",
       "region": "overseas",
       "open": false,
-      "elo": 1445,
+      "elo": 1444,
       "desc": "来自 xAI 的模型，竞技场 Elo 1445 分。数据每周自动更新。"
-    },
-    {
-      "id": "gemma-4-31b",
-      "name": "Gemma 4 31b",
-      "provider": "Google",
-      "region": "overseas",
-      "open": true,
-      "elo": 1443,
-      "desc": "来自 Google 的模型，竞技场 Elo 1442 分。数据每周自动更新。",
-      "aliases": [
-        "gemma 4 31b"
-      ]
-    },
-    {
-      "id": "inkling",
-      "name": "Inkling",
-      "provider": "Thinky",
-      "region": "overseas",
-      "open": true,
-      "elo": 1443,
-      "desc": "来自 Thinky 的模型，竞技场 Elo 1441 分。数据每周自动更新。"
     },
     {
       "id": "step 5 preview",
@@ -1182,7 +1170,7 @@
       "provider": "阶跃星辰",
       "region": "china",
       "open": false,
-      "elo": 1443,
+      "elo": 1444,
       "desc": "来自 阶跃星辰 的模型，竞技场 Elo 1448 分。数据每周自动更新。",
       "superclue": 41.23,
       "dims": {
@@ -1195,6 +1183,15 @@
       "bench": 40.19
     },
     {
+      "id": "inkling",
+      "name": "Inkling",
+      "provider": "Thinky",
+      "region": "overseas",
+      "open": true,
+      "elo": 1443,
+      "desc": "来自 Thinky 的模型，竞技场 Elo 1441 分。数据每周自动更新。"
+    },
+    {
       "id": "gpt-5.1",
       "name": "GPT 5.1",
       "provider": "OpenAI",
@@ -1202,6 +1199,18 @@
       "open": false,
       "elo": 1443,
       "desc": "来自 OpenAI 的模型，竞技场 Elo 1441 分。数据每周自动更新。"
+    },
+    {
+      "id": "gemma-4-31b",
+      "name": "Gemma 4 31b",
+      "provider": "Google",
+      "region": "overseas",
+      "open": true,
+      "elo": 1442,
+      "desc": "来自 Google 的模型，竞技场 Elo 1442 分。数据每周自动更新。",
+      "aliases": [
+        "gemma 4 31b"
+      ]
     },
     {
       "id": "ernie-5.0",
@@ -1326,7 +1335,7 @@
       "priceOut": 18.0,
       "priceCurrency": "CNY",
       "priceSource": "官网",
-      "priceDate": "2026年11月19日",
+      "priceDate": "2026年11月20日",
       "priceNote": "分段定价共 4 档（¥1.2/¥7.2 起），此处取最高档"
     },
     {
@@ -1380,7 +1389,7 @@
       "priceOut": 12.0,
       "priceCurrency": "CNY",
       "priceSource": "官网",
-      "priceDate": "2026年11月19日",
+      "priceDate": "2026年11月20日",
       "priceNote": "分段定价共 2 档（¥3/¥12 起），此处取最高档"
     },
     {
@@ -1389,7 +1398,7 @@
       "provider": "小米",
       "region": "china",
       "open": false,
-      "elo": 1437,
+      "elo": 1436,
       "desc": "来自 小米 的模型，竞技场 Elo 1436 分。数据每周自动更新。"
     },
     {
@@ -1404,7 +1413,7 @@
       "priceOut": 48.0,
       "priceCurrency": "CNY",
       "priceSource": "官网",
-      "priceDate": "2026年11月19日",
+      "priceDate": "2026年11月20日",
       "priceNote": "分段定价共 4 档（¥2/¥12 起），此处取最高档"
     },
     {
@@ -1420,7 +1429,7 @@
       "priceCacheHit": 0.8,
       "priceCurrency": "CNY",
       "priceSource": "官网",
-      "priceDate": "2026年11月19日",
+      "priceDate": "2026年11月20日",
       "priceNote": "分段定价共 3 档（输入 [0, 32K)，输出 [0, 0.2K)：¥2/¥8 起），此处取最高档（输入 [32K, 200K)）"
     },
     {
@@ -1539,7 +1548,7 @@
       "provider": "OpenAI",
       "region": "overseas",
       "open": false,
-      "elo": 1428,
+      "elo": 1429,
       "desc": "来自 OpenAI 的模型，竞技场 Elo 1429 分。数据每周自动更新。"
     },
     {
@@ -1548,7 +1557,7 @@
       "provider": "OpenAI",
       "region": "overseas",
       "open": false,
-      "elo": 1428,
+      "elo": 1429,
       "desc": "来自 OpenAI 的模型，竞技场 Elo 1428 分。数据每周自动更新。"
     },
     {
@@ -1557,7 +1566,7 @@
       "provider": "OpenAI",
       "region": "overseas",
       "open": false,
-      "elo": 1428,
+      "elo": 1429,
       "desc": "来自 OpenAI 的模型，竞技场 Elo 1301 分。数据每周自动更新。"
     },
     {
@@ -1566,7 +1575,7 @@
       "provider": "OpenAI",
       "region": "overseas",
       "open": false,
-      "elo": 1428,
+      "elo": 1429,
       "desc": "来自 OpenAI 的模型，竞技场 Elo 1264 分。数据每周自动更新。"
     },
     {
@@ -1595,19 +1604,10 @@
       },
       "bench": 39.71,
       "priceCurrency": "CNY",
-      "priceDate": "2026年11月19日",
+      "priceDate": "2026年11月20日",
       "priceCacheHit": 1.26,
       "priceSource": "官网",
       "priceNote": "官方永久五折，此处为折后价（原价 ¥12.6 起）；多档位定价（最低档 ¥2.1/¥8.4），此处取最高档"
-    },
-    {
-      "id": "grok-3",
-      "name": "Grok 3",
-      "provider": "xAI",
-      "region": "overseas",
-      "open": false,
-      "elo": 1426,
-      "desc": "来自 xAI 的模型，竞技场 Elo 1425 分。数据每周自动更新。"
     },
     {
       "id": "longcat-flash-chat exp",
@@ -1619,15 +1619,6 @@
       "desc": "来自 美团 的模型，竞技场 Elo 1427 分。数据每周自动更新。"
     },
     {
-      "id": "grok 3 preview",
-      "name": "Grok 3 preview",
-      "provider": "xAI",
-      "region": "overseas",
-      "open": false,
-      "elo": 1426,
-      "desc": "来自 xAI 的模型，竞技场 Elo 1426 分。数据每周自动更新。"
-    },
-    {
       "id": "longcat-flash-chat",
       "name": "LongCat Flash Chat",
       "provider": "美团",
@@ -1635,6 +1626,33 @@
       "open": false,
       "elo": 1426,
       "desc": "来自 美团 的模型，竞技场 Elo 1426 分。数据每周自动更新。"
+    },
+    {
+      "id": "gpt-6.1-terra",
+      "name": "GPT 6.1 Terra",
+      "provider": "OpenAI",
+      "region": "overseas",
+      "open": false,
+      "elo": 1426,
+      "desc": "来自 OpenAI 的模型，竞技场 Elo 1426 分。数据每周自动更新。"
+    },
+    {
+      "id": "grok-3",
+      "name": "Grok 3",
+      "provider": "xAI",
+      "region": "overseas",
+      "open": false,
+      "elo": 1425,
+      "desc": "来自 xAI 的模型，竞技场 Elo 1425 分。数据每周自动更新。"
+    },
+    {
+      "id": "grok 3 preview",
+      "name": "Grok 3 preview",
+      "provider": "xAI",
+      "region": "overseas",
+      "open": false,
+      "elo": 1425,
+      "desc": "来自 xAI 的模型，竞技场 Elo 1426 分。数据每周自动更新。"
     },
     {
       "id": "deepseek-v3.2",
@@ -1714,7 +1732,7 @@
       "provider": "月之暗面",
       "region": "china",
       "open": true,
-      "elo": 1421,
+      "elo": 1420,
       "desc": "来自 月之暗面 的模型，竞技场 Elo 1420 分。数据每周自动更新。"
     },
     {
@@ -1750,7 +1768,7 @@
       "provider": "OpenAI",
       "region": "overseas",
       "open": false,
-      "elo": 1420,
+      "elo": 1419,
       "desc": "来自 OpenAI 的模型，竞技场 Elo 1420 分。数据每周自动更新。",
       "aliases": [
         "gpt-5.5 instant",
@@ -1763,7 +1781,7 @@
       "provider": "DeepSeek",
       "region": "china",
       "open": true,
-      "elo": 1420,
+      "elo": 1419,
       "desc": "来自 DeepSeek 的模型，竞技场 Elo 1420 分。数据每周自动更新。"
     },
     {
@@ -1805,7 +1823,7 @@
       "priceOut": 16.0,
       "priceCurrency": "CNY",
       "priceSource": "官网",
-      "priceDate": "2026年11月19日",
+      "priceDate": "2026年11月20日",
       "priceNote": "分段定价共 4 档（¥0.8/¥6.4 起），此处取最高档"
     },
     {
@@ -1890,7 +1908,7 @@
       "provider": "月之暗面",
       "region": "china",
       "open": true,
-      "elo": 1415,
+      "elo": 1414,
       "desc": "来自 月之暗面 的模型，竞技场 Elo 1414 分。数据每周自动更新。"
     },
     {
@@ -1899,7 +1917,7 @@
       "provider": "月之暗面",
       "region": "china",
       "open": true,
-      "elo": 1415,
+      "elo": 1414,
       "desc": "来自 月之暗面 的模型，竞技场 Elo 1414 分。数据每周自动更新。"
     },
     {
@@ -1908,7 +1926,7 @@
       "provider": "月之暗面",
       "region": "china",
       "open": true,
-      "elo": 1415,
+      "elo": 1414,
       "desc": "来自 月之暗面 的模型，竞技场 Elo 1379 分。数据每周自动更新。"
     },
     {
@@ -1922,6 +1940,37 @@
       "aliases": [
         "inkling small",
         "Inkling small"
+      ]
+    },
+    {
+      "id": "gpt-6.2-sol",
+      "name": "GPT 6.2 Sol",
+      "provider": "OpenAI",
+      "region": "overseas",
+      "open": false,
+      "elo": 1414,
+      "desc": "来自 OpenAI 的模型，竞技场 Elo 1414 分。数据每周自动更新。"
+    },
+    {
+      "id": "gpt-6.2-astra",
+      "name": "GPT 6.2 Astra",
+      "provider": "OpenAI",
+      "region": "overseas",
+      "open": false,
+      "elo": 1414,
+      "desc": "来自 OpenAI 的模型，竞技场 Elo 1414 分。数据每周自动更新。"
+    },
+    {
+      "id": "mistral-large-4",
+      "name": "Mistral Large 4",
+      "provider": "Mistral AI",
+      "region": "overseas",
+      "open": false,
+      "elo": 1413,
+      "desc": "来自 Mistral AI 的模型，竞技场 Elo 1427 分。数据每周自动更新。",
+      "aliases": [
+        "mistral large 4",
+        "Mistral large 4"
       ]
     },
     {
@@ -1954,19 +2003,6 @@
       "open": false,
       "elo": 1412,
       "desc": "来自 Google 的模型，竞技场 Elo 1407 分。数据每周自动更新。"
-    },
-    {
-      "id": "mistral-large-4",
-      "name": "Mistral Large 4",
-      "provider": "Mistral AI",
-      "region": "overseas",
-      "open": false,
-      "elo": 1412,
-      "desc": "来自 Mistral AI 的模型，竞技场 Elo 1427 分。数据每周自动更新。",
-      "aliases": [
-        "mistral large 4",
-        "Mistral large 4"
-      ]
     },
     {
       "id": "mimo-v2-flash",
@@ -2018,7 +2054,7 @@
       "priceOut": 14.4,
       "priceCurrency": "CNY",
       "priceSource": "官网",
-      "priceDate": "2026年11月19日",
+      "priceDate": "2026年11月20日",
       "priceNote": "分段定价共 4 档（¥0.6/¥4.8 起），此处取最高档"
     },
     {
@@ -2061,15 +2097,6 @@
       ]
     },
     {
-      "id": "gemini 2.5 flash preview",
-      "name": "Gemini 2.5 flash preview",
-      "provider": "Google",
-      "region": "overseas",
-      "open": false,
-      "elo": 1407,
-      "desc": "来自 Google 的模型，竞技场 Elo 1406 分。数据每周自动更新。"
-    },
-    {
       "id": "grok-4-fast",
       "name": "Grok 4 Fast",
       "provider": "xAI",
@@ -2081,6 +2108,15 @@
         "grok 4 fast",
         "Grok 4 fast"
       ]
+    },
+    {
+      "id": "gemini 2.5 flash preview",
+      "name": "Gemini 2.5 flash preview",
+      "provider": "Google",
+      "region": "overseas",
+      "open": false,
+      "elo": 1406,
+      "desc": "来自 Google 的模型，竞技场 Elo 1406 分。数据每周自动更新。"
     },
     {
       "id": "hunyuan-vision-1.5",
@@ -2204,8 +2240,21 @@
       "priceOut": 0.5,
       "priceCurrency": "USD",
       "priceSource": "官网",
-      "priceDate": "2026年11月19日",
+      "priceDate": "2026年11月20日",
       "priceNote": "官方美元定价为阶梯价，此处取起步档"
+    },
+    {
+      "id": "gpt-6-sol",
+      "name": "GPT 6 Sol",
+      "provider": "OpenAI",
+      "region": "overseas",
+      "open": false,
+      "elo": 1398,
+      "desc": "来自 OpenAI 的模型，竞技场 Elo 1396 分。数据每周自动更新。",
+      "aliases": [
+        "gpt-6 sol",
+        "GPT 6 sol"
+      ]
     },
     {
       "id": "grok-4.3",
@@ -2220,19 +2269,6 @@
       ]
     },
     {
-      "id": "gpt-6-sol",
-      "name": "GPT 6 Sol",
-      "provider": "OpenAI",
-      "region": "overseas",
-      "open": false,
-      "elo": 1397,
-      "desc": "来自 OpenAI 的模型，竞技场 Elo 1396 分。数据每周自动更新。",
-      "aliases": [
-        "gpt-6 sol",
-        "GPT 6 sol"
-      ]
-    },
-    {
       "id": "qwen3.5-flash",
       "name": "Qwen3.5 Flash",
       "provider": "阿里云",
@@ -2244,7 +2280,7 @@
       "priceOut": 12.0,
       "priceCurrency": "CNY",
       "priceSource": "官网",
-      "priceDate": "2026年11月19日",
+      "priceDate": "2026年11月20日",
       "priceNote": "分段定价共 6 档（¥0.2/¥2 起），此处取最高档"
     },
     {
@@ -2286,7 +2322,7 @@
       "priceOut": 12.8,
       "priceCurrency": "CNY",
       "priceSource": "官网",
-      "priceDate": "2026年11月19日",
+      "priceDate": "2026年11月20日",
       "priceNote": "分段定价共 4 档（¥0.4/¥3.2 起），此处取最高档"
     },
     {
@@ -2295,7 +2331,7 @@
       "provider": "阿里云",
       "region": "china",
       "open": true,
-      "elo": 1394,
+      "elo": 1393,
       "desc": "来自 阿里云 的模型，竞技场 Elo 1393 分。数据每周自动更新。"
     },
     {
@@ -2315,6 +2351,19 @@
       "open": true,
       "elo": 1392,
       "desc": "来自 MiniMax 的模型，竞技场 Elo 1392 分。数据每周自动更新。"
+    },
+    {
+      "id": "gpt-6-luna",
+      "name": "GPT 6 Luna",
+      "provider": "OpenAI",
+      "region": "overseas",
+      "open": false,
+      "elo": 1390,
+      "desc": "来自 OpenAI 的模型，竞技场 Elo 1392 分。数据每周自动更新。",
+      "aliases": [
+        "gpt-6 luna",
+        "GPT 6 luna"
+      ]
     },
     {
       "id": "gpt-5.3-chat",
@@ -2340,19 +2389,6 @@
       "aliases": [
         "muse glimmer",
         "Muse glimmer"
-      ]
-    },
-    {
-      "id": "gpt-6-luna",
-      "name": "GPT 6 Luna",
-      "provider": "OpenAI",
-      "region": "overseas",
-      "open": false,
-      "elo": 1389,
-      "desc": "来自 OpenAI 的模型，竞技场 Elo 1392 分。数据每周自动更新。",
-      "aliases": [
-        "gpt-6 luna",
-        "GPT 6 luna"
       ]
     },
     {
@@ -2386,7 +2422,7 @@
       "priceCacheHit": 0.24,
       "priceCurrency": "CNY",
       "priceSource": "官网",
-      "priceDate": "2026年11月19日",
+      "priceDate": "2026年11月20日",
       "priceNote": "分段定价共 3 档（输入 [0, 32K)，输出 [0, 0.2K)：¥0.8/¥2 起），此处取最高档（输入 [32K, 128K)）"
     },
     {
@@ -2492,6 +2528,19 @@
       "desc": "来自 智谱 的模型，竞技场 Elo 1374 分。数据每周自动更新。"
     },
     {
+      "id": "gpt-5-mini",
+      "name": "GPT 5 Mini",
+      "provider": "OpenAI",
+      "region": "overseas",
+      "open": false,
+      "elo": 1374,
+      "desc": "来自 OpenAI 的模型，竞技场 Elo 1374 分。数据每周自动更新。",
+      "aliases": [
+        "gpt-5 mini",
+        "GPT 5 mini"
+      ]
+    },
+    {
       "id": "deepseek-r1",
       "name": "DeepSeek R1",
       "provider": "DeepSeek",
@@ -2499,19 +2548,6 @@
       "open": true,
       "elo": 1373,
       "desc": "来自 DeepSeek 的模型，竞技场 Elo 1428 分。数据每周自动更新。"
-    },
-    {
-      "id": "gpt-5-mini",
-      "name": "GPT 5 Mini",
-      "provider": "OpenAI",
-      "region": "overseas",
-      "open": false,
-      "elo": 1373,
-      "desc": "来自 OpenAI 的模型，竞技场 Elo 1374 分。数据每周自动更新。",
-      "aliases": [
-        "gpt-5 mini",
-        "GPT 5 mini"
-      ]
     },
     {
       "id": "gpt-5.4-nano",
@@ -2572,7 +2608,7 @@
       "provider": "OpenAI",
       "region": "overseas",
       "open": true,
-      "elo": 1366,
+      "elo": 1365,
       "desc": "来自 OpenAI 的模型，竞技场 Elo 1365 分。数据每周自动更新。"
     },
     {
@@ -2750,7 +2786,7 @@
       "priceCacheHit": 0.0,
       "priceCurrency": "CNY",
       "priceSource": "官网",
-      "priceDate": "2026年11月19日",
+      "priceDate": "2026年11月20日",
       "priceNote": "官方限时免费（恢复收费请以官网现价为准）"
     },
     {
@@ -2795,7 +2831,7 @@
       "provider": "OpenAI",
       "region": "overseas",
       "open": false,
-      "elo": 1341,
+      "elo": 1340,
       "desc": "来自 OpenAI 的模型，竞技场 Elo 1382 分。数据每周自动更新。"
     },
     {
@@ -2804,7 +2840,7 @@
       "provider": "OpenAI",
       "region": "overseas",
       "open": false,
-      "elo": 1341,
+      "elo": 1340,
       "desc": "来自 OpenAI 的模型，竞技场 Elo 1341 分。数据每周自动更新。",
       "aliases": [
         "gpt-4.1 mini",
@@ -2981,7 +3017,7 @@
       "priceCacheHit": 2.5,
       "priceCurrency": "CNY",
       "priceSource": "官网",
-      "priceDate": "2026年11月19日",
+      "priceDate": "2026年11月20日",
       "priceNote": null
     },
     {
@@ -3059,7 +3095,7 @@
       "priceOut": 64.0,
       "priceCurrency": "CNY",
       "priceSource": "官网",
-      "priceDate": "2026年11月19日",
+      "priceDate": "2026年11月20日",
       "priceNote": "分段定价共 6 档（¥0.8/¥8 起），此处取最高档"
     },
     {
@@ -3266,7 +3302,7 @@
       "provider": "Ibm",
       "region": "overseas",
       "open": true,
-      "elo": 1292,
+      "elo": 1293,
       "desc": "来自 Ibm 的模型，竞技场 Elo 1299 分。数据每周自动更新。",
       "aliases": [
         "granite 4.2 3b"
