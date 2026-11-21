@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-20",
+  "updated": "2026-11-21",
   "sources": {
     "lmarena": {
       "ok": true,
@@ -16,7 +16,7 @@
     "official": {
       "ok": true,
       "count": 31,
-      "date": "2026年11月20日",
+      "date": "2026年11月21日",
       "reports": [
         {
           "source": "deepseek",
@@ -58,55 +58,13 @@
     }
   },
   "changes": [
-    "gemini 4 carbon.elo 1538→1539",
-    "gemini-4-neon.elo 1530→1524",
-    "gemini-4-argon.elo 1529→1528",
-    "claude-opus-5.5.elo 1514→1513",
-    "muse-spark-1.3.elo 1493→1494",
-    "muse-spark.elo 1493→1494",
-    "mimo-v2.6-pro.elo 1492→1493",
-    "qwen3.8-max.elo 1486→1485",
-    "qwen.elo 1486→1485",
-    "glm-5.3.elo 1476→1475",
-    "kimi-k3.elo 1474→1475",
-    "glm-5.2.elo 1470→1469",
-    "kimi k3.1 pro.elo 1462→1458",
-    "kimi-k2.6.elo 1456→1455",
     "deepseek-v4-pro.priceIn 9.0→3.0",
     "deepseek-v4-pro.priceOut 27.0→6.0",
     "deepseek-v4-pro.priceIn 3.0→9.0",
     "deepseek-v4-pro.priceOut 6.0→27.0",
-    "gpt-6.1-sol.elo 1447→1446",
-    "grok 4.20 beta 1.elo 1445→1444",
-    "gemma-4-31b.elo 1443→1442",
-    "step 5 preview.elo 1443→1444",
-    "mimo-v2-pro.elo 1437→1436",
-    "chatgpt-4o.elo 1428→1429",
-    "chatgpt-4o latest.elo 1428→1429",
-    "gpt-4o.elo 1428→1429",
-    "gpt-4.elo 1428→1429",
     "minimax-m3.priceIn 6.3→2.1",
     "minimax-m3.priceOut 25.2→8.4",
     "minimax-m3.priceIn 2.1→6.3",
-    "minimax-m3.priceOut 8.4→25.2",
-    "grok-3.elo 1426→1425",
-    "grok 3 preview.elo 1426→1425",
-    "kimi-k2.5-instant.elo 1421→1420",
-    "gpt-5.5-instant.elo 1420→1419",
-    "deepseek-v3.1-terminus.elo 1420→1419",
-    "kimi-k2-turbo.elo 1415→1414",
-    "kimi k2 thinking turbo.elo 1415→1414",
-    "kimi-k2.elo 1415→1414",
-    "mistral-large-4.elo 1412→1413",
-    "gemini 2.5 flash preview.elo 1407→1406",
-    "gpt-6-sol.elo 1397→1398",
-    "qwen3-235b-a22b-no.elo 1394→1393",
-    "gpt-6-luna.elo 1389→1390",
-    "gpt-5-mini.elo 1373→1374",
-    "gpt-oss-120b.elo 1366→1365",
-    "gpt-4.1.elo 1341→1340",
-    "gpt-4.1-mini.elo 1341→1340",
-    "granite-4.2-3b.elo 1292→1293",
-    "+新增 4 个模型（家族归并后 LMArena 全量同步）"
+    "minimax-m3.priceOut 8.4→25.2"
   ]
 }
