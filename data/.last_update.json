@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-24",
+  "updated": "2026-11-25",
   "sources": {
     "lmarena": {
       "ok": true,
@@ -16,7 +16,7 @@
     "official": {
       "ok": true,
       "count": 31,
-      "date": "2026年11月24日",
+      "date": "2026年11月25日",
       "reports": [
         {
           "source": "deepseek",
